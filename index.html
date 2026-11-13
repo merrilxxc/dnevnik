@@ -143,6 +143,65 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
 #tip img { max-width: 160px; max-height: 110px; border-radius: 6px; display: block; margin-bottom: 6px; }
 .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 9px 16px; border-radius: 999px; font-size: 13px; z-index: 80; display: none; }
 .hide { display: none !important; }
+/* --- сравнение периодов --- */
+.cmpctl { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 10px; }
+.cmp { width: 100%; border-collapse: collapse; font-size: 14px; }
+.cmp th, .cmp td { padding: 7px 8px; border-top: 1px solid var(--line); text-align: right; }
+.cmp th:first-child, .cmp td:first-child { text-align: left; color: var(--muted); }
+.cmp thead th { border-top: 0; font-weight: 600; color: var(--fg); }
+.cmp td.up { color: var(--ok); } .cmp td.down { color: var(--bad); } .cmp td.same { color: var(--muted); }
+.cmpwrap { overflow-x: auto; }
+/* --- календарь на телефоне --- */
+.calnav { display: none; align-items: center; justify-content: space-between; gap: 8px; margin: 4px 0 10px; }
+.calnav b { font-size: 16px; }
+.calnav .cnt { font-size: 12px; color: var(--muted); }
+.calnav .btn { min-width: 46px; font-size: 18px; padding: 6px 10px; }
+#cal.one { display: block; touch-action: pan-y; }
+#cal.one .mname { display: none; }
+#cal.one .grid { gap: 5px; }
+.calfoot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+/* --- защита записей --- */
+.prot { display: flex; flex-direction: column; gap: 10px; }
+.prow { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel2); }
+.prow .pt { font-weight: 600; }
+.prow .ps { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.prow.on { border-color: var(--ok); }
+.prow.need { border-color: var(--warn); }
+/* --- итог месяца для печати --- */
+#printSheet { display: none; }
+@media print {
+  @page { size: A4; margin: 11mm; }
+  body.printing > *:not(#printSheet) { display: none !important; }
+  body.printing { background: #fff !important; }
+  body.printing #printSheet { display: block; }
+}
+#printSheet { color: #1d1d1f; background: #fff; font: 12px/1.45 -apple-system, "Segoe UI", Roboto, Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+#printSheet h1 { font-size: 26px; margin: 0; }
+#printSheet .ps-sub { color: #6b6b72; font-size: 12px; margin: 2px 0 12px; }
+#printSheet .ps-top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #8b7cf6; padding-bottom: 8px; margin-bottom: 10px; }
+#printSheet .ps-big { font-size: 40px; line-height: 1; }
+#printSheet .ps-kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px; }
+#printSheet .ps-kpi { border: 1px solid #e3e3e8; border-radius: 8px; padding: 6px 8px; }
+#printSheet .ps-kpi b { display: block; font-size: 18px; }
+#printSheet .ps-kpi span { color: #6b6b72; font-size: 10.5px; }
+#printSheet .ps-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px; }
+#printSheet h3 { font-size: 13px; margin: 0 0 6px; color: #4a3fb8; text-transform: uppercase; letter-spacing: .04em; }
+#printSheet .ps-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+#printSheet .ps-cal div { height: 34px; border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 15px; line-height: 1.05; background: #f1f1f4; color: #1d1d1f; position: relative; }
+#printSheet .ps-cal div small { font-size: 8.5px; color: #555; position: absolute; top: 1px; left: 3px; }
+#printSheet .ps-cal div.wd { background: none; height: 14px; font-size: 9.5px; color: #8a8a90; }
+#printSheet .ps-cal div.blank { background: none; }
+#printSheet .ps-bar { display: flex; align-items: center; gap: 6px; margin: 3px 0; font-size: 11.5px; }
+#printSheet .ps-bar i { height: 9px; border-radius: 4px; background: #8b7cf6; display: inline-block; }
+#printSheet .ps-bar em { font-style: normal; width: 128px; flex: none; }
+#printSheet .ps-day { border-left: 3px solid #2f9e5b; padding: 3px 8px; margin: 5px 0; }
+#printSheet .ps-day.bad { border-color: #d4554e; }
+#printSheet .ps-day b { font-size: 12px; }
+#printSheet .ps-day div { color: #333; font-size: 11px; }
+#printSheet ul { margin: 0; padding-left: 16px; }
+#printSheet li { margin: 2px 0; }
+#printSheet .ps-foot { color: #9a9aa0; font-size: 9.5px; margin-top: 8px; border-top: 1px solid #e3e3e8; padding-top: 5px; }
+
 </style>
 </head>
 <body>
@@ -196,14 +255,27 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
     <div class="insight" id="iHeat"></div>
   </section>
 
+  <section class="card" id="compare">
+    <h2>⚖️ Сравнение двух периодов</h2>
+    <p class="sub">Например, ноябрь прошлого года против этого. Цифры рядом и разница. Фильтры сверху здесь не действуют.</p>
+    <div class="cmpctl">
+      <span class="seg" id="cmpPre"></span>
+      <span class="f"><select id="cmpA"></select> против <select id="cmpB"></select></span>
+    </div>
+    <div class="cmpwrap"><table class="cmp" id="cmpT"></table></div>
+    <div class="insight" id="iCmp"></div>
+  </section>
+
   <section class="card" id="calendar">
     <h2>Календарь дней</h2>
     <p class="sub" id="calSub">Наведи на день — увидишь запись. Нажми — откроется целиком ниже. Точка в углу — есть текст.</p>
+    <div class="calnav" id="calNav"><button class="btn" id="calPrev" aria-label="Предыдущий месяц">◀</button><div style="text-align:center"><b id="calName"></b><div class="cnt" id="calCnt"></div></div><button class="btn" id="calNext" aria-label="Следующий месяц">▶</button></div>
     <div class="legend">
       <span><i style="background:var(--ok)"></i>7–10</span><span><i style="background:var(--warn)"></i>4–6</span><span><i style="background:var(--bad)"></i>1–3</span>
       <span><i style="background:var(--panel2);outline:1px solid var(--line)"></i>только настроение</span><span><i style="background:var(--empty)"></i>нет записи</span>
     </div>
     <div class="months" id="cal"></div>
+    <div class="calfoot"><span class="f">🖨️ Итог месяца одной страницей: <select id="pMonth"></select></span><button class="btn" id="bPrint">Сохранить PDF / распечатать</button></div>
   </section>
 
   <section class="card" id="detail"></section>
@@ -246,16 +318,17 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
   </section>
 
   <section class="card help pub hide" id="about">
-    <h2>🔒 Где хранятся записи</h2>
-    <p>Только в этом браузере на этом устройстве. Сайт ничего никуда не отправляет: нет ни аккаунтов, ни сервера.</p>
-    <p><b>Важно:</b> если очистить данные браузера («история, cookies и данные сайтов»), записи сотрутся. Поэтому раз в пару недель жми <b>💾 Сохранить копию</b> — скачается файл. Его же можно загрузить на другом устройстве через <b>📂 Загрузить копию</b>, чтобы перенести дневник, например, с компьютера на телефон.</p>
-    <p>На телефоне удобно добавить страницу на главный экран (в меню браузера — «Добавить на главный экран»): откроется как приложение и работает без интернета.</p>
+    <h2>🛡️ Защита записей</h2>
+    <p>Записи живут в этом браузере. Если очистить данные браузера — они сотрутся. Включи автосохранение: копия будет обновляться сама после каждой записи.</p>
+    <div class="prot" id="prot"></div>
+    <p class="sub" style="margin-top:8px">На телефоне удобно добавить страницу на главный экран (меню браузера → «Добавить на главный экран»): откроется как приложение и работает без интернета.</p>
   </section>
 
   <p class="foot" id="foot"></p>
 </div>
 <div id="tip"></div>
 <div class="toast" id="toast"></div>
+<div id="printSheet"></div>
 
 <dialog id="ed"><form class="ed" method="dialog" id="edForm" onsubmit="return false">
   <h2 id="edTitle">Запись дня</h2>
@@ -352,6 +425,7 @@ function setDays(raw) {
   else if (F.quick) setQuick(F.quick, true);
   else { F.from = clampYm(F.from || allMonths[0]); F.to = clampYm(F.to || allMonths[allMonths.length - 1]); fFrom.value = F.from; fTo.value = F.to; }
   renderOnThisDay();
+  setupCompare(); setupPrint();
   render();
 }
 const manual = () => { F.range = null; F.quick = null; markQuick(); };
@@ -409,7 +483,7 @@ function simpleTip(ev, lines) {
 // ---------- карточка дня ----------
 let selDate = null;
 function openDay(d, list) {
-  selDate = d.date; hideTip();
+  selDate = d.date; hideTip(); CAL.follow = true;
   const box = document.getElementById('detail'); box.replaceChildren(); box.style.display = 'block';
   const head = document.createElement('div'); head.className = 'dh';
   const t = document.createElement('div'); t.className = 'dt'; t.textContent = `${d.emoji || ''} ${fdate(d.t)}${d.rate != null ? ' — оценка ' + d.rate + '/10' : ''}`;
@@ -435,19 +509,48 @@ function openDay(d, list) {
 }
 
 // ---------- календарь ----------
+const CAL = { ym: null, follow: false };
+const isNarrow = () => window.innerWidth < 700;
+(function swipe() {
+  const el = document.getElementById('cal'); let x0 = null, y0 = null;
+  el.addEventListener('touchstart', (e) => { if (!el.classList.contains('one')) return; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  el.addEventListener('touchend', (e) => {
+    if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { const b = dx < 0 ? calNext : calPrev; if (!b.disabled) b.click(); }
+  }, { passive: true });
+})();
 function renderCalendar() {
   const cal = document.getElementById('cal'); cal.replaceChildren();
   const list = DAYS.filter(match);
   const by = new Map(DAYS.map((d) => [d.date, d]));
   const months = allMonths.length ? d3.utcMonths(new Date(F.from + '-01T00:00:00Z'), d3.utcMonth.offset(new Date(F.to + '-01T00:00:00Z'), 1)) : [];
-  const W = cal.clientWidth || 800;
-  const c = Math.max(22, Math.min(32, Math.floor((Math.min(W, 280) - 18) / 7)));
-  cal.style.setProperty('--c', c + 'px');
   const key = d3.utcFormat('%Y-%m-%d');
-  months.forEach((m) => {
+  // какие месяцы показываем (совсем пустые пропускаем, если месяцев много)
+  const shown = months.filter((m) => { const ym = key(m).slice(0, 7); return DAYS.some((d) => d.date.startsWith(ym)) || months.length <= 3 || (PUBLIC && ym === TODAY_YM); });
+  const one = isNarrow() && shown.length > 0;
+  cal.classList.toggle('one', one);
+  document.getElementById('calNav').style.display = one ? 'flex' : 'none';
+  let toDraw = shown;
+  if (one) {
+    const yms = shown.map((m) => key(m).slice(0, 7));
+    if (selDate && yms.includes(selDate.slice(0, 7)) && CAL.follow) CAL.ym = selDate.slice(0, 7);
+    CAL.follow = false;
+    if (!yms.includes(CAL.ym)) CAL.ym = yms.includes(TODAY_YM) ? TODAY_YM : yms[yms.length - 1];
+    const i = yms.indexOf(CAL.ym);
+    toDraw = [shown[i]];
+    calName.textContent = monthName(CAL.ym);
+    if ([...pMonth.options].some((o) => o.value === CAL.ym)) pMonth.value = CAL.ym;
+    const nIn = DAYS.filter((d) => d.date.startsWith(CAL.ym)).length;
+    calCnt.textContent = `${i + 1} из ${yms.length} · ${nIn ? dn(nIn) + ' в записи' : 'записей нет'}`;
+    calPrev.disabled = i <= 0; calNext.disabled = i >= yms.length - 1;
+    calPrev.onclick = () => { CAL.ym = yms[Math.max(0, i - 1)]; renderCalendar(); };
+    calNext.onclick = () => { CAL.ym = yms[Math.min(yms.length - 1, i + 1)]; renderCalendar(); };
+  }
+  const W = cal.clientWidth || 800;
+  const c = one ? Math.max(34, Math.min(56, Math.floor((W - 6 * 5) / 7))) : Math.max(22, Math.min(32, Math.floor((Math.min(W, 280) - 18) / 7)));
+  cal.style.setProperty('--c', c + 'px');
+  toDraw.forEach((m) => {
     const ym = key(m).slice(0, 7);
-    const hasAny = DAYS.some((d) => d.date.startsWith(ym));
-    if (!hasAny && months.length > 3 && !(PUBLIC && ym === TODAY_YM)) return; // совсем пустые месяцы не рисуем
     const box = document.createElement('div');
     const n = document.createElement('div'); n.className = 'mname'; n.textContent = monthName(ym); box.append(n);
     const g = document.createElement('div'); g.className = 'grid';
@@ -939,6 +1042,179 @@ function renderHeat(list) {
   putInsight('iHeat', L, yd.length >= 3 ? 'Серые пробелы — дни без записи. Даже одна оценка без текста делает картину года честнее.' : null);
 }
 
+
+// ---------- ⚖️ сравнение двух периодов ----------
+const CMP = { a: null, b: null, pre: null };
+const perName = (v) => (v[0] === 'y' ? v.slice(1) + ' год' : monthName(v));
+const perDays = (v) => DAYS.filter((d) => (v[0] === 'y' ? d.date.startsWith(v.slice(1)) : d.date.startsWith(v)));
+function perLen(v) { // сколько дней периода уже прошло
+  const [s, e] = v[0] === 'y' ? [v.slice(1) + '-01-01', v.slice(1) + '-12-31'] : [v + '-01', addDaysIso(d3.utcFormat('%Y-%m-%d')(d3.utcMonth.offset(new Date(v + '-01T00:00:00Z'), 1)), -1)];
+  const end = e < TODAY ? e : TODAY; if (end < s) return 0;
+  return Math.round((new Date(end + 'T00:00:00Z') - new Date(s + 'T00:00:00Z')) / 864e5) + 1;
+}
+const prevYm = (ym, k) => d3.utcFormat('%Y-%m')(d3.utcMonth.offset(new Date(ym + '-01T00:00:00Z'), -k));
+function cmpPresets() {
+  const ms = new Set(DAYS.map((d) => d.date.slice(0, 7))); const ys = dataYears(); const P = [];
+  const last = DAYS.length ? DAYS[DAYS.length - 1].date.slice(0, 7) : TODAY_YM;
+  const cur = ms.has(TODAY_YM) ? TODAY_YM : last;
+  const mn = (ym) => MN[+ym.slice(5) - 1].toLowerCase();
+  const mnD = (ym) => ['январю', 'февралю', 'марту', 'апрелю', 'маю', 'июню', 'июлю', 'августу', 'сентябрю', 'октябрю', 'ноябрю', 'декабрю'][+ym.slice(5) - 1];
+  if (ms.has(prevYm(cur, 12))) P.push(['yoy', `${mn(cur)} ${cur.slice(0, 4)} к ${mnD(cur)} ${prevYm(cur, 12).slice(0, 4)}`, prevYm(cur, 12), cur]);
+  if (ms.has(prevYm(cur, 1))) P.push(['mom', `${mn(cur)} к ${mnD(prevYm(cur, 1))}`, prevYm(cur, 1), cur]);
+  if (ys.length >= 2) P.push(['yy', `${ys[ys.length - 1]} к ${ys[ys.length - 2]}`, 'y' + ys[ys.length - 2], 'y' + ys[ys.length - 1]]);
+  return P;
+}
+function setupCompare() {
+  const ms = [...new Set(DAYS.map((d) => d.date.slice(0, 7)))].sort().reverse();
+  const opts = dataYears().slice().reverse().map((y) => ['y' + y, y + ' год']).concat(ms.map((m) => [m, monthName(m)]));
+  const P = cmpPresets();
+  const valid = (v) => opts.some(([o]) => o === v);
+  if (!valid(CMP.a) || !valid(CMP.b)) { const p0 = P[0]; if (p0) { CMP.a = p0[2]; CMP.b = p0[3]; CMP.pre = p0[0]; } else { CMP.a = opts[1] ? opts[1][0] : opts[0]?.[0]; CMP.b = opts[0]?.[0]; CMP.pre = null; } }
+  fill(cmpA, opts, CMP.a); fill(cmpB, opts, CMP.b);
+  cmpA.onchange = () => { CMP.a = cmpA.value; CMP.pre = null; renderCompare(); };
+  cmpB.onchange = () => { CMP.b = cmpB.value; CMP.pre = null; renderCompare(); };
+  cmpPre.replaceChildren(...P.map(([k, t, a, b]) => { const x = document.createElement('button'); x.textContent = t; x.dataset.k = k; x.onclick = () => { Object.assign(CMP, { a, b, pre: k }); cmpA.value = a; cmpB.value = b; renderCompare(); }; return x; }));
+  document.getElementById('compare').classList.toggle('hide', opts.length < 2);
+}
+function cmpStats(v) {
+  const L = perDays(v), R = L.filter((d) => d.rate != null), T = L.filter((d) => d.text);
+  const moods = d3.rollups(L.filter((d) => d.mood), (x) => x.length, (d) => d.mood).sort((a, b) => b[1] - a[1]);
+  const th = themeRows(L).rows.sort((a, b) => b.n - a.n);
+  const best = R.slice().sort((a, b) => b.rate - a.rate || d3.ascending(a.date, b.date))[0];
+  return { n: L.length, len: perLen(v), text: T.length, avg: mean(R.map((d) => d.rate)), good: R.length ? R.filter((d) => d.rate >= 7).length / R.length : null, bad: R.length ? R.filter((d) => d.rate <= 3).length / R.length : null,
+    top: R.filter((d) => d.rate >= 9).length, sport: mean(L.map((d) => d.sport)), study: mean(L.map((d) => d.study)), pos: L.filter((d) => d.mood).length ? L.filter((d) => POS_MOODS.has(d.mood)).length / L.filter((d) => d.mood).length : null,
+    mood: moods[0] ? MOOD_EMOJI[moods[0][0]] + ' ' + moodName(moods[0][0]).toLowerCase() : '—', theme: th[0] ? th[0].name : '—', best: best ? `${fdate(best.t)} · ${best.rate}` : '—', rated: R.length };
+}
+function renderCompare() {
+  const t = document.getElementById('cmpT'); t.replaceChildren();
+  cmpPre.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x.dataset.k === CMP.pre));
+  if (!CMP.a || !CMP.b) return;
+  const A = cmpStats(CMP.a), B = cmpStats(CMP.b);
+  const P = (x) => (x == null ? '—' : Math.round(x * 100) + '%');
+  const rows = [
+    ['Дней в записи', A.n, B.n, (x, s) => `${x} из ${s.len}`, 1, 0],
+    ['Из них с текстом', A.text, B.text, (x) => x, 1, 0],
+    ['Средняя оценка', A.avg, B.avg, (x) => (x == null ? '—' : f1(x)), 1, 1],
+    ['Хорошие дни (7+)', A.good, B.good, P, 1, 2],
+    ['Тяжёлые дни (1–3)', A.bad, B.bad, P, -1, 2],
+    ['Дней на 9–10', A.top, B.top, (x) => x, 1, 0],
+    ['Позитивное настроение', A.pos, B.pos, P, 1, 2],
+    ['Спорт, в среднем из 5', A.sport, B.sport, (x) => (x == null ? '—' : f1(x)), 1, 1],
+    ['Учёба, в среднем из 5', A.study, B.study, (x) => (x == null ? '—' : f1(x)), 1, 1],
+    ['Частое настроение', A.mood, B.mood, (x) => x, 0],
+    ['Главная тема', A.theme, B.theme, (x) => x, 0],
+    ['Лучший день', A.best, B.best, (x) => x, 0],
+  ];
+  const head = document.createElement('thead'); head.innerHTML = '<tr><th></th><th></th><th></th><th>Разница</th></tr>';
+  head.querySelectorAll('th')[1].textContent = perName(CMP.a); head.querySelectorAll('th')[2].textContent = perName(CMP.b);
+  const body = document.createElement('tbody');
+  rows.forEach(([name, a, b, fmt, dir, kind]) => {
+    const tr = document.createElement('tr');
+    const td = (txt, cls) => { const c = document.createElement('td'); c.textContent = txt; if (cls) c.className = cls; tr.append(c); };
+    td(name); td(fmt(a, A)); td(fmt(b, B));
+    if (!dir || a == null || b == null || typeof a !== 'number') { td(''); }
+    else {
+      const dlt = b - a; const eps = kind === 2 ? 0.005 : kind === 1 ? 0.05 : 0.5;
+      const txt = Math.abs(dlt) < eps ? '≈ так же' : (dlt > 0 ? '▲ ' : '▼ ') + (kind === 2 ? Math.round(Math.abs(dlt) * 100) + ' п.п.' : kind === 1 ? f1(Math.abs(dlt)) : Math.abs(dlt));
+      td(txt, Math.abs(dlt) < eps ? 'same' : dlt * dir > 0 ? 'up' : 'down');
+    }
+    body.append(tr);
+  });
+  t.append(head, body);
+  const L = [];
+  const nA = perName(CMP.a).toLowerCase(), nB = perName(CMP.b).toLowerCase();
+  if (A.avg != null && B.avg != null) { const d = B.avg - A.avg; L.push(Math.abs(d) < 0.3 ? `По оценке ${nB} примерно как ${nA} (${f1(A.avg)} и ${f1(B.avg)}).` : `${perName(CMP.b)} ${d > 0 ? 'лучше' : 'тяжелее'} по оценке: ${f1(B.avg)} против ${f1(A.avg)} (${signed(d)}).`); }
+  if (A.len && B.len) { const ca = A.n / A.len, cb = B.n / B.len; if (Math.abs(cb - ca) >= 0.15) L.push(`Записывал${cb > ca ? ' чаще' : ' реже'}: ${pct(B.n, B.len)} дней против ${pct(A.n, A.len)}.`); }
+  if (A.sport != null && B.sport != null && Math.abs(B.sport - A.sport) >= 0.5) L.push(`Спорта ${B.sport > A.sport ? 'больше' : 'меньше'}: ${f1(B.sport)} против ${f1(A.sport)} из 5.`);
+  if (A.theme !== B.theme && A.theme !== '—' && B.theme !== '—') L.push(`Главная тема сменилась: было «${A.theme}», стало «${B.theme}».`);
+  if (A.rated < 5 || B.rated < 5) L.push('В одном из периодов меньше 5 оценённых дней — сравнение пока примерное.');
+  putInsight('iCmp', L, null);
+}
+
+
+// ---------- 🖨️ итог месяца одной страницей ----------
+function setupPrint() {
+  const ms = [...new Set(DAYS.map((d) => d.date.slice(0, 7)))].sort().reverse();
+  fill(pMonth, ms.map((m) => [m, monthName(m)]), ms.includes(CAL.ym) ? CAL.ym : ms[0]);
+  bPrint.disabled = !ms.length;
+  bPrint.onclick = () => printMonth(pMonth.value);
+}
+const PRINT_COL = d3.scaleLinear().domain([1, 3.5, 5.5, 7, 10]).range(['#e06a63', '#ea9356', '#e8c25a', '#9bd49e', '#46b071']).interpolate(d3.interpolateRgb).clamp(true);
+function printMonth(ym) {
+  const L = DAYS.filter((d) => d.date.startsWith(ym)); if (!L.length) return;
+  const R = L.filter((d) => d.rate != null);
+  const sh = document.getElementById('printSheet'); sh.replaceChildren();
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  const m0 = new Date(ym + '-01T00:00:00Z'), days = d3.utcDays(m0, d3.utcMonth.offset(m0, 1));
+  const passed = days.filter((t) => d3.utcFormat('%Y-%m-%d')(t) <= TODAY).length;
+  const emj = d3.rollups(L.map((d) => firstEmoji(d.emoji) || MOOD_EMOJI[d.mood]).filter(Boolean), (v) => v.length, (x) => x).sort((a, b) => b[1] - a[1]);
+  // шапка
+  const top = el('div', 'ps-top'); const tl = el('div');
+  tl.append(el('h1', null, monthName(ym)), el('div', 'ps-sub', `Итог месяца · ${PUBLIC ? 'Дневник дней' : 'Дневник «Жизнь»'}`));
+  top.append(tl, el('div', 'ps-big', emj[0] ? emj[0][0] : '📔')); sh.append(top);
+  // цифры
+  const best = R.slice().sort((a, b) => b.rate - a.rate || d3.ascending(a.date, b.date))[0];
+  const k = el('div', 'ps-kpis');
+  [[`${L.length} из ${passed}`, 'дней записано'], [f1(mean(R.map((d) => d.rate))), 'средняя оценка'], [R.length ? pct(R.filter((d) => d.rate >= 7).length, R.length) : '—', 'хороших дней (7+)'],
+   [best ? fdate(best.t).slice(0, 5) : '—', best ? `лучший день · ${best.rate}/10` : 'лучший день'], [f1(mean(L.map((d) => d.sport))), 'спорт, в среднем из 5']]
+    .forEach(([v, t]) => { const c = el('div', 'ps-kpi'); c.append(el('b', null, v), el('span', null, t)); k.append(c); });
+  sh.append(k);
+  // календарь + график
+  const r1 = el('div', 'ps-row');
+  const cb = el('div'); cb.append(el('h3', null, 'Календарь'));
+  const g = el('div', 'ps-cal'); ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'].forEach((w) => g.append(el('div', 'wd', w)));
+  for (let i = 0; i < (m0.getUTCDay() + 6) % 7; i++) g.append(el('div', 'blank'));
+  const by = new Map(L.map((d) => [d.date, d]));
+  days.forEach((t) => { const d = by.get(d3.utcFormat('%Y-%m-%d')(t)); const c = el('div'); c.append(el('small', null, t.getUTCDate())); if (d) { c.append(document.createTextNode(firstEmoji(d.emoji) || MOOD_EMOJI[d.mood] || '•')); if (d.rate != null) c.style.background = PRINT_COL(d.rate); else c.style.background = '#e6e3fb'; } g.append(c); });
+  cb.append(g); r1.append(cb);
+  const ch = el('div'); ch.append(el('h3', null, 'Оценка по дням'));
+  const Wc = 330, Hc = 150, mg = { l: 22, r: 6, t: 8, b: 18 };
+  const x = d3.scaleUtc().domain([m0, d3.utcMonth.offset(m0, 1)]).range([mg.l, Wc - mg.r]), y = d3.scaleLinear().domain([1, 10]).range([Hc - mg.b, mg.t]);
+  const svg = d3.select(ch).append('svg').attr('width', Wc).attr('height', Hc).style('font-size', '9px').style('font-family', 'inherit');
+  [1, 4, 7, 10].forEach((v) => { svg.append('line').attr('x1', mg.l).attr('x2', Wc - mg.r).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', '#e6e6ea'); svg.append('text').attr('x', 2).attr('y', y(v) + 3).attr('fill', '#999').text(v); });
+  [1, 8, 15, 22, 29].forEach((dd) => { if (dd <= days.length) svg.append('text').attr('x', x(new Date(Date.UTC(m0.getUTCFullYear(), m0.getUTCMonth(), dd)))).attr('y', Hc - 4).attr('fill', '#999').attr('text-anchor', 'middle').text(dd); });
+  const xr = (d) => x(new Date(d.t.getTime() + 432e5));
+  svg.append('path').datum(R).attr('fill', 'none').attr('stroke', '#8b7cf6').attr('stroke-width', 1.6).attr('d', d3.line().x(xr).y((d) => y(d.rate)));
+  svg.selectAll('circle').data(R).join('circle').attr('cx', xr).attr('cy', (d) => y(d.rate)).attr('r', 3).attr('fill', (d) => PRINT_COL(d.rate)).attr('stroke', '#fff');
+  // настроения
+  const moods = d3.rollups(L.filter((d) => d.mood), (v) => v.length, (d) => d.mood).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  if (moods.length) { ch.append(el('h3', null, 'Настроения')); const mx = moods[0][1]; moods.forEach(([m, n]) => { const b = el('div', 'ps-bar'); const i = el('i'); i.style.width = Math.max(4, (n / mx) * 140) + 'px'; b.append(el('em', null, MOOD_EMOJI[m] + ' ' + moodName(m)), i, el('span', null, n)); ch.append(b); }); }
+  r1.append(ch); sh.append(r1);
+  // темы + выводы
+  const r2 = el('div', 'ps-row');
+  const tb = el('div'); const th = themeRows(L).rows.sort((a, b) => b.n - a.n).slice(0, 6);
+  tb.append(el('h3', null, 'О чём писал'));
+  if (th.length) { const mx = th[0].n; th.forEach((r) => { const b = el('div', 'ps-bar'); const i = el('i'); i.style.width = Math.max(4, (r.n / mx) * 110) + 'px'; i.style.background = '#b9b0fb'; b.append(el('em', null, r.name), i, el('span', null, `${r.n} · ср. ${f1(r.a)}`)); tb.append(b); }); }
+  else tb.append(el('div', null, 'Текстов в этом месяце нет — только оценки.'));
+  const ib = el('div'); ib.append(el('h3', null, 'Что видно'));
+  const ul = el('ul'); const P = [];
+  const prev = DAYS.filter((d) => d.date.startsWith(prevYm(ym, 1)) && d.rate != null), ly = DAYS.filter((d) => d.date.startsWith(prevYm(ym, 12)) && d.rate != null);
+  const avg = mean(R.map((d) => d.rate));
+  if (avg != null) P.push(`Средняя оценка ${f1(avg)} — ${verdict(avg)}.`);
+  if (avg != null && prev.length >= 3) { const pa = d3.mean(prev, (d) => d.rate); P.push(`К прошлому месяцу: ${signed(avg - pa)} (было ${f1(pa)}).`); }
+  if (avg != null && ly.length >= 3) { const la = d3.mean(ly, (d) => d.rate); P.push(`К этому же месяцу год назад: ${signed(avg - la)} (было ${f1(la)}).`); }
+  let st = 0, bs = 0, pv = null; L.forEach((d) => { st = pv && addDaysIso(pv, 1) === d.date ? st + 1 : 1; bs = Math.max(bs, st); pv = d.date; });
+  if (bs >= 3) P.push(`Самая длинная серия записей — ${dn(bs)} подряд.`);
+  const sp = L.filter((d) => d.sport != null && d.rate != null); const hi = sp.filter((d) => d.sport >= 3), lo = sp.filter((d) => d.sport < 3);
+  if (hi.length >= 2 && lo.length >= 2) { const dd = d3.mean(hi, (d) => d.rate) - d3.mean(lo, (d) => d.rate); if (Math.abs(dd) >= 0.5) P.push(`В дни со спортом (3+) оценка ${dd > 0 ? 'выше' : 'ниже'} на ${f1(Math.abs(dd))}.`); }
+  if (!P.length) P.push('Пока мало оценок для выводов.');
+  P.forEach((t) => ul.append(el('li', null, t))); ib.append(ul);
+  r2.append(tb, ib); sh.append(r2);
+  // лучшие и тяжёлый день
+  const r3 = el('div', 'ps-row');
+  const snip = (d) => (d.text ? (d.text.length > 150 ? d.text.slice(0, 150).trimEnd() + '…' : d.text).replace(/\s+/g, ' ') : 'Без текста.');
+  const bb = el('div'); bb.append(el('h3', null, 'Лучшие дни'));
+  R.slice().sort((a, b) => b.rate - a.rate || (b.text ? 1 : 0) - (a.text ? 1 : 0)).slice(0, 3).forEach((d) => { const c = el('div', 'ps-day'); c.append(el('b', null, `${firstEmoji(d.emoji) || ''} ${fdate(d.t)} · ${d.rate}/10`), el('div', null, snip(d))); bb.append(c); });
+  const wb = el('div'); const worst = R.slice().sort((a, b) => a.rate - b.rate)[0];
+  if (worst && worst.rate <= 5 && R.length > 1) { wb.append(el('h3', null, 'Самый тяжёлый день')); const c = el('div', 'ps-day bad'); c.append(el('b', null, `${firstEmoji(worst.emoji) || ''} ${fdate(worst.t)} · ${worst.rate}/10`), el('div', null, snip(worst))); wb.append(c); }
+  r3.append(bb, wb); sh.append(r3);
+  sh.append(el('div', 'ps-foot', `Собрано ${fdate(new Date(TODAY + 'T00:00:00Z'))}. Это статистика по записям, а не диагноз.`));
+  document.body.classList.add('printing');
+  const done = () => { document.body.classList.remove('printing'); removeEventListener('afterprint', done); };
+  addEventListener('afterprint', done);
+  setTimeout(() => window.print(), 50);
+}
+
 // ---------- общий рендер ----------
 function render() {
   const list = DAYS.filter(match);
@@ -947,7 +1223,7 @@ function render() {
   document.getElementById('welcome').classList.toggle('hide', !empty);
   if (empty) { kpis.replaceChildren(); return; }
   renderKpis(list);
-  renderHeat(list); renderCalendar(); renderWeeks(list); renderMonths(list); renderSport(list); renderMoods(list); renderWeekday(list); renderThemes(list); renderWords(list); renderInsights(list);
+  renderHeat(list); renderCompare(); renderCalendar(); renderWeeks(list); renderMonths(list); renderSport(list); renderMoods(list); renderWeekday(list); renderThemes(list); renderWords(list); renderInsights(list);
 }
 let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(render, 150); });
 
@@ -985,21 +1261,21 @@ const ED = { date: null, rate: null, mood: null, emoji: '', sport: null, study: 
   edPhoto.onchange = async () => { const f = edPhoto.files[0]; edPhoto.value = ''; if (!f) return; try { edPhotoBtn.textContent = '⏳ Сжимаю…'; ED.photo = await shrinkPhoto(f); } catch (e) { toast('Не получилось открыть это фото'); } edPhotoBtn.textContent = '📷 Выбрать фото'; paintEd(); };
   edPhotoDel.onclick = () => { ED.photo = null; paintEd(); };
   edCancel.onclick = () => ed.close();
-  edDel.onclick = async () => { if (!ED.confirmDel) { ED.confirmDel = true; edDel.textContent = 'Точно удалить?'; return; } await DB.del(ED.orig); ed.close(); closeDetail(); toast('Запись удалена'); reload(); };
+  edDel.onclick = async () => { if (!ED.confirmDel) { ED.confirmDel = true; edDel.textContent = 'Точно удалить?'; return; } BK.gesture(); await markDeleted(ED.orig); await DB.del(ED.orig); ed.close(); closeDetail(); toast('Запись удалена'); await reload(); BK.changed(); };
   edForm.onsubmit = async (ev) => {
-    ev.preventDefault();
+    ev.preventDefault(); BK.gesture();
     const date = edDate.value;
     if (!date) { toast('Укажи дату'); return false; }
     if (date > TODAY) { toast('Будущий день записать нельзя 🙂'); return false; }
     const rec = clean({ date, rate: ED.rate, mood: ED.mood, emoji: ED.emoji, sport: ED.sport, study: ED.study, text: edText.value.trim(), photo: ED.photo, updated: new Date().toISOString() });
     if (rec.rate == null && !rec.mood && !rec.text && !rec.photo) { toast('Поставь хотя бы оценку или настроение'); return false; }
     try {
-      if (ED.orig && ED.orig !== date) await DB.del(ED.orig);
+      if (ED.orig && ED.orig !== date) { await markDeleted(ED.orig); await DB.del(ED.orig); }
       await DB.put(rec);
     } catch (e) { toast('Не сохранилось: в браузере закончилось место. Попробуй фото поменьше.'); return false; }
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
     ed.close(); toast('Сохранено ✓');
-    await reload();
+    await reload(); BK.changed();
     const d = DAYS.find((x) => x.date === date); if (d) openDay(d, DAYS);
     return false;
   };
@@ -1053,7 +1329,7 @@ async function exportCopy() {
   const blob = new Blob([JSON.stringify({ app: 'dnevnik-dnei', version: 1, exported: new Date().toISOString(), days }, null, 1)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `дневник-дней-копия-${TODAY}.json`;
   document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-  await DB.setMeta('lastBackup', new Date().toISOString());
+  BK.manual = new Date().toISOString(); await DB.setMeta('lastBackup', BK.manual);
   toast(`Копия скачана: ${dn(days.length)}`); renderBanners();
 }
 async function importCopy(file) {
@@ -1065,7 +1341,7 @@ async function importCopy(file) {
     if (!ok.length) throw new Error('empty');
     if (DEMO) exitDemo(true);
     const before = new Set((await DB.all()).map((d) => d.date));
-    await DB.putMany(ok);
+    await DB.putMany(ok); BK.changed();
     const added = ok.filter((d) => !before.has(d.date)).length;
     toast(`Загружено: ${dn(ok.length)} (новых ${added}, обновлено ${ok.length - added})`);
     await reload();
@@ -1078,12 +1354,170 @@ async function renderBanners() {
   if (!PUBLIC) return;
   const add = (cls, html, btns) => { const b = document.createElement('div'); b.className = 'banner ' + cls; const s = document.createElement('span'); s.innerHTML = html; b.append(s); if (btns) { const a = document.createElement('div'); a.className = 'actions'; btns.forEach(([t, fn, p]) => { const x = document.createElement('button'); x.className = 'btn' + (p ? ' primary' : ''); x.textContent = t; x.onclick = fn; a.append(x); }); b.append(a); } box.append(b); };
   if (DEMO) { add('info', '👀 <b>Это пример</b> с выдуманными днями — посмотреть, как всё выглядит. Твои записи не тронуты.', [['Выйти из примера', () => exitDemo(), true]]); return; }
+  await BK.load(); renderProt();
+  if (BK.drive.on && BK.driveNeed) add('warn', '☁️ <b>Google Диск ждёт подтверждения входа</b> — нажми, и всё сохранится и синхронизируется.', [['Продолжить', () => BK.driveConnect(false), true]]);
+  if (BK.file.h && BK.fileNeed) add('warn', '💻 <b>Автокопия в файл на паузе</b> — браузер просит разрешение ещё раз.', [['Разрешить', () => BK.fileAllow(), true]]);
   if (!DAYS.length) return;
-  const last = await DB.getMeta('lastBackup');
-  const firstUpd = DAYS.map((d) => d.updated).filter(Boolean).sort()[0];
-  const since = last ? (Date.now() - new Date(last)) / 864e5 : firstUpd ? (Date.now() - new Date(firstUpd)) / 864e5 : 0;
-  if (since >= 14) add('warn', `💾 ${last ? `Последняя копия — ${Math.floor(since)} дн. назад.` : 'Ты ещё ни разу не сохранял копию.'} Записи живут только в этом браузере: если его почистить — пропадут.`, [['Сохранить копию', exportCopy, true]]);
+  const autoOn = BK.drive.on || !!BK.file.h;
+  if (!autoOn) {
+    const last = BK.last();
+    const firstUpd = DAYS.map((d) => d.updated).filter(Boolean).sort()[0];
+    const since = last ? (Date.now() - new Date(last)) / 864e5 : firstUpd ? (Date.now() - new Date(firstUpd)) / 864e5 : 0;
+    if (since >= 2 || DAYS.length >= 3) add('warn', `🛡️ <b>Записи пока не защищены.</b> ${last ? `Последняя копия — ${Math.floor(since)} дн. назад.` : 'Копий ещё нет.'} Если очистить браузер — всё пропадёт. Включи автосохранение: копия будет обновляться сама.`, [['Включить автосохранение', () => document.getElementById('about').scrollIntoView({ behavior: 'smooth' }), true], ['Скачать копию', exportCopy]]);
+  }
   if (!DAYS.some((d) => d.date === TODAY)) add('info', '✍️ Сегодня ещё не записан.', [['Записать сегодня', () => openEditor(TODAY), true]]);
+}
+
+// ======================================================================
+// 🛡️ АВТОСОХРАНЕНИЕ: Google Диск (с синхронизацией) и файл на компьютере
+// ======================================================================
+const GCID = '/*__GCID__*/'.startsWith('/*') ? '' : '/*__GCID__*/';
+const GFILE = 'dnevnik-dnei-backup.json';
+async function markDeleted(date) { const del = (await DB.getMeta('deleted')) || {}; del[date] = new Date().toISOString(); await DB.setMeta('deleted', del); }
+const whenTxt = (iso) => { if (!iso) return 'ещё не было'; const d = new Date(iso); const today = isoLocal(new Date()) === isoLocal(d); return (today ? 'сегодня' : isoLocal(d).split('-').reverse().join('.')) + ' в ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+async function snapshot() { return { app: 'dnevnik-dnei', version: 1, exported: new Date().toISOString(), days: (await DB.all()).map(clean), deleted: (await DB.getMeta('deleted')) || {} }; }
+// слияние: побеждает более свежая правка; удаление побеждает, если оно свежее записи
+async function mergeRemote(remote) {
+  if (!remote || !Array.isArray(remote.days)) return false;
+  const local = new Map((await DB.all()).map((d) => [d.date, d]));
+  const del = (await DB.getMeta('deleted')) || {};
+  const rdel = remote.deleted || {};
+  let changed = false; const put = [], drop = [];
+  for (const [date, at] of Object.entries(rdel)) { if (!del[date] || del[date] < at) del[date] = at; }
+  for (const r of remote.days) {
+    if (!r || !/^\d{4}-\d{2}-\d{2}$/.test(r.date)) continue;
+    const l = local.get(r.date), ru = r.updated || '', lu = l ? l.updated || '' : '';
+    if (del[r.date] && del[r.date] >= ru && !(l && lu > del[r.date])) continue;
+    if (!l || ru > lu) { put.push(clean(r)); changed = true; }
+  }
+  for (const [date, l] of local) if (del[date] && del[date] >= (l.updated || '') && !put.some((p) => p.date === date)) { drop.push(date); changed = true; }
+  const cutoff = new Date(Date.now() - 400 * 864e5).toISOString(); for (const k of Object.keys(del)) if (del[k] < cutoff) delete del[k];
+  if (put.length) await DB.putMany(put);
+  for (const d of drop) await DB.del(d);
+  await DB.setMeta('deleted', del);
+  return changed;
+}
+const BK = {
+  drive: { on: false }, file: { h: null }, driveNeed: false, fileNeed: false, busy: false, timer: null, tc: null, tok: null, waiters: [], loaded: false,
+  last() { return [this.manual, this.drive.last, this.file.last].filter(Boolean).sort().pop() || null; },
+  async load() {
+    if (this.loaded) return; this.loaded = true;
+    this.manual = await DB.getMeta('lastBackup');
+    this.drive = (await DB.getMeta('drive')) || { on: false };
+    const fh = await DB.getMeta('fileH'); this.file = { h: fh || null, last: await DB.getMeta('fileLast'), name: fh ? fh.name : null };
+    const t = await DB.getMeta('gtok'); if (t && t.exp > Date.now() + 60e3) this.tok = t;
+    if (GCID) this.loadGis();
+    if (this.drive.on && !this.tok) this.driveNeed = true;
+    if (this.file.h) { try { this.fileNeed = (await this.file.h.queryPermission({ mode: 'readwrite' })) !== 'granted'; } catch (e) { this.fileNeed = true; } }
+    if (this.drive.on && this.tok) this.run('open');
+  },
+  // вызывать в самом начале обработчика клика (браузер разрешает окна/разрешения только сразу после нажатия)
+  gesture() {
+    if (this.file.h && this.fileNeed) this.file.h.requestPermission({ mode: 'readwrite' }).then((p) => { this.fileNeed = p !== 'granted'; }).catch(() => {});
+    if (this.drive.on && !this.tokValid() && this.tc) this.askToken('');
+  },
+  changed() { clearTimeout(this.timer); this.timer = setTimeout(() => this.run('change'), 700); },
+  async run(why) {
+    if (DEMO || this.busy) { if (this.busy) this.again = true; return; }
+    this.busy = true; renderProt('⏳ сохраняю…');
+    try {
+      if (this.file.h && !this.fileNeed) await this.fileWrite();
+      if (this.drive.on) await this.driveSync();
+    } finally { this.busy = false; renderProt(); renderBanners(); if (this.again) { this.again = false; this.changed(); } }
+  },
+  // ---- файл на компьютере (Chrome / Edge) ----
+  fileSupported: () => typeof window.showSaveFilePicker === 'function',
+  async filePick() {
+    try {
+      const h = await window.showSaveFilePicker({ suggestedName: 'дневник-дней-автокопия.json', types: [{ description: 'Копия дневника', accept: { 'application/json': ['.json'] } }] });
+      this.file = { h, name: h.name }; this.fileNeed = false; await DB.setMeta('fileH', h);
+      await this.fileWrite(); toast('Автокопия включена: ' + h.name); renderBanners();
+    } catch (e) { if (e && e.name !== 'AbortError') toast('Не получилось выбрать файл'); }
+  },
+  async fileAllow() { try { const p = await this.file.h.requestPermission({ mode: 'readwrite' }); this.fileNeed = p !== 'granted'; if (!this.fileNeed) await this.run('allow'); } catch (e) { this.fileNeed = true; } renderBanners(); },
+  async fileWrite() {
+    try {
+      if ((await this.file.h.queryPermission({ mode: 'readwrite' })) !== 'granted') { this.fileNeed = true; return; }
+      const w = await this.file.h.createWritable(); await w.write(JSON.stringify(await snapshot(), null, 1)); await w.close();
+      this.file.last = new Date().toISOString(); await DB.setMeta('fileLast', this.file.last); this.fileErr = null;
+    } catch (e) { this.fileErr = 'файл недоступен — выбери заново'; }
+  },
+  async fileOff() { this.file = { h: null }; this.fileNeed = false; await DB.setMeta('fileH', null); renderBanners(); },
+  // ---- Google Диск ----
+  loadGis() {
+    if (!GCID || this.gisP) return this.gisP;
+    this.gisP = new Promise((ok) => {
+      const sc = document.createElement('script'); sc.src = 'https://accounts.google.com/gsi/client'; sc.async = true;
+      sc.onload = () => { this.tc = google.accounts.oauth2.initTokenClient({ client_id: GCID, scope: 'https://www.googleapis.com/auth/drive.file', callback: (r) => this.onToken(r), error_callback: (e) => this.onToken({ error: e && e.type }) }); ok(); renderProt(); };
+      sc.onerror = () => ok(); document.head.append(sc);
+    });
+    return this.gisP;
+  },
+  tokValid() { return this.tok && this.tok.exp > Date.now() + 60e3; },
+  askToken(prompt) {
+    return new Promise((ok) => { this.waiters.push(ok); if (this.waiters.length > 1) return; const o = { prompt }; if (this.drive.email) o.hint = this.drive.email; this.tc.requestAccessToken(o); });
+  },
+  async onToken(r) {
+    const ws = this.waiters; this.waiters = [];
+    if (r && r.access_token) { this.tok = { t: r.access_token, exp: Date.now() + (r.expires_in || 3600) * 1000 }; await DB.setMeta('gtok', this.tok); this.driveNeed = false; ws.forEach((f) => f(true)); if (this.drive.on) this.changed(); }
+    else { ws.forEach((f) => f(false)); }
+  },
+  async driveConnect(first) {
+    if (!this.tc) { toast('Google ещё загружается, нажми через секунду'); this.loadGis(); return; }
+    const ok = !first && this.tokValid() ? true : await this.askToken(first ? 'consent' : '');
+    if (!ok) { toast('Вход в Google отменён'); return; }
+    if (first) {
+      this.drive = { on: true }; await DB.setMeta('drive', this.drive);
+      try { const a = await this.api('https://www.googleapis.com/drive/v3/about?fields=user(emailAddress)'); this.drive.email = (await a.json()).user.emailAddress; await DB.setMeta('drive', this.drive); } catch (e) {}
+    }
+    await this.run('connect');
+    if (first) toast(this.drive.err ? 'Подключено, но сохранить не вышло: ' + this.drive.err : '☁️ Google Диск подключён — копия сохранена');
+  },
+  async api(url, opt = {}) {
+    const r = await fetch(url, { ...opt, headers: { ...(opt.headers || {}), Authorization: 'Bearer ' + this.tok.t } });
+    if (r.status === 401) { this.tok = null; await DB.setMeta('gtok', null); this.driveNeed = true; throw new Error('auth'); }
+    if (!r.ok) throw new Error('http ' + r.status);
+    return r;
+  },
+  async driveSync() {
+    if (!this.tokValid()) { this.driveNeed = true; return; }
+    try {
+      let id = this.drive.fileId;
+      if (!id) { const q = encodeURIComponent(`name='${GFILE}' and trashed=false`); const j = await (await this.api(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,modifiedTime)&orderBy=modifiedTime desc`)).json(); id = j.files && j.files[0] && j.files[0].id; }
+      if (id) {
+        let remote = null;
+        try { remote = await (await this.api(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`)).json(); } catch (e) { if (String(e.message).includes('404')) id = null; else throw e; }
+        if (remote && (await mergeRemote(remote))) { await reload(); toast('☁️ Подтянул записи с Google Диска'); }
+      }
+      const body = JSON.stringify(await snapshot());
+      if (id) await this.api(`https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body });
+      else {
+        const fd = new FormData();
+        fd.append('metadata', new Blob([JSON.stringify({ name: GFILE, mimeType: 'application/json', description: 'Копия «Дневника дней». Не удаляй — из неё восстанавливаются записи.' })], { type: 'application/json' }));
+        fd.append('file', new Blob([body], { type: 'application/json' }));
+        id = (await (await this.api('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', { method: 'POST', body: fd })).json()).id;
+      }
+      Object.assign(this.drive, { fileId: id, last: new Date().toISOString(), err: null }); await DB.setMeta('drive', this.drive);
+    } catch (e) { this.drive.err = e.message === 'auth' ? null : 'нет связи с Google Диском, попробую позже'; }
+  },
+  async driveOff() {
+    try { if (this.tok) google.accounts.oauth2.revoke(this.tok.t, () => {}); } catch (e) {}
+    this.drive = { on: false }; this.tok = null; this.driveNeed = false; await DB.setMeta('drive', this.drive); await DB.setMeta('gtok', null); renderBanners(); toast('Google Диск отключён. Файл-копия на Диске осталась.');
+  },
+};
+function renderProt(busyTxt) {
+  const box = document.getElementById('prot'); if (!box || !PUBLIC) return; box.replaceChildren();
+  const row = (cls, title, sub, btns) => { const r = document.createElement('div'); r.className = 'prow ' + cls; const l = document.createElement('div'); const t = document.createElement('div'); t.className = 'pt'; t.textContent = title; const s2 = document.createElement('div'); s2.className = 'ps'; s2.textContent = sub; l.append(t, s2); r.append(l); const a = document.createElement('div'); a.className = 'actions'; btns.forEach(([tx, fn, p]) => { const b = document.createElement('button'); b.className = 'btn' + (p ? ' primary' : ''); b.textContent = tx; b.onclick = fn; a.append(b); }); r.append(a); box.append(r); };
+  if (GCID) {
+    if (!BK.drive.on) row('', '☁️ Google Диск — самый надёжный вариант', 'Копия хранится в твоём Google-аккаунте и обновляется после каждой записи. Заодно переносит дневник между телефоном и компьютером: подключи один и тот же аккаунт на обоих. Приложение видит только свой файл, остальной Диск — нет.', [['Подключить', () => BK.driveConnect(true), true]]);
+    else row(BK.driveNeed ? 'need' : 'on', `☁️ Google Диск подключён${BK.drive.email ? ' · ' + BK.drive.email : ''}`, busyTxt || (BK.driveNeed ? 'Нужно нажать «Продолжить» — Google просит подтвердить вход.' : BK.drive.err ? BK.drive.err : `Сохраняется автоматически · последний раз: ${whenTxt(BK.drive.last)}`),
+      [[BK.driveNeed ? 'Продолжить' : 'Синхронизировать', () => BK.driveConnect(false), BK.driveNeed], ['Отключить', () => BK.driveOff()]]);
+  }
+  if (BK.fileSupported()) {
+    if (!BK.file.h) row('', '💻 Автокопия в файл на компьютере', 'Выбери, куда класть файл — лучше в папку OneDrive, Google Drive или Dropbox, тогда копия ещё и улетит в облако. Обновляется после каждой записи.', [['Выбрать файл', () => BK.filePick(), !GCID]]);
+    else row(BK.fileNeed || BK.fileErr ? 'need' : 'on', `💻 Автокопия в файл «${BK.file.h.name}»`, BK.fileErr || (BK.fileNeed ? 'Браузер просит разрешение ещё раз — нажми «Разрешить».' : `Сохраняется автоматически · последний раз: ${whenTxt(BK.file.last)}`), [[BK.fileNeed ? 'Разрешить' : 'Сменить файл', () => (BK.fileNeed ? BK.fileAllow() : BK.filePick()), BK.fileNeed], ['Отключить', () => BK.fileOff()]]);
+  }
+  row(BK.manual ? 'on' : '', '💾 Копия вручную', `Скачать файл со всеми записями или загрузить его на другом устройстве. Последняя ручная копия: ${whenTxt(BK.manual)}.`, [['Скачать копию', exportCopy], ['Загрузить копию', () => fileImport.click()]]);
 }
 
 // ---------- пример с выдуманными днями ----------
