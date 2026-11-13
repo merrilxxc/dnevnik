@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,19 +12,24 @@
 <meta name="description" content="Личный дневник дней: оценка, настроение, календарь и тепловая карта года. Данные хранятся только в твоём браузере.">
 
 <style>
-:root {
+:root, [data-theme=dark] {
   --bg: #1e1e1e; --panel: #262626; --panel2: #2e2e2e; --line: #3a3a3a; --fg: #e6e6e6; --muted: #9a9a9a;
-  --ok: #3fa66b; --bad: #d4554e; --accent: #8b7cf6; --empty: #2c2c2c;
-  --warn: #d9a530;
+  --ok: #3fa66b; --bad: #d4554e; --accent: #8b7cf6; --empty: #2c2c2c; --warn: #d9a530; --head: #2b2840;
 }
-@media (prefers-color-scheme: light) {
-  :root { --bg: #fafafa; --panel: #ffffff; --panel2: #f2f2f2; --line: #e2e2e2; --fg: #1f1f1f; --muted: #6b6b6b; --empty: #ececec; --accent: #6d5ce8; }
-}
+[data-theme=light] { --bg: #f4f4f6; --panel: #ffffff; --panel2: #f2f2f4; --line: #e2e2e6; --fg: #1f1f1f; --muted: #6b6b6b; --empty: #ececee; --accent: #6d5ce8; --head: #f0eefc; }
+[data-theme=night] { --bg: #0b0f1a; --panel: #121827; --panel2: #1a2236; --line: #283350; --fg: #e3e8f4; --muted: #8d97b0; --empty: #182034; --accent: #6f9bff; --head: #16213a; }
+[data-theme=warm] { --bg: #f5ede0; --panel: #fffaf2; --panel2: #f2e8d8; --line: #e2d3bb; --fg: #2b2418; --muted: #7a6a52; --empty: #ebe0cc; --accent: #b4632f; --head: #f6e7d3; --ok: #3d9a5f; --warn: #cf9a2a; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 18px 16px 40px; display: flex; flex-direction: column; gap: 16px; }
 h1 { font-size: 24px; margin: 0; font-weight: 600; }
 h2 { font-size: 16px; margin: 0 0 4px; font-weight: 600; }
+/* --- заголовки блоков: полоса слева + плашка + разделитель --- */
+.card > h2 { font-size: 17px; font-weight: 700; line-height: 1.3; margin: -14px -16px 12px; padding: 11px 16px 10px 13px; border-left: 4px solid var(--accent); background: var(--head); border-bottom: 1px solid var(--line); border-radius: 12px 12px 0 0; }
+.card.welcome > h2 { margin: 8px 0; padding: 0; border: 0; background: none; font-size: 20px; border-radius: 0; }
+.settings { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.settings select { padding: 4px 6px; font-size: 12px; }
+.seg.small button { padding: 4px 8px; font-size: 12px; font-weight: 600; }
 .sub { color: var(--muted); font-size: 12px; margin: 0 0 10px; }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
 .kpis { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
@@ -104,6 +109,7 @@ svg text { fill: var(--muted); font-size: 11px; }
 #otd .ophoto { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; margin-left: auto; }
 /* --- тепловая карта --- */
 .heatwrap { overflow-x: auto; padding-bottom: 4px; }
+.heatwrap svg { display: block; max-width: 100%; height: auto; }
 .heatlegend { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--muted); margin-top: 6px; flex-wrap: wrap; }
 .heatlegend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
 .hrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
@@ -151,6 +157,28 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
 .cmp thead th { border-top: 0; font-weight: 600; color: var(--fg); }
 .cmp td.up { color: var(--ok); } .cmp td.down { color: var(--bad); } .cmp td.same { color: var(--muted); }
 .cmpwrap { overflow-x: auto; }
+.fmore { display: contents; }
+#fToggle { display: none; }
+/* --- телефон --- */
+@media (max-width: 640px) {
+  .wrap { padding: 12px 10px 32px; gap: 12px; }
+  .card { padding: 12px; }
+  .card > h2 { margin: -12px -12px 10px; padding: 10px 12px 9px 10px; font-size: 16px; }
+  h1 { font-size: 21px; }
+  .cmp { font-size: 12.5px; }
+  .cmp th, .cmp td { padding: 6px 4px; }
+  .cmp td:last-child { white-space: nowrap; font-size: 12px; }
+  .cmp th:first-child, .cmp td:first-child { width: 34%; }
+  #fToggle { display: inline-block; }
+  .filters:not(.open) .fmore { display: none; }
+  .fmore .f { width: 100%; }
+  .filters .f select { flex: 1 1 110px; min-width: 0; }
+  input[type=search] { flex: 1; width: auto; min-width: 0; }
+  .kpi { font-size: 12px; padding: 3px 10px; }
+  .kpi b { font-size: 14px; }
+  .actions .btn { padding: 7px 10px; }
+  .topbar .actions.pub { width: 100%; }
+}
 /* --- календарь на телефоне --- */
 .calnav { display: none; align-items: center; justify-content: space-between; gap: 8px; margin: 4px 0 10px; }
 .calnav b { font-size: 16px; }
@@ -209,12 +237,16 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
   <header>
     <div class="topbar">
       <h1 id="title">📔 Дневник «Жизнь»</h1>
-      <div class="actions pub hide">
-        <button class="btn primary" id="bAdd">＋ Записать день</button>
-        <button class="btn" id="bExport" title="Скачать файл со всеми записями">💾 Сохранить копию</button>
-        <button class="btn" id="bImport" title="Загрузить записи из файла-копии">📂 Загрузить копию</button>
-        <input type="file" id="fileImport" accept=".json,application/json" class="hide">
+      <div class="settings">
+        <span class="seg small" id="langSeg"><button data-lang="ru">RU</button><button data-lang="uk">UA</button><button data-lang="en">EN</button></span>
+        <select id="themeSel" aria-label="Тема"></select>
       </div>
+    </div>
+    <div class="actions pub hide" style="margin-top:8px">
+      <button class="btn primary" id="bAdd" data-t="bAdd">＋ Записать день</button>
+      <button class="btn" id="bExport" data-t="bExport" data-tt="bExportT" title="Скачать файл со всеми записями">💾 Сохранить копию</button>
+      <button class="btn" id="bImport" data-t="bImport" data-tt="bImportT" title="Загрузить записи из файла-копии">📂 Загрузить копию</button>
+      <input type="file" id="fileImport" accept=".json,application/json" class="hide">
     </div>
     <div class="kpis" id="kpis"></div>
   </header>
@@ -223,105 +255,109 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
 
   <section class="card welcome hide" id="welcome">
     <div class="big">📔</div>
-    <h2>Дневник дней</h2>
-    <p>Отмечай каждый день: оценку от 1 до 10, настроение, смайлик, пару строк и фото, если хочется. Со временем здесь появятся календарь, тепловая карта года и подсказки, что делает твои дни лучше.</p>
-    <p><b>Всё хранится только в этом браузере на этом устройстве.</b> Никуда не отправляется, никто, кроме тебя, не видит.</p>
+    <h2 data-t="appName">Дневник дней</h2>
+    <p data-t="welcome1">Отмечай каждый день: оценку от 1 до 10, настроение, смайлик, пару строк и фото, если хочется. Со временем здесь появятся календарь, тепловая карта года и подсказки, что делает твои дни лучше.</p>
+    <p data-t="welcome2"><b>Всё хранится только в этом браузере на этом устройстве.</b> Никуда не отправляется, никто, кроме тебя, не видит.</p>
     <div class="actions" style="justify-content:center">
-      <button class="btn primary" id="bFirst">＋ Записать сегодняшний день</button>
-      <button class="btn" id="bDemo">👀 Посмотреть на примере</button>
-      <button class="btn" id="bImport2">📂 У меня есть копия</button>
+      <button class="btn primary" id="bFirst" data-t="bFirst">＋ Записать сегодняшний день</button>
+      <button class="btn" id="bDemo" data-t="bDemo">👀 Посмотреть на примере</button>
+      <button class="btn" id="bImport2" data-t="bImport2">📂 У меня есть копия</button>
     </div>
   </section>
 
-  <section class="card" id="otd"><h2>🕰️ В этот день</h2><p class="sub" id="otdSub">Что было ровно год назад. Нажми, чтобы открыть запись.</p><div id="otdList"></div></section>
+  <section class="card" id="otd"><h2 data-t="hOtd">🕰️ В этот день</h2><p class="sub" id="otdSub" data-t="otdSub">Что было ровно год назад. Нажми, чтобы открыть запись.</p><div id="otdList"></div></section>
 
   <div id="main">
   <section class="card filters" id="filters">
-    <div class="f">Быстро <span class="seg" id="fQuick"></span></div>
-    <div class="f">Период <select id="fFrom"></select> — <select id="fTo"></select></div>
-    <div class="f">Оценка <select id="fMin"></select> — <select id="fMax"></select></div>
-    <div class="f">Записи <span class="seg" id="fKind"><button data-k="all" class="on">все</button><button data-k="text">с текстом</button><button data-k="rate">только оценка</button></span></div>
-    <div class="f">Поиск <input type="search" id="fQ" placeholder="слово из записи…"></div>
-    <div class="f">Настроение <span class="chips" id="fMood"></span></div>
-    <button class="btn" id="fReset">Сбросить</button>
+    <div class="f"><span data-t="fQuickL">Быстро</span> <span class="seg" id="fQuick"></span></div>
+    <button class="btn" id="fToggle" data-t="fMoreBtn">⚙️ Ещё фильтры</button>
+    <div class="fmore">
+    <div class="f"><span data-t="fPeriod">Период</span> <select id="fFrom"></select> — <select id="fTo"></select></div>
+    <div class="f"><span data-t="fRate">Оценка</span> <select id="fMin"></select> — <select id="fMax"></select></div>
+    <div class="f"><span data-t="fKindL">Записи</span> <span class="seg" id="fKind"><button data-k="all" class="on" data-t="kAll">все</button><button data-k="text" data-t="kText">с текстом</button><button data-k="rate" data-t="kRate">только оценка</button></span></div>
+    <div class="f"><span data-t="fSearch">Поиск</span> <input type="search" id="fQ" data-tp="fSearchP" placeholder="слово из записи…"></div>
+    <div class="f"><span data-t="fMoodL">Настроение</span> <span class="chips" id="fMood"></span></div>
+    <button class="btn" id="fReset" data-t="fReset">Сбросить</button>
+    </div>
   </section>
 
-  <section class="card" id="summary"><h2>🧭 Коротко о выбранном периоде</h2><p class="sub">Собирается автоматически из оценок, настроений и текста. Меняется вместе с фильтрами.</p><div id="iSummary"></div><p class="note">Это статистика по твоим записям, а не диагноз. Она подсвечивает закономерности: выводы делаешь ты.</p></section>
+  <section class="card" id="summary"><h2 data-t="hSummary">🧭 Коротко о выбранном периоде</h2><p class="sub" data-t="sSummary">Собирается автоматически из оценок, настроений и текста. Меняется вместе с фильтрами.</p><div id="iSummary"></div><p class="note" data-t="nSummary">Это статистика по твоим записям, а не диагноз. Она подсвечивает закономерности: выводы делаешь ты.</p></section>
 
   <section class="card" id="heat">
-    <div class="hrow"><div><h2>🟩 Год одной полосой</h2><p class="sub" style="margin:0">Каждый квадратик — день, цвет — оценка. Как активность на GitHub: видно серии, провалы и пропуски.</p></div><span class="seg" id="hYears"></span></div>
+    <h2 data-t="hHeat">🟩 Год одной полосой</h2>
+    <div class="hrow"><p class="sub" style="margin:0;flex:1 1 240px" id="heatSub">Каждый квадратик — день, цвет — оценка. Как активность на GitHub: видно серии, провалы и пропуски.</p><span class="seg" id="hYears"></span></div>
     <div class="heatwrap"><div id="cHeat"></div></div>
     <div class="heatlegend" id="hLegend"></div>
     <div class="insight" id="iHeat"></div>
   </section>
 
   <section class="card" id="compare">
-    <h2>⚖️ Сравнение двух периодов</h2>
-    <p class="sub">Например, ноябрь прошлого года против этого. Цифры рядом и разница. Фильтры сверху здесь не действуют.</p>
+    <h2 data-t="hCmp">⚖️ Сравнение двух периодов</h2>
+    <p class="sub" data-t="sCmp">Например, ноябрь прошлого года против этого. Цифры рядом и разница. Фильтры сверху здесь не действуют.</p>
     <div class="cmpctl">
       <span class="seg" id="cmpPre"></span>
-      <span class="f"><select id="cmpA"></select> против <select id="cmpB"></select></span>
+      <span class="f"><select id="cmpA"></select> <span data-t="vs">против</span> <select id="cmpB"></select></span>
     </div>
     <div class="cmpwrap"><table class="cmp" id="cmpT"></table></div>
     <div class="insight" id="iCmp"></div>
   </section>
 
   <section class="card" id="calendar">
-    <h2>Календарь дней</h2>
+    <h2 data-t="hCal">📅 Календарь дней</h2>
     <p class="sub" id="calSub">Наведи на день — увидишь запись. Нажми — откроется целиком ниже. Точка в углу — есть текст.</p>
-    <div class="calnav" id="calNav"><button class="btn" id="calPrev" aria-label="Предыдущий месяц">◀</button><div style="text-align:center"><b id="calName"></b><div class="cnt" id="calCnt"></div></div><button class="btn" id="calNext" aria-label="Следующий месяц">▶</button></div>
+    <div class="calnav" id="calNav"><button class="btn" id="calPrev" data-tt="prevM" aria-label="Предыдущий месяц">◀</button><div style="text-align:center"><b id="calName"></b><div class="cnt" id="calCnt"></div></div><button class="btn" id="calNext" data-tt="nextM" aria-label="Следующий месяц">▶</button></div>
     <div class="legend">
       <span><i style="background:var(--ok)"></i>7–10</span><span><i style="background:var(--warn)"></i>4–6</span><span><i style="background:var(--bad)"></i>1–3</span>
-      <span><i style="background:var(--panel2);outline:1px solid var(--line)"></i>только настроение</span><span><i style="background:var(--empty)"></i>нет записи</span>
+      <span><i style="background:var(--panel2);outline:1px solid var(--line)"></i><span data-t="lgMood">только настроение</span></span><span><i style="background:var(--empty)"></i><span data-t="lgNone">нет записи</span></span>
     </div>
     <div class="months" id="cal"></div>
-    <div class="calfoot"><span class="f">🖨️ Итог месяца одной страницей: <select id="pMonth"></select></span><button class="btn" id="bPrint">Сохранить PDF / распечатать</button></div>
+    <div class="calfoot"><span class="f"><span data-t="printL">🖨️ Итог месяца одной страницей:</span> <select id="pMonth"></select></span><button class="btn" id="bPrint" data-t="bPrint">Сохранить PDF / распечатать</button></div>
   </section>
 
   <section class="card" id="detail"></section>
 
   <section class="card">
-    <h2>Средняя оценка по неделям</h2>
-    <p class="sub">Один столбик — одна неделя с записями (пустые недели пропущены, «⋯» — большой перерыв). Высота — средняя оценка, цвет — по твоей шкале.</p>
+    <h2 data-t="hWeeks">📊 Средняя оценка по неделям</h2>
+    <p class="sub" data-t="sWeeks">Один столбик — одна неделя с записями (пустые недели пропущены, «⋯» — большой перерыв). Высота — средняя оценка, цвет — по твоей шкале.</p>
     <div id="cWeeks"></div><div class="insight" id="iWeeks"></div>
   </section>
 
   <div class="two">
-    <section class="card"><h2>Средняя оценка по месяцам</h2><p class="sub">Под столбиком — сколько дней с оценкой.</p><div id="cMonths"></div><div class="insight" id="iMonths"></div></section>
-    <section class="card"><h2>Спорт и учёба по месяцам</h2><p class="sub">Средние баллы из 5.</p><div id="cSport"></div><div class="insight" id="iSport"></div></section>
+    <section class="card"><h2 data-t="hMonths">🗓️ Средняя оценка по месяцам</h2><p class="sub" data-t="sMonths">Под столбиком — сколько дней с оценкой.</p><div id="cMonths"></div><div class="insight" id="iMonths"></div></section>
+    <section class="card"><h2 data-t="hSport">🏃 Спорт и учёба по месяцам</h2><p class="sub" data-t="sSport">Средние баллы из 5.</p><div id="cSport"></div><div class="insight" id="iSport"></div></section>
   </div>
 
   <div class="two">
-    <section class="card"><h2>Настроения</h2><p class="sub">Сколько дней с каждым настроением и средняя оценка таких дней.</p><div id="cMoods"></div><div class="insight" id="iMoods"></div></section>
-    <section class="card"><h2>Дни недели</h2><p class="sub">Какой день недели в среднем лучше.</p><div id="cWeekday"></div><div class="insight" id="iWeekday"></div></section>
+    <section class="card"><h2 data-t="hMoods">🎭 Настроения</h2><p class="sub" data-t="sMoods">Сколько дней с каждым настроением и средняя оценка таких дней.</p><div id="cMoods"></div><div class="insight" id="iMoods"></div></section>
+    <section class="card"><h2 data-t="hWd">📆 Дни недели</h2><p class="sub" data-t="sWd">Какой день недели в среднем лучше.</p><div id="cWeekday"></div><div class="insight" id="iWeekday"></div></section>
   </div>
 
   <section class="card">
-    <h2>Анализ текста: о чём дни и как они оцениваются</h2>
-    <p class="sub">Темы ищутся по словам в записях. Справа — средняя оценка дней с этой темой и разница со средней по всем дням с текстом.</p>
+    <h2 data-t="hThemes">🧠 Анализ текста: о чём дни и как они оцениваются</h2>
+    <p class="sub" data-t="sThemes">Темы ищутся по словам в записях. Справа — средняя оценка дней с этой темой и разница со средней по всем дням с текстом.</p>
     <div class="themes" id="cThemes"></div><div class="insight" id="iThemes"></div>
   </section>
 
   <section class="card">
-    <h2>Частые слова</h2>
-    <p class="sub">Чем крупнее — тем чаще встречается. Клик по слову — поиск по нему.</p>
+    <h2 data-t="hWords">💬 Частые слова</h2>
+    <p class="sub" data-t="sWords">Чем крупнее — тем чаще встречается. Клик по слову — поиск по нему.</p>
     <div class="words" id="cWords"></div><div class="insight" id="iWords"></div>
   </section>
 
   </div><!-- /main -->
 
   <section class="card help pub hide" id="help">
-    <h2>💛 Если тяжело</h2>
-    <p>Подсказки на этой странице — просто статистика по твоим записям, а не диагноз и не совет врача.</p>
-    <p>Если долго плохо, пусто или страшно — не держи это в себе. Напиши или позвони кому-то из близких. В Украине круглосуточно и бесплатно отвечают на линии <b>Lifeline Ukraine — 7333</b> (<a href="https://lifelineukraine.com" target="_blank" rel="noopener">lifelineukraine.com</a>). Если есть угроза жизни — звони <b>112</b>.</p>
-    <p>В другой стране телефоны помощи можно найти на <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a>.</p>
+    <h2 data-t="hHelp">💛 Если тяжело</h2>
+    <p data-t="help1">Подсказки на этой странице — просто статистика по твоим записям, а не диагноз и не совет врача.</p>
+    <p data-t="help2">Если долго плохо, пусто или страшно — не держи это в себе. Напиши или позвони кому-то из близких. В Украине круглосуточно и бесплатно отвечают на линии <b>Lifeline Ukraine — 7333</b> (<a href="https://lifelineukraine.com" target="_blank" rel="noopener">lifelineukraine.com</a>). Если есть угроза жизни — звони <b>112</b>.</p>
+    <p data-t="help3">В другой стране телефоны помощи можно найти на <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a>.</p>
   </section>
 
   <section class="card help pub hide" id="about">
-    <h2>🛡️ Защита записей</h2>
-    <p>Записи живут в этом браузере. Если очистить данные браузера — они сотрутся. Включи автосохранение: копия будет обновляться сама после каждой записи.</p>
+    <h2 data-t="hProt">🛡️ Защита записей</h2>
+    <p data-t="prot1">Записи живут в этом браузере. Если очистить данные браузера — они сотрутся. Включи автосохранение: копия будет обновляться сама после каждой записи.</p>
     <div class="prot" id="prot"></div>
-    <p class="sub" style="margin-top:8px">На телефоне удобно добавить страницу на главный экран (меню браузера → «Добавить на главный экран»): откроется как приложение и работает без интернета.</p>
+    <p class="sub" style="margin-top:8px" data-t="prot2">На телефоне удобно добавить страницу на главный экран (меню браузера → «Добавить на главный экран»): откроется как приложение и работает без интернета.</p>
   </section>
 
   <p class="foot" id="foot"></p>
@@ -333,26 +369,26 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
 <dialog id="ed"><form class="ed" method="dialog" id="edForm" onsubmit="return false">
   <h2 id="edTitle">Запись дня</h2>
   <div class="edrow">
-    <div style="flex:1;min-width:160px"><label class="lb" for="edDate">Дата</label><input type="date" id="edDate" required></div>
+    <div style="flex:1;min-width:160px"><label class="lb" for="edDate" data-t="edDateL">Дата</label><input type="date" id="edDate" required></div>
   </div>
-  <div><label class="lb">Оценка дня (1 — ужасно, 10 — отлично)</label><div class="rates" id="edRates"></div></div>
-  <div><label class="lb">Настроение</label><div class="chips" id="edMoods"></div></div>
-  <div><label class="lb">Картинка дня</label><div class="emojis" id="edEmojis"></div>
-    <input type="text" id="edEmoji" maxlength="8" placeholder="или свой смайлик" style="margin-top:6px;width:150px"></div>
+  <div><label class="lb" data-t="edRateL">Оценка дня (1 — ужасно, 10 — отлично)</label><div class="rates" id="edRates"></div></div>
+  <div><label class="lb" data-t="fMoodL">Настроение</label><div class="chips" id="edMoods"></div></div>
+  <div><label class="lb" data-t="edEmojiL">Картинка дня</label><div class="emojis" id="edEmojis"></div>
+    <input type="text" id="edEmoji" maxlength="8" data-tp="edEmojiP" placeholder="или свой смайлик" style="margin-top:6px;width:150px"></div>
   <div class="edrow">
-    <div><label class="lb">Спорт / движение (0–5)</label><span class="seg" id="edSport"></span></div>
-    <div><label class="lb">Учёба / развитие (0–5)</label><span class="seg" id="edStudy"></span></div>
+    <div><label class="lb" data-t="edSportL">Спорт / движение (0–5)</label><span class="seg" id="edSport"></span></div>
+    <div><label class="lb" data-t="edStudyL">Учёба / развитие (0–5)</label><span class="seg" id="edStudy"></span></div>
   </div>
-  <div><label class="lb" for="edText">Что было, что запомнилось</label><textarea id="edText" placeholder="Пара строк — уже отлично. Можно и без текста."></textarea></div>
-  <div><label class="lb">Фото дня</label>
-    <div class="actions"><button type="button" class="btn" id="edPhotoBtn">📷 Выбрать фото</button><button type="button" class="btn hide" id="edPhotoDel">Убрать фото</button></div>
+  <div><label class="lb" for="edText" data-t="edTextL">Что было, что запомнилось</label><textarea id="edText" data-tp="edTextP" placeholder="Пара строк — уже отлично. Можно и без текста."></textarea></div>
+  <div><label class="lb" data-t="edPhotoL">Фото дня</label>
+    <div class="actions"><button type="button" class="btn" id="edPhotoBtn">📷 Выбрать фото</button><button type="button" class="btn hide" id="edPhotoDel" data-t="edPhotoDel">Убрать фото</button></div>
     <input type="file" id="edPhoto" accept="image/*" class="hide"><img id="edPhotoPrev" class="phprev hide" alt="">
   </div>
   <div class="edfoot">
     <button type="button" class="btn hide" id="edDel" style="border-color:var(--bad)">Удалить</button>
     <span style="flex:1"></span>
-    <button type="button" class="btn" id="edCancel">Отмена</button>
-    <button type="submit" class="btn primary" id="edSave">Сохранить</button>
+    <button type="button" class="btn" id="edCancel" data-t="edCancel">Отмена</button>
+    <button type="submit" class="btn primary" id="edSave" data-t="edSave">Сохранить</button>
   </div>
 </form></dialog>
 
@@ -363,14 +399,123 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
 const DATA = /*__DATA__*/null || { mode: 'public', days: [] };
 const PUBLIC = DATA.mode === 'public';
 let DAYS = [];
+// ======================================================================
+// 🌐 ЯЗЫК И ТЕМА (настройки хранятся только в этом браузере)
+// ======================================================================
+const LANGS = ['ru', 'uk', 'en'];
+const lsGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+let LANG = (() => {
+  const s = lsGet('dn-lang'); if (LANGS.includes(s)) return s;
+  if (DATA.mode !== 'public') return 'ru';
+  for (const l of navigator.languages || [navigator.language || '']) { const c = String(l).slice(0, 2).toLowerCase(); if (c === 'uk') return 'uk'; if (c === 'ru') return 'ru'; if (c === 'en') return 'en'; }
+  return 'ru';
+})();
+const L = (ru, uk, en) => (LANG === 'uk' ? uk : LANG === 'en' ? en : ru);
+const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? a : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? b : c; };
+// P(n, [ru1, ru2, ru5], [uk1, uk2, uk5], [en1, enN]) — слово в нужной форме
+const P = (n, ru, uk, en) => (LANG === 'en' ? (n === 1 ? en[0] : en[1]) : plural(n, ...(LANG === 'uk' ? uk : ru)));
+const THEMES_UI = [['dark', '🌙', 'Тёмная', 'Темна', 'Dark'], ['light', '☀️', 'Светлая', 'Світла', 'Light'], ['night', '🌌', 'Ночная синяя', 'Нічна синя', 'Night blue'], ['warm', '📜', 'Тёплая', 'Тепла', 'Warm']];
+let THEME = (() => { const s = lsGet('dn-theme'); return THEMES_UI.some((t) => t[0] === s) ? s : 'dark'; })();
+const THEME_COLOR = { dark: '#1e1e1e', light: '#f4f4f6', night: '#0b0f1a', warm: '#f5ede0' };
+function applyTheme() {
+  document.documentElement.dataset.theme = THEME;
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = THEME_COLOR[THEME];
+}
+applyTheme();
+
+// тексты из разметки: data-t (содержимое), data-tp (placeholder), data-tt (подсказка)
+const ST = {
+  bAdd: ['＋ Записать день', '＋ Записати день', '＋ Add a day'],
+  bExport: ['💾 Сохранить копию', '💾 Зберегти копію', '💾 Save a copy'],
+  bExportT: ['Скачать файл со всеми записями', 'Завантажити файл з усіма записами', 'Download a file with all entries'],
+  bImport: ['📂 Загрузить копию', '📂 Відновити з копії', '📂 Load a copy'],
+  bImportT: ['Загрузить записи из файла-копии', 'Завантажити записи з файлу-копії', 'Load entries from a backup file'],
+  appName: ['Дневник дней', 'Щоденник днів', 'Diary of Days'],
+  welcome1: ['Отмечай каждый день: оценку от 1 до 10, настроение, смайлик, пару строк и фото, если хочется. Со временем здесь появятся календарь, тепловая карта года и подсказки, что делает твои дни лучше.',
+    'Відмічай кожен день: оцінку від 1 до 10, настрій, смайлик, пару рядків і фото, якщо хочеться. З часом тут з’являться календар, теплова карта року й підказки, що робить твої дні кращими.',
+    'Mark every day: a score from 1 to 10, a mood, an emoji, a couple of lines and a photo if you like. Over time you’ll get a calendar, a year heatmap and hints about what makes your days better.'],
+  welcome2: ['<b>Всё хранится только в этом браузере на этом устройстве.</b> Никуда не отправляется, никто, кроме тебя, не видит.',
+    '<b>Усе зберігається лише в цьому браузері на цьому пристрої.</b> Нікуди не надсилається, ніхто, крім тебе, не бачить.',
+    '<b>Everything is stored only in this browser on this device.</b> Nothing is sent anywhere, nobody but you can see it.'],
+  bFirst: ['＋ Записать сегодняшний день', '＋ Записати сьогоднішній день', '＋ Write down today'],
+  bDemo: ['👀 Посмотреть на примере', '👀 Подивитися на прикладі', '👀 See an example'],
+  bImport2: ['📂 У меня есть копия', '📂 У мене є копія', '📂 I have a backup'],
+  hOtd: ['🕰️ В этот день', '🕰️ Цього дня', '🕰️ On this day'],
+  otdSub: ['Что было ровно год назад. Нажми, чтобы открыть запись.', 'Що було рівно рік тому. Натисни, щоб відкрити запис.', 'What happened exactly a year ago. Tap to open the entry.'],
+  fQuickL: ['Быстро', 'Швидко', 'Quick'],
+  fMoreBtn: ['⚙️ Ещё фильтры', '⚙️ Більше фільтрів', '⚙️ More filters'],
+  fPeriod: ['Период', 'Період', 'Period'],
+  fRate: ['Оценка', 'Оцінка', 'Score'],
+  fKindL: ['Записи', 'Записи', 'Entries'],
+  kAll: ['все', 'усі', 'all'], kText: ['с текстом', 'з текстом', 'with text'], kRate: ['только оценка', 'лише оцінка', 'score only'],
+  fSearch: ['Поиск', 'Пошук', 'Search'], fSearchP: ['слово из записи…', 'слово із запису…', 'a word from an entry…'],
+  fMoodL: ['Настроение', 'Настрій', 'Mood'],
+  fReset: ['Сбросить', 'Скинути', 'Reset'],
+  hSummary: ['🧭 Коротко о выбранном периоде', '🧭 Коротко про вибраний період', '🧭 The selected period in brief'],
+  sSummary: ['Собирается автоматически из оценок, настроений и текста. Меняется вместе с фильтрами.', 'Складається автоматично з оцінок, настроїв і тексту. Змінюється разом із фільтрами.', 'Built automatically from scores, moods and text. Changes with the filters.'],
+  nSummary: ['Это статистика по твоим записям, а не диагноз. Она подсвечивает закономерности: выводы делаешь ты.', 'Це статистика за твоїми записами, а не діагноз. Вона підсвічує закономірності: висновки робиш ти.', 'These are statistics from your entries, not a diagnosis. They highlight patterns; the conclusions are yours.'],
+  hHeat: ['🟩 Год одной полосой', '🟩 Рік однією смугою', '🟩 The year at a glance'],
+  hCmp: ['⚖️ Сравнение двух периодов', '⚖️ Порівняння двох періодів', '⚖️ Compare two periods'],
+  sCmp: ['Например, ноябрь прошлого года против этого. Цифры рядом и разница. Фильтры сверху здесь не действуют.', 'Наприклад, листопад минулого року проти цього. Цифри поруч і різниця. Фільтри згори тут не діють.', 'For example, last November vs this one. Numbers side by side and the difference. The filters above don’t apply here.'],
+  vs: ['против', 'проти', 'vs'],
+  hCal: ['📅 Календарь дней', '📅 Календар днів', '📅 Calendar'],
+  prevM: ['Предыдущий месяц', 'Попередній місяць', 'Previous month'], nextM: ['Следующий месяц', 'Наступний місяць', 'Next month'],
+  lgMood: ['только настроение', 'лише настрій', 'mood only'], lgNone: ['нет записи', 'немає запису', 'no entry'],
+  printL: ['🖨️ Итог месяца одной страницей:', '🖨️ Підсумок місяця однією сторінкою:', '🖨️ Month summary on one page:'],
+  bPrint: ['Сохранить PDF / распечатать', 'Зберегти PDF / надрукувати', 'Save PDF / print'],
+  hWeeks: ['📊 Средняя оценка по неделям', '📊 Середня оцінка за тижнями', '📊 Average score by week'],
+  sWeeks: ['Один столбик — одна неделя с записями (пустые недели пропущены, «⋯» — большой перерыв). Высота — средняя оценка, цвет — по твоей шкале.', 'Один стовпчик — один тиждень із записами (порожні тижні пропущено, «⋯» — велика перерва). Висота — середня оцінка, колір — за твоєю шкалою.', 'One bar is one week with entries (empty weeks skipped, “⋯” marks a long break). Height is the average score, colour follows your scale.'],
+  hMonths: ['🗓️ Средняя оценка по месяцам', '🗓️ Середня оцінка за місяцями', '🗓️ Average score by month'],
+  sMonths: ['Под столбиком — сколько дней с оценкой.', 'Під стовпчиком — скільки днів з оцінкою.', 'Under each bar: how many days have a score.'],
+  hSport: ['🏃 Спорт и учёба по месяцам', '🏃 Спорт і навчання за місяцями', '🏃 Sport and study by month'],
+  sSport: ['Средние баллы из 5.', 'Середні бали з 5.', 'Average points out of 5.'],
+  hMoods: ['🎭 Настроения', '🎭 Настрої', '🎭 Moods'],
+  sMoods: ['Сколько дней с каждым настроением и средняя оценка таких дней.', 'Скільки днів з кожним настроєм і середня оцінка таких днів.', 'How many days had each mood, and their average score.'],
+  hWd: ['📆 Дни недели', '📆 Дні тижня', '📆 Days of the week'],
+  sWd: ['Какой день недели в среднем лучше.', 'Який день тижня в середньому кращий.', 'Which weekday is better on average.'],
+  hThemes: ['🧠 Анализ текста: о чём дни и как они оцениваются', '🧠 Аналіз тексту: про що дні і як вони оцінюються', '🧠 Text analysis: what days are about and how they score'],
+  sThemes: ['Темы ищутся по словам в записях. Справа — средняя оценка дней с этой темой и разница со средней по всем дням с текстом.', 'Теми шукаються за словами в записах. Праворуч — середня оцінка днів з цією темою та різниця із середньою по всіх днях з текстом.', 'Topics are found by words in your entries. On the right: the average score of days with that topic and how it differs from all days with text.'],
+  hWords: ['💬 Частые слова', '💬 Часті слова', '💬 Frequent words'],
+  sWords: ['Чем крупнее — тем чаще встречается. Клик по слову — поиск по нему.', 'Що більше — то частіше трапляється. Клік по слову — пошук за ним.', 'The bigger, the more often it appears. Click a word to search for it.'],
+  hHelp: ['💛 Если тяжело', '💛 Якщо важко', '💛 If it’s hard'],
+  help1: ['Подсказки на этой странице — просто статистика по твоим записям, а не диагноз и не совет врача.', 'Підказки на цій сторінці — просто статистика за твоїми записами, а не діагноз і не порада лікаря.', 'The hints on this page are just statistics from your entries — not a diagnosis and not medical advice.'],
+  help2: ['Если долго плохо, пусто или страшно — не держи это в себе. Напиши или позвони кому-то из близких. В Украине круглосуточно и бесплатно отвечают на линии <b>Lifeline Ukraine — 7333</b> (<a href="https://lifelineukraine.com" target="_blank" rel="noopener">lifelineukraine.com</a>). Если есть угроза жизни — звони <b>112</b>.',
+    'Якщо довго погано, порожньо чи страшно — не тримай це в собі. Напиши або подзвони комусь із близьких. В Україні цілодобово й безкоштовно відповідають на лінії <b>Lifeline Ukraine — 7333</b> (<a href="https://lifelineukraine.com" target="_blank" rel="noopener">lifelineukraine.com</a>). Якщо є загроза життю — дзвони <b>112</b>.',
+    'If you’ve felt bad, empty or scared for a long time, don’t keep it to yourself. Message or call someone close. In Ukraine, <b>Lifeline Ukraine — 7333</b> (<a href="https://lifelineukraine.com" target="_blank" rel="noopener">lifelineukraine.com</a>) answers free, 24/7. If a life is in danger, call <b>112</b>.'],
+  help3: ['В другой стране телефоны помощи можно найти на <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a>.', 'В іншій країні телефони допомоги можна знайти на <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a>.', 'In other countries, find helplines at <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a>.'],
+  hProt: ['🛡️ Защита записей', '🛡️ Захист записів', '🛡️ Protect your entries'],
+  prot1: ['Записи живут в этом браузере. Если очистить данные браузера — они сотрутся. Включи автосохранение: копия будет обновляться сама после каждой записи.', 'Записи живуть у цьому браузері. Якщо очистити дані браузера — вони зітруться. Увімкни автозбереження: копія оновлюватиметься сама після кожного запису.', 'Entries live in this browser. Clearing browser data erases them. Turn on autosave and a copy will update itself after every entry.'],
+  prot2: ['На телефоне удобно добавить страницу на главный экран (меню браузера → «Добавить на главный экран»): откроется как приложение и работает без интернета.', 'На телефоні зручно додати сторінку на головний екран (меню браузера → «Додати на головний екран»): відкриватиметься як застосунок і працює без інтернету.', 'On a phone, add this page to your home screen (browser menu → “Add to Home screen”): it opens like an app and works offline.'],
+  edDateL: ['Дата', 'Дата', 'Date'],
+  edRateL: ['Оценка дня (1 — ужасно, 10 — отлично)', 'Оцінка дня (1 — жахливо, 10 — чудово)', 'Day score (1 — awful, 10 — great)'],
+  edEmojiL: ['Картинка дня', 'Картинка дня', 'Emoji of the day'], edEmojiP: ['или свой смайлик', 'або свій смайлик', 'or your own emoji'],
+  edSportL: ['Спорт / движение (0–5)', 'Спорт / рух (0–5)', 'Sport / movement (0–5)'],
+  edStudyL: ['Учёба / развитие (0–5)', 'Навчання / розвиток (0–5)', 'Study / growth (0–5)'],
+  edTextL: ['Что было, что запомнилось', 'Що було, що запам’яталося', 'What happened, what you remember'],
+  edTextP: ['Пара строк — уже отлично. Можно и без текста.', 'Пара рядків — уже чудово. Можна й без тексту.', 'A couple of lines is great. Text is optional.'],
+  edPhotoL: ['Фото дня', 'Фото дня', 'Photo of the day'], edPhotoDel: ['Убрать фото', 'Прибрати фото', 'Remove photo'],
+  edCancel: ['Отмена', 'Скасувати', 'Cancel'], edSave: ['Сохранить', 'Зберегти', 'Save'],
+};
+function applyStatic() {
+  document.documentElement.lang = LANG === 'uk' ? 'uk' : LANG;
+  document.querySelectorAll('[data-t]').forEach((e) => { const v = ST[e.dataset.t]; if (v) e.innerHTML = L(...v); });
+  document.querySelectorAll('[data-tp]').forEach((e) => { const v = ST[e.dataset.tp]; if (v) e.placeholder = L(...v); });
+  document.querySelectorAll('[data-tt]').forEach((e) => { const v = ST[e.dataset.tt]; if (v) { e.title = L(...v); if (e.hasAttribute('aria-label')) e.setAttribute('aria-label', L(...v)); } });
+  langSeg.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.lang === LANG));
+  themeSel.replaceChildren(...THEMES_UI.map(([k, ic, ...n]) => new Option(ic + ' ' + L(...n), k)));
+  themeSel.value = THEME; themeSel.setAttribute('aria-label', L('Тема', 'Тема', 'Theme'));
+}
 const MOODS = ['Приятное', 'Спокойное', 'Нейтральное-обычн', 'Благодарное', 'Раздумия', 'Уставшее', 'Разочарование', 'Грустное', 'Неприятное', 'Другое'];
 const MOOD_EMOJI = { 'Приятное': '😊', 'Спокойное': '😌', 'Нейтральное-обычн': '😐', 'Благодарное': '🙏', 'Раздумия': '🤔', 'Уставшее': '😮‍💨', 'Разочарование': '😞', 'Грустное': '😢', 'Неприятное': '😠', 'Другое': '▫️' };
-const moodName = (m) => (m === 'Нейтральное-обычн' ? 'Обычное' : m === 'Раздумия' ? 'Раздумья' : m);
-const MN = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+const MOOD_TR = { 'Приятное': ['Приятное', 'Приємний', 'Pleasant'], 'Спокойное': ['Спокойное', 'Спокійний', 'Calm'], 'Нейтральное-обычн': ['Обычное', 'Звичайний', 'Ordinary'], 'Благодарное': ['Благодарное', 'Вдячний', 'Grateful'], 'Раздумия': ['Раздумья', 'Задумливий', 'Thoughtful'], 'Уставшее': ['Уставшее', 'Втомлений', 'Tired'], 'Разочарование': ['Разочарование', 'Розчарований', 'Disappointed'], 'Грустное': ['Грустное', 'Сумний', 'Sad'], 'Неприятное': ['Неприятное', 'Неприємний', 'Unpleasant'], 'Другое': ['Другое', 'Інше', 'Other'] };
+const moodName = (m) => (MOOD_TR[m] ? L(...MOOD_TR[m]) : m);
+const MN_ALL = { ru: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], uk: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'], en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] };
+let MN = MN_ALL[LANG];
 const monthName = (ym) => MN[+ym.slice(5) - 1] + ' ' + ym.slice(0, 4);
 const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const colorOf = (r) => (r == null ? null : r >= 7 ? 'var(--ok)' : r >= 4 ? 'var(--warn)' : 'var(--bad)');
-const f1 = (v) => (v == null || isNaN(v) ? '—' : (Math.round(v * 10) / 10).toFixed(1).replace('.', ','));
+const f1 = (v) => (v == null || isNaN(v) ? '—' : (Math.round(v * 10) / 10).toFixed(1).replace('.', LANG === 'en' ? '.' : ','));
 const fdate = d3.utcFormat('%d.%m.%Y');
 const mean = (xs) => { xs = xs.filter((x) => x != null); return xs.length ? d3.mean(xs) : null; };
 
@@ -380,7 +525,9 @@ const isoLocal = (dt) => `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt
 const TODAY = isoLocal(new Date());
 const TODAY_YM = TODAY.slice(0, 7);
 const addDaysIso = (iso, n) => { const t = new Date(iso + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
-const WDN = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
+const WDN_ALL = { ru: ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'], uk: ['неділя', 'понеділок', 'вівторок', 'середа', 'четвер', 'пʼятниця', 'субота'], en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] };
+let WDN = WDN_ALL[LANG];
+const WD_SHORT = () => L(['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'], ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'], ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']);
 
 // ---------- фильтры ----------
 let allMonths = [];
@@ -391,9 +538,10 @@ fill(fMin, d3.range(1, 11).map((v) => [v, v]), 1);
 fill(fMax, d3.range(1, 11).map((v) => [v, v]), 10);
 function monthSpan(a, b) { const out = []; let [y, m] = a.split('-').map(Number); const [y2, m2] = b.split('-').map(Number); while (y < y2 || (y === y2 && m <= m2)) { out.push(`${y}-${pad(m)}`); m++; if (m > 12) { m = 1; y++; } } return out; }
 const clampYm = (ym) => (ym < allMonths[0] ? allMonths[0] : ym > allMonths[allMonths.length - 1] ? allMonths[allMonths.length - 1] : ym);
+const yearName = (y) => L(y + ' год', y + ' рік', String(y));
 const dataYears = () => [...new Set(DAYS.map((d) => d.date.slice(0, 4)))].sort();
 function buildQuick() {
-  const items = [['all', 'всё']].concat(dataYears().map((y) => ['y' + y, y + ' год']), [['month', 'этот месяц'], ['d30', 'последние 30 дней']]);
+  const items = [['all', L('всё', 'все', 'all')]].concat(dataYears().map((y) => ['y' + y, yearName(y)]), [['month', L('этот месяц', 'цей місяць', 'this month')], ['d30', L('последние 30 дней', 'останні 30 днів', 'last 30 days')]]);
   fQuick.replaceChildren(...items.map(([k, t]) => { const b = document.createElement('button'); b.dataset.q = k; b.textContent = t; b.onclick = () => setQuick(k); return b; }));
   markQuick();
 }
@@ -455,16 +603,17 @@ const match = (d) => {
 
 // ---------- подсказка ----------
 const tip = document.getElementById('tip');
+const NOTEXT = () => L('Текста нет — только настроение и оценка.', 'Тексту немає — лише настрій та оцінка.', 'No text — just the mood and score.');
 function showTip(ev, d) {
   tip.replaceChildren();
-  const a = document.createElement('div'); a.className = 't1'; a.textContent = `${d.emoji || ''} ${fdate(d.t)}${d.rate != null ? ' — оценка ' + d.rate + '/10' : ''}`;
-  const b = document.createElement('div'); b.className = 't2'; b.textContent = `${d.mood_raw || '—'} · спорт ${d.sport ?? '—'}/5 · учёба ${d.study ?? '—'}/5`;
+  const a = document.createElement('div'); a.className = 't1'; a.textContent = `${d.emoji || ''} ${fdate(d.t)}${d.rate != null ? ' — ' + L('оценка', 'оцінка', 'score') + ' ' + d.rate + '/10' : ''}`;
+  const b = document.createElement('div'); b.className = 't2'; b.textContent = `${d.mood_raw || '—'} · ${L('спорт', 'спорт', 'sport')} ${d.sport ?? '—'}/5 · ${L('учёба', 'навчання', 'study')} ${d.study ?? '—'}/5`;
   tip.append(a, b);
   if (d.photo) { const im = document.createElement('img'); im.src = d.photo; im.alt = ''; tip.append(im); }
   const c = document.createElement('div'); c.className = 't3';
-  c.textContent = d.text ? (d.text.length > 700 ? d.text.slice(0, 700).trimEnd() + '…' : d.text) : 'Текста нет — только настроение и оценка.';
+  c.textContent = d.text ? (d.text.length > 700 ? d.text.slice(0, 700).trimEnd() + '…' : d.text) : NOTEXT();
   tip.append(c);
-  if (d.text || PUBLIC) { const e = document.createElement('div'); e.className = 't4'; e.textContent = PUBLIC ? 'Нажми, чтобы открыть или изменить' : 'Нажми, чтобы открыть целиком'; tip.append(e); }
+  if (d.text || PUBLIC) { const e = document.createElement('div'); e.className = 't4'; e.textContent = PUBLIC ? L('Нажми, чтобы открыть или изменить', 'Натисни, щоб відкрити або змінити', 'Tap to open or edit') : L('Нажми, чтобы открыть целиком', 'Натисни, щоб відкрити повністю', 'Tap to open in full'); tip.append(e); }
   tip.style.display = 'block'; moveTip(ev);
 }
 function moveTip(ev) {
@@ -486,12 +635,12 @@ function openDay(d, list) {
   selDate = d.date; hideTip(); CAL.follow = true;
   const box = document.getElementById('detail'); box.replaceChildren(); box.style.display = 'block';
   const head = document.createElement('div'); head.className = 'dh';
-  const t = document.createElement('div'); t.className = 'dt'; t.textContent = `${d.emoji || ''} ${fdate(d.t)}${d.rate != null ? ' — оценка ' + d.rate + '/10' : ''}`;
+  const t = document.createElement('div'); t.className = 'dt'; t.textContent = `${d.emoji || ''} ${fdate(d.t)}${d.rate != null ? ' — ' + L('оценка', 'оцінка', 'score') + ' ' + d.rate + '/10' : ''}`;
   const nav = document.createElement('div'); nav.style.display = 'flex'; nav.style.gap = '6px'; nav.style.flexWrap = 'wrap';
   const idx = list.findIndex((x) => x.date === d.date);
   const mk = (txt, fn, dis) => { const b = document.createElement('button'); b.className = 'btn'; b.textContent = txt; b.disabled = dis; if (dis) b.style.opacity = .4; b.onclick = fn; return b; };
-  nav.append(mk('◀ пред.', () => openDay(list[idx - 1], list), idx <= 0), mk('след. ▶', () => openDay(list[idx + 1], list), idx < 0 || idx >= list.length - 1));
-  if (PUBLIC) nav.append(mk('✏️ Изменить', () => openEditor(d.date), DEMO));
+  nav.append(mk(L('◀ пред.', '◀ попер.', '◀ prev'), () => openDay(list[idx - 1], list), idx <= 0), mk(L('след. ▶', 'наст. ▶', 'next ▶'), () => openDay(list[idx + 1], list), idx < 0 || idx >= list.length - 1));
+  if (PUBLIC) nav.append(mk(L('✏️ Изменить', '✏️ Змінити', '✏️ Edit'), () => openEditor(d.date), DEMO));
   else {
     const ob = document.createElement('a'); ob.className = 'btn'; ob.textContent = 'Открыть в Obsidian';
     ob.href = 'obsidian://open?path=' + encodeURIComponent(DATA.vault + '\\дневник\\' + d.file + '.md');
@@ -499,10 +648,10 @@ function openDay(d, list) {
   }
   nav.append(mk('✕', () => { box.style.display = 'none'; selDate = null; renderCalendar(); renderHeat(DAYS.filter(match)); }));
   head.append(t, nav);
-  const m = document.createElement('div'); m.className = 'dm'; m.textContent = `${WDN[d.t.getUTCDay()]} · Настроение: ${d.mood_raw || '—'} · Спорт: ${d.sport ?? '—'}/5 · Учёба: ${d.study ?? '—'}/5`;
+  const m = document.createElement('div'); m.className = 'dm'; m.textContent = `${WDN[d.t.getUTCDay()]} · ${L('Настроение', 'Настрій', 'Mood')}: ${d.mood_raw || '—'} · ${L('Спорт', 'Спорт', 'Sport')}: ${d.sport ?? '—'}/5 · ${L('Учёба', 'Навчання', 'Study')}: ${d.study ?? '—'}/5`;
   box.append(head, m);
-  if (d.photo) { const im = document.createElement('img'); im.className = 'dphoto'; im.src = d.photo; im.alt = 'Фото дня'; box.append(im); }
-  const x = document.createElement('div'); x.className = 'dx'; x.textContent = d.text || 'Текста нет — только настроение и оценка.';
+  if (d.photo) { const im = document.createElement('img'); im.className = 'dphoto'; im.src = d.photo; im.alt = L('Фото дня', 'Фото дня', 'Photo of the day'); box.append(im); }
+  const x = document.createElement('div'); x.className = 'dx'; x.textContent = d.text || NOTEXT();
   box.append(x);
   renderCalendar(); renderHeat(DAYS.filter(match));
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -541,7 +690,7 @@ function renderCalendar() {
     calName.textContent = monthName(CAL.ym);
     if ([...pMonth.options].some((o) => o.value === CAL.ym)) pMonth.value = CAL.ym;
     const nIn = DAYS.filter((d) => d.date.startsWith(CAL.ym)).length;
-    calCnt.textContent = `${i + 1} из ${yms.length} · ${nIn ? dn(nIn) + ' в записи' : 'записей нет'}`;
+    calCnt.textContent = `${i + 1} ${L('из', 'з', 'of')} ${yms.length} · ${nIn ? dn(nIn) + ' ' + L('в записи', 'у записі', 'logged') : L('записей нет', 'записів немає', 'no entries')}`;
     calPrev.disabled = i <= 0; calNext.disabled = i >= yms.length - 1;
     calPrev.onclick = () => { CAL.ym = yms[Math.max(0, i - 1)]; renderCalendar(); };
     calNext.onclick = () => { CAL.ym = yms[Math.min(yms.length - 1, i + 1)]; renderCalendar(); };
@@ -554,7 +703,7 @@ function renderCalendar() {
     const box = document.createElement('div');
     const n = document.createElement('div'); n.className = 'mname'; n.textContent = monthName(ym); box.append(n);
     const g = document.createElement('div'); g.className = 'grid';
-    ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].forEach((w) => { const e = document.createElement('div'); e.className = 'wd'; e.textContent = w; g.append(e); });
+    WD_SHORT().forEach((w) => { const e = document.createElement('div'); e.className = 'wd'; e.textContent = w; g.append(e); });
     for (let i = 0; i < (m.getUTCDay() + 6) % 7; i++) g.append(document.createElement('div'));
     d3.utcDays(m, d3.utcMonth.offset(m, 1)).forEach((day) => {
       const d = by.get(key(day)); const e = document.createElement('div');
@@ -562,7 +711,7 @@ function renderCalendar() {
         e.className = 'cell none'; const s = document.createElement('span'); s.textContent = day.getUTCDate(); e.append(s);
         const iso = key(day);
         if (iso === TODAY) e.style.boxShadow = '0 0 0 2px var(--accent)';
-        if (PUBLIC && !DEMO && iso <= TODAY) { e.style.cursor = 'pointer'; e.title = 'Записать этот день'; e.onclick = () => openEditor(iso); }
+        if (PUBLIC && !DEMO && iso <= TODAY) { e.style.cursor = 'pointer'; e.title = L('Записать этот день', 'Записати цей день', 'Write this day'); e.onclick = () => openEditor(iso); }
       }
       else {
         e.className = 'cell day' + (d.rate == null ? ' moodonly' : '') + (d.text ? '' : ' notext') + (match(d) ? '' : ' dim') + (selDate === d.date ? ' sel' : '');
@@ -576,7 +725,7 @@ function renderCalendar() {
     });
     box.append(g); cal.append(box);
   });
-  if (!cal.children.length) { const p = document.createElement('div'); p.className = 'empty-note'; p.textContent = 'В выбранном периоде записей нет.'; cal.append(p); }
+  if (!cal.children.length) { const p = document.createElement('div'); p.className = 'empty-note'; p.textContent = L('В выбранном периоде записей нет.', 'У вибраному періоді записів немає.', 'No entries in the selected period.'); cal.append(p); }
 }
 
 // ---------- общие помощники графиков ----------
@@ -586,13 +735,15 @@ function svgIn(id, H, label) {
   const svg = d3.select(el).append('svg').attr('width', '100%').attr('height', H).attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', label);
   return { el, svg, W, H };
 }
-const emptyNote = (id) => { const el = document.getElementById(id); el.replaceChildren(); const p = document.createElement('div'); p.className = 'empty-note'; p.textContent = 'Нет данных под эти фильтры.'; el.append(p); };
+const emptyNote = (id) => { const el = document.getElementById(id); el.replaceChildren(); const p = document.createElement('div'); p.className = 'empty-note'; p.textContent = L('Нет данных под эти фильтры.', 'Немає даних під ці фільтри.', 'No data for these filters.'); el.append(p); };
 
+const avgTip = (a, n) => L(`Средняя оценка: ${f1(a)} · дней с оценкой: ${n}`, `Середня оцінка: ${f1(a)} · днів з оцінкою: ${n}`, `Average score: ${f1(a)} · days with a score: ${n}`);
+const DN_SHORT = () => L('дн', 'дн', 'd');
 function renderWeeks(list) {
   const rated = list.filter((d) => d.rate != null);
   if (!rated.length) return emptyNote('cWeeks');
   const groups = d3.rollups(rated, (v) => ({ avg: d3.mean(v, (d) => d.rate), n: v.length }), (d) => +d3.utcMonday.floor(d.t)).map(([k, v]) => ({ w: new Date(k), ...v })).sort((a, b) => a.w - b.w);
-  const { svg, W, H } = svgIn('cWeeks', 210, 'Средняя оценка по неделям');
+  const { svg, W, H } = svgIn('cWeeks', 210, L(...ST.hWeeks));
   const m = { t: 8, r: 8, b: 24, l: 26 };
   const keys = groups.map((g) => +g.w);
   const x = d3.scaleBand().domain(keys).range([m.l, W - m.r]).padding(0.15);
@@ -605,14 +756,14 @@ function renderWeeks(list) {
   [4, 7].forEach((v) => svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', 'var(--line)').attr('stroke-dasharray', '3 3'));
   groups.forEach((g, i) => { if (i && g.w - groups[i - 1].w > 5 * 7 * 864e5) svg.append('text').attr('x', x(+g.w) - x.step() * 0.08).attr('y', H - m.b - 4).attr('text-anchor', 'middle').text('⋯'); });
   svg.append('g').selectAll('rect').data(groups).join('rect').attr('x', (d) => x(+d.w)).attr('width', x.bandwidth()).attr('y', (d) => y(d.avg)).attr('height', (d) => y(0) - y(d.avg)).attr('rx', 2).style('fill', (d) => colorOf(d.avg))
-    .on('mouseenter mousemove', (ev, d) => simpleTip(ev, [`${fdate(d.w)} – ${fdate(d3.utcDay.offset(d.w, 6))}`, `Средняя оценка: ${f1(d.avg)} · дней с оценкой: ${d.n}`])).on('mouseleave', hideTip);
+    .on('mouseenter mousemove', (ev, d) => simpleTip(ev, [`${fdate(d.w)} – ${fdate(d3.utcDay.offset(d.w, 6))}`, avgTip(d.avg, d.n)])).on('mouseleave', hideTip);
 }
 
 function renderMonths(list) {
   const rated = list.filter((d) => d.rate != null);
   if (!rated.length) return emptyNote('cMonths');
   const rows = d3.rollups(rated, (v) => ({ avg: d3.mean(v, (d) => d.rate), n: v.length }), (d) => d.date.slice(0, 7)).map(([k, v]) => ({ m: k, ...v })).sort((a, b) => d3.ascending(a.m, b.m));
-  const { svg, W, H } = svgIn('cMonths', 220, 'Средняя оценка по месяцам');
+  const { svg, W, H } = svgIn('cMonths', 220, L(...ST.hMonths));
   const mg = { t: 16, r: 6, b: 38, l: 24 };
   const x = d3.scaleBand().domain(rows.map((d) => d.m)).range([mg.l, W - mg.r]).padding(0.25);
   const y = d3.scaleLinear().domain([0, 10]).range([H - mg.b, mg.t]);
@@ -620,33 +771,33 @@ function renderMonths(list) {
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - mg.b})`).call(d3.axisBottom(x).tickFormat((v) => v.slice(5) + '.' + v.slice(2, 4)));
   const g = svg.append('g').selectAll('g').data(rows).join('g');
   g.append('rect').attr('x', (d) => x(d.m)).attr('width', x.bandwidth()).attr('y', (d) => y(d.avg)).attr('height', (d) => y(0) - y(d.avg)).attr('rx', 3).style('fill', (d) => colorOf(d.avg))
-    .on('mouseenter mousemove', (ev, d) => simpleTip(ev, [monthName(d.m), `Средняя оценка: ${f1(d.avg)} · дней с оценкой: ${d.n}`])).on('mouseleave', hideTip);
+    .on('mouseenter mousemove', (ev, d) => simpleTip(ev, [monthName(d.m), avgTip(d.avg, d.n)])).on('mouseleave', hideTip);
   if (x.bandwidth() > 20) g.append('text').attr('x', (d) => x(d.m) + x.bandwidth() / 2).attr('y', (d) => y(d.avg) - 4).attr('text-anchor', 'middle').style('fill', 'var(--fg)').text((d) => f1(d.avg));
-  g.append('text').attr('x', (d) => x(d.m) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle').text((d) => d.n + ' дн');
+  g.append('text').attr('x', (d) => x(d.m) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle').text((d) => d.n + ' ' + DN_SHORT());
 }
 
 function renderSport(list) {
   const rows = d3.rollups(list, (v) => ({ sport: mean(v.map((d) => d.sport)), study: mean(v.map((d) => d.study)) }), (d) => d.date.slice(0, 7)).map(([k, v]) => ({ m: k, ...v })).filter((r) => r.sport != null || r.study != null).sort((a, b) => d3.ascending(a.m, b.m));
   if (!rows.length) return emptyNote('cSport');
-  const { svg, W, H } = svgIn('cSport', 220, 'Средний спорт и учёба по месяцам');
+  const { svg, W, H } = svgIn('cSport', 220, L(...ST.hSport));
   const mg = { t: 24, r: 10, b: 26, l: 24 };
   const x = d3.scalePoint().domain(rows.map((d) => d.m)).range([mg.l + 10, W - mg.r - 10]);
   const y = d3.scaleLinear().domain([0, 5]).range([H - mg.b, mg.t]);
   svg.append('g').attr('class', 'axis').attr('transform', `translate(${mg.l},0)`).call(d3.axisLeft(y).ticks(5));
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - mg.b})`).call(d3.axisBottom(x).tickFormat((v) => v.slice(5) + '.' + v.slice(2, 4)));
-  [['sport', 'var(--accent)', 'Спорт'], ['study', 'var(--ok)', 'Учёба']].forEach(([k, col, name], i) => {
+  [['sport', 'var(--accent)', L('Спорт', 'Спорт', 'Sport')], ['study', 'var(--ok)', L('Учёба', 'Навчання', 'Study')]].forEach(([k, col, name], i) => {
     const pts = rows.filter((r) => r[k] != null);
     svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', col).attr('stroke-width', 2).attr('d', d3.line().x((d) => x(d.m)).y((d) => y(d[k])));
     svg.append('g').selectAll('circle').data(pts).join('circle').attr('cx', (d) => x(d.m)).attr('cy', (d) => y(d[k])).attr('r', 4).style('fill', col)
-      .on('mouseenter mousemove', (ev, d) => simpleTip(ev, [monthName(d.m), `${name}: ${f1(d[k])} из 5`])).on('mouseleave', hideTip);
-    svg.append('circle').attr('cx', mg.l + 8 + i * 80).attr('cy', 10).attr('r', 5).style('fill', col);
-    svg.append('text').attr('x', mg.l + 16 + i * 80).attr('y', 14).style('fill', 'var(--fg)').text(name);
+      .on('mouseenter mousemove', (ev, d) => simpleTip(ev, [monthName(d.m), `${name}: ${f1(d[k])} ${L('из', 'з', 'of')} 5`])).on('mouseleave', hideTip);
+    svg.append('circle').attr('cx', mg.l + 8 + i * 90).attr('cy', 10).attr('r', 5).style('fill', col);
+    svg.append('text').attr('x', mg.l + 16 + i * 90).attr('y', 14).style('fill', 'var(--fg)').text(name);
   });
 }
 
 function hbars(id, rows, label, fmtRight) {
   if (!rows.length) return emptyNote(id);
-  const rowH = 26, lab = 150;
+  const rowH = 26, lab = window.innerWidth < 420 ? 128 : 150;
   const { svg, W } = svgIn(id, rows.length * rowH + 6, label);
   const x = d3.scaleLinear().domain([0, d3.max(rows, (d) => d.v) || 1]).range([0, W - lab - 90]);
   const g = svg.selectAll('g').data(rows).join('g').attr('transform', (d, i) => `translate(0,${i * rowH + 3})`);
@@ -657,75 +808,78 @@ function hbars(id, rows, label, fmtRight) {
 }
 
 function renderMoods(list) {
-  const rows = d3.rollups(list.filter((d) => d.mood), (v) => ({ n: v.length, avg: mean(v.map((d) => d.rate)) }), (d) => d.mood).map(([m, v]) => ({ name: MOOD_EMOJI[m] + ' ' + moodName(m), v: v.n, avg: v.avg, color: colorOf(v.avg) || 'var(--accent)', tip: [moodName(m), `Дней: ${v.n}`, `Средняя оценка: ${f1(v.avg)}`] })).sort((a, b) => b.v - a.v);
-  hbars('cMoods', rows, 'Дни по настроениям', (d) => `${d.v} дн · ${f1(d.avg)}`);
+  const rows = d3.rollups(list.filter((d) => d.mood), (v) => ({ n: v.length, avg: mean(v.map((d) => d.rate)) }), (d) => d.mood).map(([m, v]) => ({ name: MOOD_EMOJI[m] + ' ' + moodName(m), v: v.n, avg: v.avg, color: colorOf(v.avg) || 'var(--accent)', tip: [moodName(m), `${L('Дней', 'Днів', 'Days')}: ${v.n}`, `${L('Средняя оценка', 'Середня оцінка', 'Average score')}: ${f1(v.avg)}`] })).sort((a, b) => b.v - a.v);
+  hbars('cMoods', rows, L(...ST.hMoods), (d) => `${d.v} ${DN_SHORT()} · ${f1(d.avg)}`);
 }
 function renderWeekday(list) {
-  const W = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-  const rows = W.map((name, i) => { const v = list.filter((d) => d.rate != null && (d.t.getUTCDay() + 6) % 7 === i); const a = mean(v.map((d) => d.rate)); return { name, v: a || 0, avg: a, n: v.length, color: colorOf(a), tip: [name, `Средняя оценка: ${f1(a)}`, `Дней с оценкой: ${v.length}`] }; });
+  const W = WD_SHORT();
+  const rows = W.map((name, i) => { const v = list.filter((d) => d.rate != null && (d.t.getUTCDay() + 6) % 7 === i); const a = mean(v.map((d) => d.rate)); return { name, v: a || 0, avg: a, n: v.length, color: colorOf(a), tip: [name, avgTip(a, v.length)] }; });
   if (!rows.some((r) => r.n)) return emptyNote('cWeekday');
-  hbars('cWeekday', rows, 'Средняя оценка по дням недели', (d) => (d.n ? `${f1(d.avg)} · ${d.n} дн` : '—'));
+  hbars('cWeekday', rows, L(...ST.hWd), (d) => (d.n ? `${f1(d.avg)} · ${d.n} ${DN_SHORT()}` : '—'));
 }
 
 // ---------- анализ текста ----------
-const THEMES_PUBLIC = [
-  ['💼 Работа', /работ|начальн|руковод|коллег|офис|смен[аеуы]|проект|задач|клиент|робот|роботі/],
-  ['😴 Сон', /(^|[^а-яіїє])(сон|снов|спал|поспал|выспал|уснул|сплю|бессонн|не спал|сну)/],
-  ['🎬 Фильмы и сериалы', /сериал|фильм|мульт|аниме|кино|смотрел|посмотрел|фільм/],
-  ['🎮 Игры', /игр|поиграл|гра[вл]|катк/],
-  ['📚 Чтение и учёба', /книг|читал|почитал|учил|учёб|учеб|курс|урок|англ|навча/],
-  ['🏃 Спорт и прогулки', /спорт|бег|побегал|трениров|зал|йог|прогул|гулял|пешком|велосип|плава/],
-  ['🍲 Еда', /поел|ели|кушал|готовил|наготовил|ужин|обед|завтрак|кафе|ресторан|доставк|пицц|їж/],
-  ['🩺 Здоровье', /болел|болит|болезн|врач|лечил|лекар|таблет|температур|простуд|самочувств|здоров/],
-  ['🤝 Люди и близкие', /друз|друг|подруг|мам|пап|брат|сестр|семь|родн|встрет|встреч|позвонил|созвон|гост/],
-  ['💸 Деньги', /деньг|зарплат|зп|заработ|потратил|купил|покупк|долг|кредит|грн|гроші/],
-  ['🏠 Дом и дела', /убор|убрал|стирк|ремонт|дом[аеу ]|квартир|магазин|дела/],
-  ['😮‍💨 Усталость и стресс', /устал|усталост|стресс|нервн|тревог|выгор|злюсь|бесит|раздраж/],
+const THEMES_PUBLIC_DEF = [
+  ['work', '💼', ['Работа', 'Робота', 'Work'], /работ|робот|начальн|руковод|керівн|коллег|колег|офис|офіс|смен[аеуы]|проект|проєкт|задач|завдан|клиент|клієнт|\bwork|\bjob|office|boss|meeting|colleague|client|project|deadline/],
+  ['sleep', '😴', ['Сон', 'Сон', 'Sleep'], /(^|[^а-яіїєґ])(сон|снов|спал|поспал|выспал|уснул|сплю|бессонн|не спал|сну|спав|поспав|виспав|заснув|безсон)|sleep|slept|\bnap\b|insomnia/],
+  ['films', '🎬', ['Фильмы и сериалы', 'Фільми й серіали', 'Films and series'], /сериал|серіал|фильм|фільм|мульт|аниме|аніме|кино|кіно|смотрел|посмотрел|дивив|подивив|movie|film|series|\bshow|netflix|anime|watched/],
+  ['games', '🎮', ['Игры', 'Ігри', 'Games'], /игр|поиграл|ігр|пограв|грав|катк|\bgame|gaming|played/],
+  ['reading', '📚', ['Чтение и учёба', 'Читання й навчання', 'Reading and study'], /книг|читал|почитал|читав|учил|учёб|учеб|навча|курс|урок|англ|\bbook|\bread|study|studied|course|lesson|learn/],
+  ['sport', '🏃', ['Спорт и прогулки', 'Спорт і прогулянки', 'Sport and walks'], /спорт|бег|побегал|біг|бігав|трениров|тренув|зал|йог|прогул|гулял|гуляв|пешком|пішки|велосип|плава|sport|\brun|\bran\b|jog|\bgym|workout|\bwalk|yoga|swim|\bbike/],
+  ['food', '🍲', ['Еда', 'Їжа', 'Food'], /поел|ели|кушал|готовил|наготовил|ужин|обед|завтрак|вечер[яю]|обід|сніданок|кафе|ресторан|доставк|пицц|піц|їж|поїв|готував|\bfood|\bate\b|\beat|\bcook|dinner|lunch|breakfast|pizza|restaurant|\bcafe/],
+  ['health', '🩺', ['Здоровье', 'Здоровʼя', 'Health'], /болел|болит|болезн|врач|лечил|лекар|таблет|температур|простуд|самочувств|здоров|хвор|болить|лікар|лікув|\bsick|\bill\b|doctor|\bpain|headache|medicine|health/],
+  ['people', '🤝', ['Люди и близкие', 'Люди й близькі', 'People and loved ones'], /друз|друг|подруг|мам|пап|брат|сестр|семь|сімʼ|сім'|родн|рідн|встрет|встреч|зустр|позвонил|подзвон|созвон|гост|friend|\bmom|\bmum|\bdad|brother|sister|family|\bmet\b|called|visit/],
+  ['money', '💸', ['Деньги', 'Гроші', 'Money'], /деньг|гроші|грош|зарплат|зп|заработ|заробі|потратил|витрат|купил|купив|покупк|долг|борг|кредит|грн|money|salary|\bpaid|bought|spent|\bdebt/],
+  ['home', '🏠', ['Дом и дела', 'Дім і справи', 'Home and chores'], /убор|убрал|прибир|стирк|прання|ремонт|дом[аеу ]|вдома|квартир|магазин|(^|[^а-яіїє])(дела|справи)([^а-яіїє]|$)|по дому|\bclean|laundry|\bhome|\bhouse|chores|\bshop|groceries|repair/],
+  ['stress', '😮‍💨', ['Усталость и стресс', 'Втома і стрес', 'Tiredness and stress'], /устал|усталост|втом|стресс|стрес|нервн|тревог|тривог|выгор|вигор|злюсь|бесит|раздраж|дратув|tired|stress|anxious|anxiety|burnout|angry|annoyed|exhausted/],
 ];
-const THEMES = PUBLIC ? THEMES_PUBLIC : [
-  ['💼 Работа', /работ|начальств|руковод|увольн|сотрудник|штраф|офис|распред|выгрузк|рассылк/],
-  ['😴 Сон', /(^|[^а-я])(сон|снов|спал|поспал|доспал|уснуть|сплю|лег |ложусь)/],
-  ['🎬 Сериалы и фильмы', /сериал|фильм|мульт|аниме|смотрел|посмотрел|досмотр/],
-  ['🎮 Игры', /игр|поиграл|лонг дар|лон дарк|дота|хелдрайвер|nintendo/],
-  ['📚 Чтение и манхва', /манхв|книг|почитал|читал|чтени|страниц/],
-  ['🏃 Спорт', /спорт|побегал|бег |турник|тренир|позанимал|занимаюсь/],
-  ['🍲 Еда', /поел|покушал|кушал|наготовил|готовил|доставк|пицц|суп|еды|еда/],
-  ['🩺 Здоровье', /зуб|болел|болит|живот|лечил|лечени|зрени|глаз|стоматолог|болею|подзаболел/],
-  ['🤝 Люди и друзья', /юр[аыуе]|друз|брат|девушк|коллег|саш|влад|ребят|семь/],
-  ['💸 Деньги', /деньг|зп|заработ|кинули|купон|грн|сделк|подар.*купон/],
-  ['🕯️ Свет и холод', /свет|холод|отоплен|станци|печк|генератор/],
-  ['🎅 Новый год', /новый год|дед мороз|корпоратив|(^|[^а-я])нг([^а-я]|$)/],
+const THEMES_PRIVATE_DEF = [
+  ['work', '💼', ['Работа'], /работ|начальств|руковод|увольн|сотрудник|штраф|офис|распред|выгрузк|рассылк/],
+  ['sleep', '😴', ['Сон'], /(^|[^а-я])(сон|снов|спал|поспал|доспал|уснуть|сплю|лег |ложусь)/],
+  ['films', '🎬', ['Сериалы и фильмы'], /сериал|фильм|мульт|аниме|смотрел|посмотрел|досмотр/],
+  ['games', '🎮', ['Игры'], /игр|поиграл|лонг дар|лон дарк|дота|хелдрайвер|nintendo/],
+  ['reading', '📚', ['Чтение и манхва'], /манхв|книг|почитал|читал|чтени|страниц/],
+  ['sport', '🏃', ['Спорт'], /спорт|побегал|бег |турник|тренир|позанимал|занимаюсь/],
+  ['food', '🍲', ['Еда'], /поел|покушал|кушал|наготовил|готовил|доставк|пицц|суп|еды|еда/],
+  ['health', '🩺', ['Здоровье'], /зуб|болел|болит|живот|лечил|лечени|зрени|глаз|стоматолог|болею|подзаболел/],
+  ['people', '🤝', ['Люди и друзья'], /юр[аыуе]|друз|брат|девушк|коллег|саш|влад|ребят|семь/],
+  ['money', '💸', ['Деньги'], /деньг|зп|заработ|кинули|купон|грн|сделк|подар.*купон/],
+  ['light', '🕯️', ['Свет и холод'], /свет|холод|отоплен|станци|печк|генератор/],
+  ['ny', '🎅', ['Новый год'], /новый год|дед мороз|корпоратив|(^|[^а-я])нг([^а-я]|$)/],
 ];
+const THEMES_DEF = PUBLIC ? THEMES_PUBLIC_DEF : THEMES_PRIVATE_DEF;
+const themeList = () => THEMES_DEF.map(([id, ic, n, re]) => [ic + ' ' + (n.length > 1 ? L(...n) : n[0]), re, id]);
+const short = (name) => { const s = name.slice(name.indexOf(' ') + 1); return LANG === 'en' ? s.toLowerCase() : s.toLowerCase(); };
 function renderThemes(list) {
   const el = document.getElementById('cThemes'); el.replaceChildren();
   const withText = list.filter((d) => d.text);
-  if (!withText.length) { const p = document.createElement('div'); p.className = 'empty-note'; p.textContent = 'Нет дней с текстом под эти фильтры.'; el.append(p); return; }
+  if (!withText.length) { const p = document.createElement('div'); p.className = 'empty-note'; p.textContent = L('Нет дней с текстом под эти фильтры.', 'Немає днів з текстом під ці фільтри.', 'No days with text for these filters.'); el.append(p); return; }
   const base = mean(withText.map((d) => d.rate));
-  const rows = THEMES.map(([name, re]) => { const v = withText.filter((d) => re.test(d.text.toLowerCase())); return { name, re, n: v.length, avg: mean(v.map((d) => d.rate)) }; }).filter((r) => r.n).sort((a, b) => b.n - a.n);
+  const rows = themeList().map(([name, re, id]) => { const v = withText.filter((d) => re.test(d.text.toLowerCase())); return { name, re, id, n: v.length, avg: mean(v.map((d) => d.rate)) }; }).filter((r) => r.n).sort((a, b) => b.n - a.n);
   const mx = d3.max(rows, (r) => r.n) || 1;
   rows.forEach((r) => {
     const a = document.createElement('div'); a.textContent = r.name; a.style.cursor = 'pointer'; a.title = '';
-    a.onmouseenter = (ev) => simpleTip(ev, [r.name, `Упоминается в ${r.n} днях из ${withText.length}`, `Средняя оценка таких дней: ${f1(r.avg)}`]); a.onmousemove = moveTip; a.onmouseleave = hideTip;
+    a.onmouseenter = (ev) => simpleTip(ev, [r.name, L(`Упоминается в ${r.n} днях из ${withText.length}`, `Згадується у ${r.n} днях з ${withText.length}`, `Mentioned on ${r.n} of ${withText.length} days`), L(`Средняя оценка таких дней: ${f1(r.avg)}`, `Середня оцінка таких днів: ${f1(r.avg)}`, `Average score of these days: ${f1(r.avg)}`)]); a.onmousemove = moveTip; a.onmouseleave = hideTip;
     const bw = document.createElement('div'); const bar = document.createElement('div'); bar.className = 'bar'; bar.style.width = Math.max(4, r.n / mx * 100) + '%'; bw.append(bar);
     const p = document.createElement('div'); p.className = 'pill'; p.textContent = f1(r.avg); p.style.background = colorOf(r.avg) || 'var(--line)';
     const dl = document.createElement('div'); dl.className = 'delta';
     const diff = r.avg != null && base != null ? r.avg - base : null;
     dl.textContent = diff == null ? '' : (diff >= 0 ? '+' : '−') + f1(Math.abs(diff)); dl.style.color = diff == null ? '' : diff >= 0.3 ? 'var(--ok)' : diff <= -0.3 ? 'var(--bad)' : 'var(--muted)';
-    const cnt = document.createElement('span'); cnt.textContent = ` ${r.n} дн`; cnt.style.color = 'var(--muted)'; cnt.style.fontSize = '12px'; a.append(cnt);
+    const cnt = document.createElement('span'); cnt.textContent = ` ${r.n} ${DN_SHORT()}`; cnt.style.color = 'var(--muted)'; cnt.style.fontSize = '12px'; a.append(cnt);
     el.append(a, bw, p, dl);
   });
 }
-const STOP = new Set('запомнилось главное мысли завтра было что-то этот этого чтобы которые который которая когда потом после перед очень было были была будет быть есть просто только может тоже также всего всех всем ещё еще даже хотя если чтоы вообще себя себе меня мной мне него нему него них ними нибудь сейчас сегодня вчера завтра день дней дня днем днём дело делал сделал делать хотел хочу хочется хочеться нужно надо можно будто кажется много мало немного почти снова опять потому поэтому который того тому тоже такой такая такие так тут там здесь где куда откуда весь вся всё все всегда никогда ничего нечего чего чем что как или либо уже еще ещё про для при без над под через между около свой своя свои своих этой этим этих эти этом наш наша наши ваш ваша они оно она мой моя мои твой твоя является итог итоге времени время раз разы года годы год лишь хоть пока ибо типа конечно реально вроде например плюс минус норм нормально хорошо плохо неплохо нету нема'.split(' '));
+const STOP = new Set(('запомнилось главное мысли завтра было что-то этот этого чтобы которые который которая когда потом после перед очень было были была будет быть есть просто только может тоже также всего всех всем ещё еще даже хотя если чтоы вообще себя себе меня мной мне него нему него них ними нибудь сейчас сегодня вчера завтра день дней дня днем днём дело делал сделал делать хотел хочу хочется хочеться нужно надо можно будто кажется много мало немного почти снова опять потому поэтому который того тому тоже такой такая такие так тут там здесь где куда откуда весь вся всё все всегда никогда ничего нечего чего чем что как или либо уже еще ещё про для при без над под через между около свой своя свои своих этой этим этих эти этом наш наша наши ваш ваша они оно она мой моя мои твой твоя является итог итоге времени время раз разы года годы год лишь хоть пока ибо типа конечно реально вроде например плюс минус норм нормально хорошо плохо неплохо нету нема ' + 'запамʼяталося головне думки завтра було щось цей цього щоб які який яка коли потім після перед дуже були була буде бути також всього всіх усіх всім ще навіть хоча якщо взагалі себе мене мені його йому них ними зараз сьогодні вчора день днів дня вдень справа робив зробив робити хотів хочу хочеться треба можна майже знову тому такий така такі тут там де куди весь вся усе все завжди ніколи нічого чого чим що як або вже про для при без над під через між свій своя свої своїх цієї цим цих ці цьому наш наша наші ваш вони воно вона мій моя мої твій твоя підсумок часу час раз рази року роки рік лише поки типу звісно реально начебто наприклад плюс мінус нормально добре погано непогано немає ' + 'this that with from have they were what when then than them there their about would could should after before into just very also some more much been being here today yesterday tomorrow which while really still even only over again because didn doesn dont wasn felt feel things thing going went time really pretty quite like little want wanted made make').split(' '));
 function renderWords(list) {
   const el = document.getElementById('cWords'); el.replaceChildren();
   const cnt = new Map();
-  list.forEach((d) => (d.text || '').toLowerCase().replace(/ё/g, 'е').split(/[^a-zа-я]+/).forEach((w) => { if (w.length >= 4 && !STOP.has(w)) cnt.set(w, (cnt.get(w) || 0) + 1); }));
+  list.forEach((d) => (d.text || '').toLowerCase().replace(/ё/g, 'е').split(/[^a-zа-яіїєґ]+/).forEach((w) => { if (w.length >= 4 && !STOP.has(w)) cnt.set(w, (cnt.get(w) || 0) + 1); }));
   const top = [...cnt].filter(([, n]) => n >= 2).sort((a, b) => b[1] - a[1]).slice(0, 40);
-  if (!top.length) { const p = document.createElement('div'); p.className = 'empty-note'; p.textContent = 'Мало текста под эти фильтры.'; el.append(p); return; }
+  if (!top.length) { const p = document.createElement('div'); p.className = 'empty-note'; p.textContent = L('Мало текста под эти фильтры.', 'Замало тексту під ці фільтри.', 'Not enough text for these filters.'); el.append(p); return; }
   const s = d3.scaleSqrt().domain([d3.min(top, (t) => t[1]), d3.max(top, (t) => t[1])]).range([12, 30]);
   top.sort((a, b) => d3.ascending(a[0], b[0])).forEach(([w, n]) => {
     const e = document.createElement('span'); e.textContent = w; e.style.fontSize = s(n) + 'px'; e.style.opacity = 0.55 + 0.45 * (s(n) - 12) / 18;
-    e.onmouseenter = (ev) => simpleTip(ev, [w, `Встречается ${n} раз`]); e.onmousemove = moveTip; e.onmouseleave = hideTip;
+    e.onmouseenter = (ev) => simpleTip(ev, [w, L(`Встречается ${n} ${plural(n, 'раз', 'раза', 'раз')}`, `Трапляється ${n} ${plural(n, 'раз', 'рази', 'разів')}`, `Appears ${n} ${n === 1 ? 'time' : 'times'}`)]); e.onmousemove = moveTip; e.onmouseleave = hideTip;
     e.onclick = () => { fQ.value = w; F.q = w; hideTip(); render(); document.getElementById('calendar').scrollIntoView({ behavior: 'smooth' }); };
     el.append(e);
   });
@@ -736,162 +890,161 @@ function renderKpis(list) {
   const rated = list.filter((d) => d.rate != null);
   const byM = d3.rollups(rated, (v) => ({ a: d3.mean(v, (d) => d.rate), n: v.length }), (d) => d.date.slice(0, 7)).filter(([, v]) => v.n >= 3).sort((a, b) => b[1].a - a[1].a);
   const items = [
-    [list.length, 'дней в записи'], [list.filter((d) => d.text).length, 'с текстом'],
-    [f1(mean(rated.map((d) => d.rate))), 'средняя оценка'], [rated.filter((d) => d.rate >= 9).length, 'дней на 9–10'],
-    [byM.length ? monthName(byM[0][0]).toLowerCase() : '—', 'лучший месяц'],
+    [list.length, L('дней в записи', 'днів у записі', 'days logged')], [list.filter((d) => d.text).length, L('с текстом', 'з текстом', 'with text')],
+    [f1(mean(rated.map((d) => d.rate))), L('средняя оценка', 'середня оцінка', 'average score')], [rated.filter((d) => d.rate >= 9).length, L('дней на 9–10', 'днів на 9–10', 'days at 9–10')],
+    [byM.length ? (LANG === 'en' ? monthName(byM[0][0]) : monthName(byM[0][0]).toLowerCase()) : '—', L('лучший месяц', 'найкращий місяць', 'best month')],
   ];
   kpis.replaceChildren(...items.map(([v, t]) => { const e = document.createElement('span'); e.className = 'kpi'; const b = document.createElement('b'); b.textContent = v; e.append(b, t); return e; }));
 }
 
 // ---------- авто-анализ (текст под графиками) ----------
-const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? a : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? b : c; };
-const dn = (n) => `${n} ${plural(n, 'день', 'дня', 'дней')}`;
+const dn = (n) => `${n} ${P(n, ['день', 'дня', 'дней'], ['день', 'дні', 'днів'], ['day', 'days'])}`;
 const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0) + '%';
-const mLow = (ym) => monthName(ym).toLowerCase();
+const mLow = (ym) => (LANG === 'en' ? monthName(ym) : monthName(ym).toLowerCase());
 const signed = (v) => (v >= 0 ? '+' : '−') + f1(Math.abs(v));
 const POS_MOODS = new Set(['Приятное', 'Спокойное', 'Благодарное']);
 const NEG_MOODS = new Set(['Уставшее', 'Разочарование', 'Грустное', 'Неприятное']);
-const REST_THEMES = PUBLIC ? ['😴 Сон', '🎬 Фильмы и сериалы', '🎮 Игры', '📚 Чтение и учёба', '🏃 Спорт и прогулки', '🍲 Еда', '🤝 Люди и близкие'] : ['😴 Сон', '🎬 Сериалы и фильмы', '🎮 Игры', '📚 Чтение и манхва', '🏃 Спорт', '🍲 Еда', '🤝 Люди и друзья'];
+const REST_THEMES = ['sleep', 'films', 'games', 'reading', 'sport', 'food', 'people'];
 function putInsight(id, lines, hint) {
   const el = document.getElementById(id); if (!el) return; el.replaceChildren();
   lines = lines.filter(Boolean);
   if (!lines.length) { el.style.display = 'none'; return; }
   el.style.display = '';
-  const h = document.createElement('div'); h.className = 'ih'; h.textContent = 'Что видно';
+  const h = document.createElement('div'); h.className = 'ih'; h.textContent = L('Что видно', 'Що видно', 'What it shows');
   const ul = document.createElement('ul'); lines.forEach((t) => { const li = document.createElement('li'); li.textContent = t; ul.append(li); });
   el.append(h, ul);
   if (hint) { const p = document.createElement('div'); p.className = 'hint'; p.textContent = '💡 ' + hint; el.append(p); }
 }
-const verdict = (v) => (v >= 7 ? 'хороший уровень' : v >= 5.5 ? 'середина, скорее норм' : v >= 4 ? 'ниже середины' : 'тяжёлый уровень');
+const verdict = (v) => (v >= 7 ? L('хороший уровень', 'добрий рівень', 'a good level') : v >= 5.5 ? L('середина, скорее норм', 'середина, радше норм', 'middling, mostly fine') : v >= 4 ? L('ниже середины', 'нижче середини', 'below the middle') : L('тяжёлый уровень', 'важкий рівень', 'a hard level'));
 
 function anWeeks(rated) {
   const g = d3.rollups(rated, (v) => ({ a: d3.mean(v, (d) => d.rate), n: v.length }), (d) => +d3.utcMonday.floor(d.t)).map(([k, v]) => ({ w: new Date(k), ...v })).sort((a, b) => a.w - b.w);
   if (g.length < 2) return [[], null];
-  const L = [], all = d3.mean(rated, (d) => d.rate);
+  const O = [], all = d3.mean(rated, (d) => d.rate);
   const best = g.filter((x) => x.n >= 2).sort((a, b) => b.a - a.a)[0], worst = g.filter((x) => x.n >= 2).sort((a, b) => a.a - b.a)[0];
-  if (best && worst && best !== worst) L.push(`Лучшая неделя — ${fdate(best.w)} (в среднем ${f1(best.a)}), самая тяжёлая — ${fdate(worst.w)} (${f1(worst.a)}).`);
+  if (best && worst && best !== worst) O.push(L(`Лучшая неделя — ${fdate(best.w)} (в среднем ${f1(best.a)}), самая тяжёлая — ${fdate(worst.w)} (${f1(worst.a)}).`, `Найкращий тиждень — ${fdate(best.w)} (у середньому ${f1(best.a)}), найважчий — ${fdate(worst.w)} (${f1(worst.a)}).`, `Best week: ${fdate(best.w)} (average ${f1(best.a)}); hardest: ${fdate(worst.w)} (${f1(worst.a)}).`));
   let run = 0, maxRun = 0; g.forEach((x) => { run = x.a < 4 ? run + 1 : 0; maxRun = Math.max(maxRun, run); });
-  if (maxRun >= 2) L.push(`Было ${maxRun} ${plural(maxRun, 'неделя', 'недели', 'недель')} подряд с оценкой ниже 4 — затяжной спад, а не один плохой день.`);
+  if (maxRun >= 2) O.push(L(`Было ${maxRun} ${plural(maxRun, 'неделя', 'недели', 'недель')} подряд с оценкой ниже 4 — затяжной спад, а не один плохой день.`, `Було ${maxRun} ${plural(maxRun, 'тиждень', 'тижні', 'тижнів')} поспіль з оцінкою нижче 4 — затяжний спад, а не один поганий день.`, `${maxRun} weeks in a row averaged below 4 — a lasting dip, not just one bad day.`));
   const last = g.slice(-3); const la = d3.mean(last, (x) => x.a);
   let hint = null;
   if (g.length >= 5) {
     const diff = la - all;
-    L.push(`Последние ${last.length} нед.: ${f1(la)} против ${f1(all)} в среднем за период — ${Math.abs(diff) < 0.5 ? 'примерно как обычно' : diff > 0 ? 'лучше обычного' : 'хуже обычного'}.`);
-    if (diff <= -1.5) hint = 'Резкое падение последних недель обычно связано с конкретными событиями. Стоит заглянуть, что изменилось, и не оставаться с этим одному.';
+    O.push(L(`Последние ${last.length} нед.: ${f1(la)} против ${f1(all)} в среднем за период — ${Math.abs(diff) < 0.5 ? 'примерно как обычно' : diff > 0 ? 'лучше обычного' : 'хуже обычного'}.`, `Останні ${last.length} тиж.: ${f1(la)} проти ${f1(all)} у середньому за період — ${Math.abs(diff) < 0.5 ? 'приблизно як зазвичай' : diff > 0 ? 'краще, ніж зазвичай' : 'гірше, ніж зазвичай'}.`, `Last ${last.length} weeks: ${f1(la)} vs ${f1(all)} on average for the period — ${Math.abs(diff) < 0.5 ? 'about usual' : diff > 0 ? 'better than usual' : 'worse than usual'}.`));
+    if (diff <= -1.5) hint = L('Резкое падение последних недель обычно связано с конкретными событиями. Стоит заглянуть, что изменилось, и не оставаться с этим одному.', 'Різке падіння останніх тижнів зазвичай повʼязане з конкретними подіями. Варто подивитися, що змінилося, і не залишатися з цим наодинці.', 'A sharp drop over the last weeks is usually tied to specific events. Worth looking at what changed — and not facing it alone.');
   }
   const gaps = g.filter((x, i) => i && x.w - g[i - 1].w > 5 * 7 * 864e5).length;
-  if (gaps) L.push(`${gaps} ${plural(gaps, 'большой перерыв', 'больших перерыва', 'больших перерывов')} в записях (больше месяца). Если дневник бросается, часто это совпадает с тяжёлым или очень загруженным периодом.`);
-  return [L, hint];
+  if (gaps) O.push(L(`${gaps} ${plural(gaps, 'большой перерыв', 'больших перерыва', 'больших перерывов')} в записях (больше месяца). Если дневник бросается, часто это совпадает с тяжёлым или очень загруженным периодом.`, `${gaps} ${plural(gaps, 'велика перерва', 'великі перерви', 'великих перерв')} у записах (понад місяць). Якщо щоденник закидається, часто це збігається з важким або дуже завантаженим періодом.`, `${gaps} long ${gaps === 1 ? 'break' : 'breaks'} in entries (over a month). When a diary gets dropped, it often coincides with a hard or very busy period.`));
+  return [O, hint];
 }
 function anMonths(rated) {
   const r = d3.rollups(rated, (v) => ({ a: d3.mean(v, (d) => d.rate), n: v.length }), (d) => d.date.slice(0, 7)).map(([m, v]) => ({ m, ...v })).sort((a, b) => d3.ascending(a.m, b.m));
   if (!r.length) return [[], null];
-  const L = [], ok = r.filter((x) => x.n >= 3);
+  const O = [], ok = r.filter((x) => x.n >= 3);
   if (ok.length >= 2) {
     const b = ok.reduce((p, x) => (x.a > p.a ? x : p)), w = ok.reduce((p, x) => (x.a < p.a ? x : p));
-    L.push(`Пик — ${mLow(b.m)} (${f1(b.a)}), минимум — ${mLow(w.m)} (${f1(w.a)}).`);
+    O.push(L(`Пик — ${mLow(b.m)} (${f1(b.a)}), минимум — ${mLow(w.m)} (${f1(w.a)}).`, `Пік — ${mLow(b.m)} (${f1(b.a)}), мінімум — ${mLow(w.m)} (${f1(w.a)}).`, `Peak: ${mLow(b.m)} (${f1(b.a)}); low: ${mLow(w.m)} (${f1(w.a)}).`));
   }
   const years = d3.rollups(rated, (v) => d3.mean(v, (d) => d.rate), (d) => d.date.slice(0, 4)).sort((a, b) => d3.ascending(a[0], b[0]));
   if (years.length >= 2) {
     const [y1, a1] = years[years.length - 2], [y2, a2] = years[years.length - 1];
-    L.push(`${y1} год в среднем ${f1(a1)}, ${y2} — ${f1(a2)}: ${Math.abs(a2 - a1) < 0.5 ? 'примерно одинаково' : a2 > a1 ? 'стало лучше' : 'стало хуже'}.`);
+    O.push(L(`${y1} год в среднем ${f1(a1)}, ${y2} — ${f1(a2)}: ${Math.abs(a2 - a1) < 0.5 ? 'примерно одинаково' : a2 > a1 ? 'стало лучше' : 'стало хуже'}.`, `${y1} рік у середньому ${f1(a1)}, ${y2} — ${f1(a2)}: ${Math.abs(a2 - a1) < 0.5 ? 'приблизно однаково' : a2 > a1 ? 'стало краще' : 'стало гірше'}.`, `${y1} averaged ${f1(a1)}, ${y2} ${f1(a2)}: ${Math.abs(a2 - a1) < 0.5 ? 'about the same' : a2 > a1 ? 'getting better' : 'getting worse'}.`));
   }
   const lm = r[r.length - 1];
-  if (r.length >= 3) L.push(`Последний месяц (${mLow(lm.m)}): ${f1(lm.a)} — ${verdict(lm.a)}${lm.n < 5 ? `, но записей пока мало (${dn(lm.n)})` : ''}.`);
+  if (r.length >= 3) O.push(L(`Последний месяц (${mLow(lm.m)}): ${f1(lm.a)} — ${verdict(lm.a)}${lm.n < 5 ? `, но записей пока мало (${dn(lm.n)})` : ''}.`, `Останній місяць (${mLow(lm.m)}): ${f1(lm.a)} — ${verdict(lm.a)}${lm.n < 5 ? `, але записів поки мало (${dn(lm.n)})` : ''}.`, `Latest month (${mLow(lm.m)}): ${f1(lm.a)} — ${verdict(lm.a)}${lm.n < 5 ? `, but there are few entries so far (${dn(lm.n)})` : ''}.`));
   const thin = r.filter((x) => x.n < 5).length;
-  if (thin >= 2) L.push(`В ${thin} ${plural(thin, 'месяце', 'месяцах', 'месяцах')} меньше 5 записей, поэтому их средняя оценка — скорее ориентир, чем точная картина.`);
-  return [L, null];
+  if (thin >= 2) O.push(L(`В ${thin} ${plural(thin, 'месяце', 'месяцах', 'месяцах')} меньше 5 записей, поэтому их средняя оценка — скорее ориентир, чем точная картина.`, `У ${thin} ${plural(thin, 'місяці', 'місяцях', 'місяцях')} менше 5 записів, тож їхня середня оцінка — радше орієнтир, ніж точна картина.`, `${thin} months have fewer than 5 entries, so their averages are a rough guide rather than an exact picture.`));
+  return [O, null];
 }
 function anSport(list) {
-  const L = []; let hint = null;
+  const O = []; let hint = null;
   const s = mean(list.map((d) => d.sport)), st = mean(list.map((d) => d.study));
   if (s == null && st == null) return [[], null];
-  L.push(`В среднем спорт ${f1(s)} из 5, учёба ${f1(st)} из 5.`);
+  O.push(L(`В среднем спорт ${f1(s)} из 5, учёба ${f1(st)} из 5.`, `У середньому спорт ${f1(s)} з 5, навчання ${f1(st)} з 5.`, `On average: sport ${f1(s)} of 5, study ${f1(st)} of 5.`));
   const cmp = (key, name) => {
     const hi = list.filter((d) => d[key] != null && d[key] >= 3 && d.rate != null), lo = list.filter((d) => d[key] != null && d[key] <= 1 && d.rate != null);
     if (hi.length < 3 || lo.length < 3) return null;
     const a = d3.mean(hi, (d) => d.rate), b = d3.mean(lo, (d) => d.rate), df = a - b;
-    L.push(`Дни, где ${name} на 3+ из 5, оцениваются в ${f1(a)}, а где почти нет (0–1) — в ${f1(b)}. Разница ${signed(df)}.`);
+    O.push(L(`Дни, где ${name} на 3+ из 5, оцениваются в ${f1(a)}, а где почти нет (0–1) — в ${f1(b)}. Разница ${signed(df)}.`, `Дні, де ${name} на 3+ з 5, оцінюються в ${f1(a)}, а де майже немає (0–1) — в ${f1(b)}. Різниця ${signed(df)}.`, `Days with ${name} at 3+ of 5 score ${f1(a)}; days with almost none (0–1) score ${f1(b)}. Difference ${signed(df)}.`));
     return df;
   };
-  const ds = cmp('sport', 'спорт'), du = cmp('study', 'учёба');
-  if (ds != null && ds >= 1) hint = 'Похоже, даже немного движения заметно поднимает день. Это самый простой рычаг из всех.';
-  else if (du != null && du >= 1) hint = 'Дни с учёбой оцениваются выше: ощущение, что двигаешься вперёд, похоже, держит настроение.';
+  const ds = cmp('sport', L('спорт', 'спорт', 'sport')), du = cmp('study', L('учёба', 'навчання', 'study'));
+  if (ds != null && ds >= 1) hint = L('Похоже, даже немного движения заметно поднимает день. Это самый простой рычаг из всех.', 'Схоже, навіть трохи руху помітно піднімає день. Це найпростіший важіль з усіх.', 'Even a little movement seems to lift the day noticeably. It’s the simplest lever of all.');
+  else if (du != null && du >= 1) hint = L('Дни с учёбой оцениваются выше: ощущение, что двигаешься вперёд, похоже, держит настроение.', 'Дні з навчанням оцінюються вище: відчуття, що рухаєшся вперед, схоже, тримає настрій.', 'Days with study score higher: the feeling of moving forward seems to hold up the mood.');
   const ms = d3.rollups(list.filter((d) => d.sport != null), (v) => d3.mean(v, (d) => d.sport), (d) => d.date.slice(0, 7)).sort((a, b) => d3.ascending(a[0], b[0]));
   if (ms.length >= 4) {
     const early = d3.mean(ms.slice(0, Math.floor(ms.length / 2)), (x) => x[1]), late = d3.mean(ms.slice(Math.floor(ms.length / 2)), (x) => x[1]);
-    if (Math.abs(late - early) >= 0.7) L.push(`Спорта ${late > early ? 'стало больше' : 'стало меньше'}: было ~${f1(early)}, стало ~${f1(late)}.`);
+    if (Math.abs(late - early) >= 0.7) O.push(L(`Спорта ${late > early ? 'стало больше' : 'стало меньше'}: было ~${f1(early)}, стало ~${f1(late)}.`, `Спорту ${late > early ? 'стало більше' : 'стало менше'}: було ~${f1(early)}, стало ~${f1(late)}.`, `${late > early ? 'More' : 'Less'} sport lately: was ~${f1(early)}, now ~${f1(late)}.`));
   }
-  return [L, hint];
+  return [O, hint];
 }
 function anMoods(list) {
   const m = list.filter((d) => d.mood); if (m.length < 3) return [[], null];
-  const L = []; const r = d3.rollups(m, (v) => ({ n: v.length, a: mean(v.map((d) => d.rate)) }), (d) => d.mood).sort((a, b) => b[1].n - a[1].n);
+  const O = []; const r = d3.rollups(m, (v) => ({ n: v.length, a: mean(v.map((d) => d.rate)) }), (d) => d.mood).sort((a, b) => b[1].n - a[1].n);
   const [top, tv] = r[0];
-  L.push(`Чаще всего — «${moodName(top).toLowerCase()}»: ${dn(tv.n)} из ${m.length} (${pct(tv.n, m.length)}).`);
+  O.push(L(`Чаще всего — «${moodName(top).toLowerCase()}»: ${dn(tv.n)} из ${m.length} (${pct(tv.n, m.length)}).`, `Найчастіше — «${moodName(top).toLowerCase()}»: ${dn(tv.n)} з ${m.length} (${pct(tv.n, m.length)}).`, `Most common: “${moodName(top).toLowerCase()}” — ${dn(tv.n)} of ${m.length} (${pct(tv.n, m.length)}).`));
   const pos = m.filter((d) => POS_MOODS.has(d.mood)).length, neg = m.filter((d) => NEG_MOODS.has(d.mood)).length;
-  L.push(`Светлых настроений (приятное, спокойное, благодарное) — ${pct(pos, m.length)}, тяжёлых (усталость, разочарование, грусть, неприятное) — ${pct(neg, m.length)}.`);
+  O.push(L(`Светлых настроений (приятное, спокойное, благодарное) — ${pct(pos, m.length)}, тяжёлых (усталость, разочарование, грусть, неприятное) — ${pct(neg, m.length)}.`, `Світлих настроїв (приємний, спокійний, вдячний) — ${pct(pos, m.length)}, важких (втома, розчарування, сум, неприємний) — ${pct(neg, m.length)}.`, `Bright moods (pleasant, calm, grateful): ${pct(pos, m.length)}; heavy ones (tired, disappointed, sad, unpleasant): ${pct(neg, m.length)}.`));
   const tired = m.filter((d) => d.mood === 'Уставшее').length;
   let hint = null;
-  if (tired / m.length >= 0.2) hint = `Усталость — почти каждый ${Math.max(2, Math.round(m.length / tired))}-й день. Это чаще про сон и нагрузку, чем про характер.`;
-  else if (neg > pos) hint = 'Тяжёлых дней больше, чем светлых. Посмотри фильтром по настроению, что их объединяет.';
-  return [L, hint];
+  if (tired / m.length >= 0.2) { const k = Math.max(2, Math.round(m.length / tired)); hint = L(`Усталость — почти каждый ${k}-й день. Это чаще про сон и нагрузку, чем про характер.`, `Втома — майже кожен ${k}-й день. Це частіше про сон і навантаження, ніж про характер.`, `Tiredness shows up almost every ${k} days. That’s usually about sleep and workload, not character.`); }
+  else if (neg > pos) hint = L('Тяжёлых дней больше, чем светлых. Посмотри фильтром по настроению, что их объединяет.', 'Важких днів більше, ніж світлих. Подивися фільтром за настроєм, що їх обʼєднує.', 'There are more heavy days than bright ones. Use the mood filter to see what they have in common.');
+  return [O, hint];
 }
 function anWeekday(list) {
-  const W = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье'];
+  const W = [1, 2, 3, 4, 5, 6, 0].map((i) => WDN[i]);
   const rows = W.map((n, i) => { const v = list.filter((d) => d.rate != null && (d.t.getUTCDay() + 6) % 7 === i); return { n, c: v.length, a: mean(v.map((d) => d.rate)) }; }).filter((x) => x.c >= 2);
   if (rows.length < 3) return [[], null];
-  const L = [], b = rows.reduce((p, x) => (x.a > p.a ? x : p)), w = rows.reduce((p, x) => (x.a < p.a ? x : p));
-  L.push(`Лучший день недели — ${b.n} (${f1(b.a)}), худший — ${w.n} (${f1(w.a)}).`);
+  const O = [], b = rows.reduce((p, x) => (x.a > p.a ? x : p)), w = rows.reduce((p, x) => (x.a < p.a ? x : p));
+  O.push(L(`Лучший день недели — ${b.n} (${f1(b.a)}), худший — ${w.n} (${f1(w.a)}).`, `Найкращий день тижня — ${b.n} (${f1(b.a)}), найгірший — ${w.n} (${f1(w.a)}).`, `Best weekday: ${b.n} (${f1(b.a)}); worst: ${w.n} (${f1(w.a)}).`));
   const r = list.filter((d) => d.rate != null), we = r.filter((d) => [0, 6].includes(d.t.getUTCDay())), wd = r.filter((d) => ![0, 6].includes(d.t.getUTCDay()));
   if (we.length >= 3 && wd.length >= 3) {
     const df = d3.mean(we, (d) => d.rate) - d3.mean(wd, (d) => d.rate);
-    L.push(Math.abs(df) < 0.4 ? 'Выходные и будни оцениваются почти одинаково.' : `Выходные ${df > 0 ? 'лучше' : 'хуже'} будней на ${f1(Math.abs(df))}.`);
-    if (df >= 1) return [L, 'Будни заметно проседают — значит, основное давление идёт от работы или рутины.'];
-    if (df <= -1) return [L, 'Выходные хуже будней — бывает, когда без работы становится пусто. Стоит заранее планировать что-то на выходные.'];
+    O.push(Math.abs(df) < 0.4 ? L('Выходные и будни оцениваются почти одинаково.', 'Вихідні та будні оцінюються майже однаково.', 'Weekends and weekdays score about the same.') : L(`Выходные ${df > 0 ? 'лучше' : 'хуже'} будней на ${f1(Math.abs(df))}.`, `Вихідні ${df > 0 ? 'кращі' : 'гірші'} за будні на ${f1(Math.abs(df))}.`, `Weekends score ${f1(Math.abs(df))} ${df > 0 ? 'higher' : 'lower'} than weekdays.`));
+    if (df >= 1) return [O, L('Будни заметно проседают — значит, основное давление идёт от работы или рутины.', 'Будні помітно просідають — отже, основний тиск іде від роботи чи рутини.', 'Weekdays dip noticeably — the main pressure likely comes from work or routine.')];
+    if (df <= -1) return [O, L('Выходные хуже будней — бывает, когда без работы становится пусто. Стоит заранее планировать что-то на выходные.', 'Вихідні гірші за будні — буває, коли без роботи стає порожньо. Варто заздалегідь планувати щось на вихідні.', 'Weekends are worse than weekdays — it happens when things feel empty without work. Try planning something for weekends in advance.')];
   }
-  return [L, null];
+  return [O, null];
 }
 function themeRows(list) {
   const withText = list.filter((d) => d.text); const base = mean(withText.map((d) => d.rate));
-  return { withText, base, rows: THEMES.map(([name, re]) => { const v = withText.filter((d) => re.test(d.text.toLowerCase())); return { name, n: v.length, a: mean(v.map((d) => d.rate)) }; }).filter((r) => r.n) };
+  return { withText, base, rows: themeList().map(([name, re, id]) => { const v = withText.filter((d) => re.test(d.text.toLowerCase())); return { name, id, n: v.length, a: mean(v.map((d) => d.rate)) }; }).filter((r) => r.n) };
 }
 function anThemes(list) {
   const { withText, base, rows } = themeRows(list);
   if (withText.length < 3 || !rows.length) return [[], null];
-  const L = []; let hint = null; const by = Object.fromEntries(rows.map((r) => [r.name, r]));
+  const O = []; let hint = null; const by = Object.fromEntries(rows.map((r) => [r.id, r]));
   const sorted = [...rows].sort((a, b) => b.n - a.n);
-  L.push(`Чаще всего в записях: ${sorted.slice(0, 3).map((r) => `${r.name.slice(r.name.indexOf(' ') + 1).toLowerCase()} (${pct(r.n, withText.length)} дней)`).join(', ')}.`);
-  const work = by['💼 Работа'];
+  O.push(L('Чаще всего в записях: ', 'Найчастіше в записах: ', 'Most frequent in entries: ') + sorted.slice(0, 3).map((r) => `${short(r.name)} (${pct(r.n, withText.length)} ${L('дней', 'днів', 'of days')})`).join(', ') + '.');
+  const work = by.work;
   const rest = REST_THEMES.map((n) => by[n]).filter(Boolean).sort((a, b) => b.n - a.n);
   if (work && rest.length) {
     const r0 = rest[0]; const k = work.n / r0.n;
-    if (k >= 1.4) { L.push(`Работа упоминается в ${work.n} ${plural(work.n, 'дне', 'днях', 'днях')} — это в ${f1(k)} раза чаще, чем самая частая «жизненная» тема (${r0.name.slice(r0.name.indexOf(' ') + 1).toLowerCase()}, ${dn(r0.n)}).`); hint = 'Работа занимает в записях заметно больше места, чем любая тема отдыха и жизни вне неё. В балансе эти доли ближе друг к другу — повод присмотреться, не съедает ли работа всё остальное.'; }
-    else if (k <= 0.7) L.push(`Работа (${dn(work.n)}) упоминается реже, чем ${r0.name.slice(r0.name.indexOf(' ') + 1).toLowerCase()} (${dn(r0.n)}): жизнь вне работы занимает основное место.`);
-    else L.push(`Работа (${dn(work.n)}) и жизнь вне неё (${r0.name.slice(r0.name.indexOf(' ') + 1).toLowerCase()}, ${dn(r0.n)}) примерно в балансе.`);
+    if (k >= 1.4) { O.push(L(`Работа упоминается в ${work.n} ${plural(work.n, 'дне', 'днях', 'днях')} — это в ${f1(k)} раза чаще, чем самая частая «жизненная» тема (${short(r0.name)}, ${dn(r0.n)}).`, `Робота згадується у ${work.n} ${plural(work.n, 'дні', 'днях', 'днях')} — це в ${f1(k)} раза частіше, ніж найчастіша «життєва» тема (${short(r0.name)}, ${dn(r0.n)}).`, `Work comes up on ${dn(work.n)} — ${f1(k)}× more often than the most frequent “life” topic (${short(r0.name)}, ${dn(r0.n)}).`)); hint = L('Работа занимает в записях заметно больше места, чем любая тема отдыха и жизни вне неё. В балансе эти доли ближе друг к другу — повод присмотреться, не съедает ли работа всё остальное.', 'Робота займає в записах помітно більше місця, ніж будь-яка тема відпочинку й життя поза нею. У балансі ці частки ближчі одна до одної — привід придивитися, чи не зʼїдає робота все інше.', 'Work takes up noticeably more space in your entries than any topic about rest or life outside it. In a balanced life these shares are closer — worth checking whether work is eating everything else.'); }
+    else if (k <= 0.7) O.push(L(`Работа (${dn(work.n)}) упоминается реже, чем ${short(r0.name)} (${dn(r0.n)}): жизнь вне работы занимает основное место.`, `Робота (${dn(work.n)}) згадується рідше, ніж ${short(r0.name)} (${dn(r0.n)}): життя поза роботою займає основне місце.`, `Work (${dn(work.n)}) comes up less than ${short(r0.name)} (${dn(r0.n)}): life outside work takes centre stage.`));
+    else O.push(L(`Работа (${dn(work.n)}) и жизнь вне неё (${short(r0.name)}, ${dn(r0.n)}) примерно в балансе.`, `Робота (${dn(work.n)}) і життя поза нею (${short(r0.name)}, ${dn(r0.n)}) приблизно в балансі.`, `Work (${dn(work.n)}) and life outside it (${short(r0.name)}, ${dn(r0.n)}) are roughly balanced.`));
   }
   const up = rows.filter((r) => r.n >= 3 && r.a != null && r.a - base >= 0.7).sort((a, b) => b.a - a.a);
   const dw = rows.filter((r) => r.n >= 3 && r.a != null && r.a - base <= -0.7).sort((a, b) => a.a - b.a);
-  if (up.length) L.push(`Поднимают оценку дня: ${up.slice(0, 3).map((r) => `${r.name.slice(r.name.indexOf(' ') + 1).toLowerCase()} (${signed(r.a - base)})`).join(', ')}.`);
-  if (dw.length) L.push(`Тянут вниз: ${dw.slice(0, 3).map((r) => `${r.name.slice(r.name.indexOf(' ') + 1).toLowerCase()} (${signed(r.a - base)})`).join(', ')}.`);
-  if (!hint && up.length) hint = `Если хочется больше хороших дней — первым делом больше того, что их поднимает: ${up[0].name.slice(up[0].name.indexOf(' ') + 1).toLowerCase()}.`;
-  return [L, hint];
+  if (up.length) O.push(L('Поднимают оценку дня: ', 'Піднімають оцінку дня: ', 'Lift the day’s score: ') + up.slice(0, 3).map((r) => `${short(r.name)} (${signed(r.a - base)})`).join(', ') + '.');
+  if (dw.length) O.push(L('Тянут вниз: ', 'Тягнуть донизу: ', 'Pull it down: ') + dw.slice(0, 3).map((r) => `${short(r.name)} (${signed(r.a - base)})`).join(', ') + '.');
+  if (!hint && up.length) hint = L('Если хочется больше хороших дней — первым делом больше того, что их поднимает: ', 'Якщо хочеться більше добрих днів — насамперед більше того, що їх піднімає: ', 'Want more good days? Start with more of what lifts them: ') + short(up[0].name) + '.';
+  return [O, hint];
 }
-function words(d) { return new Set((d.text || '').toLowerCase().replace(/ё/g, 'е').split(/[^a-zа-я]+/).filter((w) => w.length >= 4 && !STOP.has(w))); }
+function words(d) { return new Set((d.text || '').toLowerCase().replace(/ё/g, 'е').split(/[^a-zа-яіїєґ]+/).filter((w) => w.length >= 4 && !STOP.has(w))); }
 function anWords(list) {
   const t = list.filter((d) => d.text && d.rate != null); const good = t.filter((d) => d.rate >= 7), bad = t.filter((d) => d.rate <= 4);
-  const L = [];
+  const O = [];
   const cnt = new Map(); list.forEach((d) => words(d).forEach((w) => cnt.set(w, (cnt.get(w) || 0) + 1)));
   const top = [...cnt].sort((a, b) => b[1] - a[1]).slice(0, 5);
-  if (top.length) L.push(`Самые частые слова: ${top.map(([w, n]) => `${w} (${n})`).join(', ')}.`);
+  if (top.length) O.push(L('Самые частые слова: ', 'Найчастіші слова: ', 'Most frequent words: ') + top.map(([w, n]) => `${w} (${n})`).join(', ') + '.');
   if (good.length >= 3 && bad.length >= 3) {
     const gs = good.map(words), bs = bad.map(words), all = new Set([...gs, ...bs].flatMap((s) => [...s]));
     const sc = [...all].map((w) => { const g = gs.filter((s) => s.has(w)).length, b = bs.filter((s) => s.has(w)).length; return { w, g, b, d: g / gs.length - b / bs.length }; });
     const gw = sc.filter((x) => x.g >= 2 && x.d > 0).sort((a, b) => b.d - a.d).slice(0, 5), bw = sc.filter((x) => x.b >= 2 && x.d < 0).sort((a, b) => a.d - b.d).slice(0, 5);
-    if (gw.length) L.push(`Слова хороших дней (7+): ${gw.map((x) => x.w).join(', ')}.`);
-    if (bw.length) L.push(`Слова тяжёлых дней (до 4): ${bw.map((x) => x.w).join(', ')}.`);
-  } else L.push('Для сравнения слов хороших и тяжёлых дней нужно хотя бы по 3 дня с текстом в каждой группе.');
-  return [L, 'Клик по слову в облаке покажет все дни, где оно встречается.'];
+    if (gw.length) O.push(L('Слова хороших дней (7+): ', 'Слова добрих днів (7+): ', 'Words of good days (7+): ') + gw.map((x) => x.w).join(', ') + '.');
+    if (bw.length) O.push(L('Слова тяжёлых дней (до 4): ', 'Слова важких днів (до 4): ', 'Words of hard days (up to 4): ') + bw.map((x) => x.w).join(', ') + '.');
+  } else O.push(L('Для сравнения слов хороших и тяжёлых дней нужно хотя бы по 3 дня с текстом в каждой группе.', 'Щоб порівняти слова добрих і важких днів, потрібно хоча б по 3 дні з текстом у кожній групі.', 'To compare words of good and hard days you need at least 3 days with text in each group.'));
+  return [O, L('Клик по слову в облаке покажет все дни, где оно встречается.', 'Клік по слову в хмарі покаже всі дні, де воно трапляється.', 'Click a word in the cloud to see every day it appears.')];
 }
 function renderInsights(list) {
   const rated = list.filter((d) => d.rate != null);
@@ -901,25 +1054,25 @@ function renderInsights(list) {
   const S = [];
   if (rated.length) {
     const a = d3.mean(rated, (d) => d.rate);
-    S.push(`${dn(list.length)} в записи, средняя оценка ${f1(a)} из 10 — ${verdict(a)}.`);
+    S.push(L(`${dn(list.length)} в записи, средняя оценка ${f1(a)} из 10 — ${verdict(a)}.`, `${dn(list.length)} у записі, середня оцінка ${f1(a)} з 10 — ${verdict(a)}.`, `${dn(list.length)} logged, average score ${f1(a)} of 10 — ${verdict(a)}.`));
     if (rated.length >= 8) {
       const h = Math.floor(rated.length / 2), a1 = d3.mean(rated.slice(0, h), (d) => d.rate), a2 = d3.mean(rated.slice(h), (d) => d.rate);
-      S.push(`Динамика: первая половина периода ${f1(a1)}, вторая ${f1(a2)} — ${Math.abs(a2 - a1) < 0.5 ? 'ровно' : a2 > a1 ? 'идёт вверх' : 'идёт вниз'}.`);
+      S.push(L(`Динамика: первая половина периода ${f1(a1)}, вторая ${f1(a2)} — ${Math.abs(a2 - a1) < 0.5 ? 'ровно' : a2 > a1 ? 'идёт вверх' : 'идёт вниз'}.`, `Динаміка: перша половина періоду ${f1(a1)}, друга ${f1(a2)} — ${Math.abs(a2 - a1) < 0.5 ? 'рівно' : a2 > a1 ? 'іде вгору' : 'іде вниз'}.`, `Trend: first half of the period ${f1(a1)}, second ${f1(a2)} — ${Math.abs(a2 - a1) < 0.5 ? 'steady' : a2 > a1 ? 'going up' : 'going down'}.`));
     }
     const hi = rated.filter((d) => d.rate >= 7).length, lo = rated.filter((d) => d.rate <= 3).length;
-    S.push(`Хороших дней (7+) — ${pct(hi, rated.length)}, тяжёлых (1–3) — ${pct(lo, rated.length)}.`);
+    S.push(L(`Хороших дней (7+) — ${pct(hi, rated.length)}, тяжёлых (1–3) — ${pct(lo, rated.length)}.`, `Добрих днів (7+) — ${pct(hi, rated.length)}, важких (1–3) — ${pct(lo, rated.length)}.`, `Good days (7+): ${pct(hi, rated.length)}; hard days (1–3): ${pct(lo, rated.length)}.`));
   }
   const { withText, base, rows } = themeRows(list);
   if (withText.length >= 3 && rows.length) {
     const top = [...rows].sort((a, b) => b.n - a.n)[0];
-    S.push(`Главная тема записей — ${top.name.slice(top.name.indexOf(' ') + 1).toLowerCase()} (${pct(top.n, withText.length)} дней с текстом).`);
+    S.push(L(`Главная тема записей — ${short(top.name)} (${pct(top.n, withText.length)} дней с текстом).`, `Головна тема записів — ${short(top.name)} (${pct(top.n, withText.length)} днів з текстом).`, `Main topic: ${short(top.name)} (${pct(top.n, withText.length)} of days with text).`));
     const up = rows.filter((r) => r.n >= 3 && r.a != null).sort((a, b) => b.a - a.a)[0];
-    if (up && up.a - base >= 0.7) S.push(`Сильнее всего день поднимает: ${up.name.slice(up.name.indexOf(' ') + 1).toLowerCase()} (${signed(up.a - base)} к средней).`);
+    if (up && up.a - base >= 0.7) S.push(L(`Сильнее всего день поднимает: ${short(up.name)} (${signed(up.a - base)} к средней).`, `Найсильніше день піднімає: ${short(up.name)} (${signed(up.a - base)} до середньої).`, `What lifts the day most: ${short(up.name)} (${signed(up.a - base)} vs average).`));
   }
   const last = [...rated].slice(-7);
-  if (last.length >= 4 && d3.mean(last, (d) => d.rate) < 4) S.push(`Последние ${dn(last.length)} в среднем ${f1(d3.mean(last, (d) => d.rate))} — сейчас тяжёлый отрезок. Хорошо бы не тащить его в одиночку: написать кому-то из своих или поговорить со специалистом.`);
+  if (last.length >= 4 && d3.mean(last, (d) => d.rate) < 4) S.push(L(`Последние ${dn(last.length)} в среднем ${f1(d3.mean(last, (d) => d.rate))} — сейчас тяжёлый отрезок. Хорошо бы не тащить его в одиночку: написать кому-то из своих или поговорить со специалистом.`, `Останні ${dn(last.length)} у середньому ${f1(d3.mean(last, (d) => d.rate))} — зараз важкий відрізок. Добре б не тягнути його наодинці: написати комусь зі своїх або поговорити з фахівцем.`, `The last ${dn(last.length)} averaged ${f1(d3.mean(last, (d) => d.rate))} — a hard stretch right now. Try not to carry it alone: message someone close or talk to a professional.`));
   const el = document.getElementById('iSummary'); el.replaceChildren();
-  const ul = document.createElement('ul'); (S.length ? S : ['Мало данных под эти фильтры.']).forEach((t) => { const li = document.createElement('li'); li.textContent = t; ul.append(li); }); el.append(ul);
+  const ul = document.createElement('ul'); (S.length ? S : [L('Мало данных под эти фильтры.', 'Замало даних під ці фільтри.', 'Not enough data for these filters.')]).forEach((t) => { const li = document.createElement('li'); li.textContent = t; ul.append(li); }); el.append(ul);
 }
 
 // ---------- 🕰️ в этот день ----------
@@ -933,27 +1086,27 @@ function renderOnThisDay() {
   for (let k = 1; k <= 10; k++) {
     let iso = `${y0 - k}-${md}`;
     if (md === '02-29' && !by.has(iso)) iso = `${y0 - k}-02-28`;
-    if (by.has(iso)) found.push({ d: by.get(iso), lbl: k === 1 ? 'Ровно год назад' : `${k} ${plural(k, 'год', 'года', 'лет')} назад`, exact: true });
+    if (by.has(iso)) found.push({ d: by.get(iso), lbl: k === 1 ? L('Ровно год назад', 'Рівно рік тому', 'Exactly a year ago') : L(`${k} ${plural(k, 'год', 'года', 'лет')} назад`, `${k} ${plural(k, 'рік', 'роки', 'років')} тому`, `${k} years ago`), exact: true, k });
   }
-  if (!found.some((f) => f.lbl === 'Ровно год назад')) {
+  if (!found.some((f) => f.k === 1)) {
     const target = `${y0 - 1}-${md}`; let best = null;
     for (let s = 1; s <= 7 && !best; s++) for (const sg of [-1, 1]) { const iso = addDaysIso(target, s * sg); if (by.has(iso)) { best = by.get(iso); break; } }
-    if (best) found.unshift({ d: best, lbl: 'Почти год назад', exact: false });
+    if (best) found.unshift({ d: best, lbl: L('Почти год назад', 'Майже рік тому', 'Almost a year ago'), exact: false });
   }
   const sub = document.getElementById('otdSub');
   if (!found.length) {
     if (!PUBLIC) { box.style.display = 'none'; return; }
-    sub.textContent = 'Год назад записей ещё нет. Через год здесь появится то, что ты пишешь сегодня 🙂';
+    sub.textContent = L('Год назад записей ещё нет. Через год здесь появится то, что ты пишешь сегодня 🙂', 'Рік тому записів ще немає. Через рік тут зʼявиться те, що ти пишеш сьогодні 🙂', 'No entries from a year ago yet. In a year, what you write today will show up here 🙂');
     box.style.display = 'block'; return;
   }
-  sub.textContent = found[0].exact ? 'Что было в этот день в прошлые годы. Нажми, чтобы открыть запись.' : `Ровно ${fdate(new Date(`${y0 - 1}-${md}T00:00:00Z`))} записи нет — вот ближайший день к нему. Нажми, чтобы открыть.`;
+  { const dd = fdate(new Date(`${y0 - 1}-${md}T00:00:00Z`)); sub.textContent = found[0].exact ? L('Что было в этот день в прошлые годы. Нажми, чтобы открыть запись.', 'Що було цього дня в минулі роки. Натисни, щоб відкрити запис.', 'What happened on this day in past years. Tap to open the entry.') : L(`Ровно ${dd} записи нет — вот ближайший день к нему. Нажми, чтобы открыть.`, `Саме ${dd} запису немає — ось найближчий до нього день. Натисни, щоб відкрити.`, `There’s no entry for exactly ${dd} — here’s the closest day. Tap to open.`); }
   found.slice(0, 4).forEach(({ d, lbl }) => {
     const row = document.createElement('div'); row.className = 'oi';
     const e = document.createElement('div'); e.className = 'oe'; e.textContent = firstEmoji(d.emoji) || MOOD_EMOJI[d.mood] || '📅';
     const body = document.createElement('div'); body.style.flex = '1';
     const t = document.createElement('div'); t.className = 'ot'; t.textContent = `${lbl} · ${fdate(d.t)}, ${WDN[d.t.getUTCDay()]}`;
-    const m = document.createElement('div'); m.className = 'om'; m.textContent = [d.rate != null ? `оценка ${d.rate}/10` : null, d.mood_raw ? `настроение: ${d.mood_raw.toLowerCase()}` : null].filter(Boolean).join(' · ') || 'без оценки';
-    const x = document.createElement('div'); x.className = 'ox'; x.textContent = d.text ? (d.text.length > 260 ? d.text.slice(0, 260).trimEnd() + '…' : d.text) : 'Текста нет — только оценка и настроение.';
+    const m = document.createElement('div'); m.className = 'om'; m.textContent = [d.rate != null ? `${L('оценка', 'оцінка', 'score')} ${d.rate}/10` : null, d.mood_raw ? `${L('настроение', 'настрій', 'mood')}: ${d.mood_raw.toLowerCase()}` : null].filter(Boolean).join(' · ') || L('без оценки', 'без оцінки', 'no score');
+    const x = document.createElement('div'); x.className = 'ox'; x.textContent = d.text ? (d.text.length > 260 ? d.text.slice(0, 260).trimEnd() + '…' : d.text) : NOTEXT();
     body.append(t, m, x); row.append(e, body);
     if (d.photo) { const im = document.createElement('img'); im.className = 'ophoto'; im.src = d.photo; im.alt = ''; row.append(im); }
     row.onclick = () => openDay(d, DAYS);
@@ -970,11 +1123,11 @@ function heatScale() {
 }
 function renderHeatLegend() {
   const el = document.getElementById('hLegend'); el.replaceChildren();
-  const s = document.createElement('span'); s.textContent = 'Оценка: 1'; s.style.marginRight = '4px'; el.append(s);
+  const s = document.createElement('span'); s.textContent = L('Оценка: 1', 'Оцінка: 1', 'Score: 1'); s.style.marginRight = '4px'; el.append(s);
   d3.range(1, 11).forEach((v) => { const i = document.createElement('i'); i.style.background = heatColor(v); i.title = v; el.append(i); });
   const e = document.createElement('span'); e.textContent = '10'; e.style.margin = '0 12px 0 4px'; el.append(e);
-  const a = document.createElement('i'); a.style.background = 'var(--panel2)'; a.style.outline = '1px solid var(--line)'; el.append(a, document.createTextNode(' без оценки  '));
-  const b = document.createElement('i'); b.style.background = 'var(--empty)'; b.style.marginLeft = '10px'; el.append(b, document.createTextNode(' нет записи'));
+  const a = document.createElement('i'); a.style.background = 'var(--panel2)'; a.style.outline = '1px solid var(--line)'; el.append(a, document.createTextNode(' ' + L('без оценки', 'без оцінки', 'no score') + '  '));
+  const b = document.createElement('i'); b.style.background = 'var(--empty)'; b.style.marginLeft = '10px'; el.append(b, document.createTextNode(' ' + L(...ST.lgNone)));
 }
 function renderHeat(list) {
   const el = document.getElementById('cHeat'); el.replaceChildren();
@@ -991,16 +1144,31 @@ function renderHeat(list) {
   const col = (t) => Math.round((d3.utcMonday.floor(t) - wkStart) / (7 * 864e5));
   const row = (t) => (t.getUTCDay() + 6) % 7;
   const ncol = col(days[days.length - 1]) + 1;
-  const avail = Math.max(300, (document.getElementById('heat').clientWidth || 800) - 34);
-  const lab = 22, top = 16, gap = 2;
-  const cs = Math.max(10, Math.min(18, Math.floor((avail - lab) / ncol) - gap));
-  const W = lab + ncol * (cs + gap), Hh = top + 7 * (cs + gap);
-  const svg = d3.select(el).append('svg').attr('width', W).attr('height', Hh).attr('role', 'img').attr('aria-label', `Тепловая карта ${year} года`);
-  ['Пн', '', 'Ср', '', 'Пт', '', 'Вс'].forEach((t, i) => t && svg.append('text').attr('x', 0).attr('y', top + i * (cs + gap) + cs * 0.75).style('font-size', '9px').text(t));
-  d3.utcMonths(start, end).forEach((m) => svg.append('text').attr('x', lab + col(m) * (cs + gap)).attr('y', 10).style('font-size', '10px').text(MN[m.getUTCMonth()].slice(0, 3).toLowerCase()));
+  const box = document.getElementById('heat'); const pad = parseFloat(getComputedStyle(box).paddingLeft) || 16;
+  const avail = Math.max(260, (box.clientWidth || 800) - pad * 2 - 2);
+  const mshort = (i) => MN[i].slice(0, 3).toLowerCase();
   const key = d3.utcFormat('%Y-%m-%d');
+  const vert = avail < 560; // на телефоне: каждый месяц — своя полоска, дни 1…31 слева направо
+  let W, Hh, X, Y, cw, ch;
+  if (!vert) {
+    const lab = 22, top = 16, gap = 2;
+    cw = ch = Math.max(9, Math.min(18, Math.floor((avail - lab) / ncol) - gap));
+    W = lab + ncol * (cw + gap); Hh = top + 7 * (ch + gap);
+    X = (t) => lab + col(t) * (cw + gap); Y = (t) => top + row(t) * (ch + gap);
+    var svg = d3.select(el).append('svg').attr('width', W).attr('height', Hh).attr('viewBox', `0 0 ${W} ${Hh}`).attr('role', 'img').attr('aria-label', L(...ST.hHeat) + ' ' + year);
+    WD_SHORT().forEach((t, i) => i % 2 === 0 && svg.append('text').attr('x', 0).attr('y', top + i * (ch + gap) + ch * 0.75).style('font-size', '9px').text(t));
+    d3.utcMonths(start, end).forEach((m) => svg.append('text').attr('x', lab + col(m) * (cw + gap)).attr('y', 10).style('font-size', '10px').text(mshort(m.getUTCMonth())));
+  } else {
+    const lab = 30, top = 14, gap = 2;
+    cw = Math.max(5, (avail - lab) / 31 - gap); ch = Math.max(14, Math.min(20, cw * 1.6));
+    W = lab + 31 * (cw + gap); Hh = top + 12 * (ch + gap);
+    X = (t) => lab + (t.getUTCDate() - 1) * (cw + gap); Y = (t) => top + t.getUTCMonth() * (ch + gap);
+    var svg = d3.select(el).append('svg').attr('width', W).attr('height', Hh).attr('viewBox', `0 0 ${W} ${Hh}`).attr('role', 'img').attr('aria-label', L(...ST.hHeat) + ' ' + year);
+    d3.range(12).forEach((i) => svg.append('text').attr('x', 0).attr('y', top + i * (ch + gap) + ch * 0.7).style('font-size', '10px').text(mshort(i)));
+    [1, 5, 10, 15, 20, 25, 31].forEach((dd) => svg.append('text').attr('x', lab + (dd - 1) * (cw + gap) + cw / 2).attr('y', 10).attr('text-anchor', 'middle').style('font-size', '9px').text(dd));
+  }
   svg.append('g').selectAll('rect').data(days).join('rect')
-    .attr('x', (t) => lab + col(t) * (cs + gap)).attr('y', (t) => top + row(t) * (cs + gap)).attr('width', cs).attr('height', cs).attr('rx', 3)
+    .attr('x', X).attr('y', Y).attr('width', cw).attr('height', ch).attr('rx', vert ? 2 : 3)
     .each(function (t) {
       const iso = key(t), d = by.get(iso), r = d3.select(this);
       if (iso > TODAY) { r.style('fill', 'transparent').style('stroke', 'var(--line)').style('stroke-opacity', 0.5); return; }
@@ -1012,40 +1180,41 @@ function renderHeat(list) {
       if (d && selDate === iso) r.style('stroke', 'var(--fg)').style('stroke-width', 2).style('stroke-opacity', 1);
       if (d || (PUBLIC && !DEMO)) r.style('cursor', 'pointer');
     })
-    .on('mouseenter mousemove', (ev, t) => { const d = by.get(key(t)); if (d) showTip(ev, d); else simpleTip(ev, [`${fdate(t)}, ${WDN[t.getUTCDay()]}`, key(t) > TODAY ? 'Этот день ещё впереди' : PUBLIC && !DEMO ? 'Записи нет — нажми, чтобы добавить' : 'Записи нет']); })
+    .on('mouseenter mousemove', (ev, t) => { const d = by.get(key(t)); if (d) showTip(ev, d); else simpleTip(ev, [`${fdate(t)}, ${WDN[t.getUTCDay()]}`, key(t) > TODAY ? L('Этот день ещё впереди', 'Цей день ще попереду', 'This day is still ahead') : PUBLIC && !DEMO ? L('Записи нет — нажми, чтобы добавить', 'Запису немає — натисни, щоб додати', 'No entry — tap to add') : L('Записи нет', 'Запису немає', 'No entry')]); })
     .on('mouseleave', hideTip)
     .on('click', (ev, t) => { const iso = key(t), d = by.get(iso); if (d) openDay(d, DAYS); else if (PUBLIC && !DEMO && iso <= TODAY) openEditor(iso); });
   renderHeatLegend();
-  { const wrap = el.parentElement; if (wrap.scrollWidth > wrap.clientWidth) { const tx = year === +TODAY.slice(0, 4) ? lab + col(new Date(TODAY + 'T00:00:00Z')) * (cs + gap) : W; wrap.scrollLeft = Math.max(0, tx - wrap.clientWidth + 60); } }
+  { const wrap = el.parentElement; if (wrap.scrollWidth > wrap.clientWidth) { const tx = year === +TODAY.slice(0, 4) ? X(new Date(TODAY + 'T00:00:00Z')) : W; wrap.scrollLeft = Math.max(0, tx - wrap.clientWidth + 60); } }
+  heatSub.textContent = vert ? L('Каждая строка — месяц, квадратик — день, цвет — оценка. Видно серии, провалы и пропуски.', 'Кожен рядок — місяць, квадратик — день, колір — оцінка. Видно серії, провали й пропуски.', 'Each row is a month, each square a day, colour is the score. Streaks, dips and gaps stand out.') : L('Каждый квадратик — день, цвет — оценка. Как активность на GitHub: видно серии, провалы и пропуски.', 'Кожен квадратик — день, колір — оцінка. Як активність на GitHub: видно серії, провали й пропуски.', 'Each square is a day, colour is the score — like GitHub activity: streaks, dips and gaps stand out.');
   // анализ года
   const yd = DAYS.filter((d) => d.date.startsWith(String(year)));
-  const L = [];
+  const O = [];
   if (yd.length) {
     const lastIso = year === +TODAY.slice(0, 4) ? TODAY : `${year}-12-31`;
     const passed = days.filter((t) => key(t) <= lastIso).length;
     const rated = yd.filter((d) => d.rate != null);
-    L.push(`В ${year} году записан${yd.length === 1 ? '' : 'о'} ${dn(yd.length)} из ${passed} (${pct(yd.length, passed)})${rated.length ? `, средняя оценка ${f1(d3.mean(rated, (d) => d.rate))}` : ''}.`);
+    { const av = rated.length ? f1(d3.mean(rated, (d) => d.rate)) : null; O.push(L(`В ${year} году записан${yd.length === 1 ? '' : 'о'} ${dn(yd.length)} из ${passed} (${pct(yd.length, passed)})${av ? `, средняя оценка ${av}` : ''}.`, `У ${year} році записано ${dn(yd.length)} з ${passed} (${pct(yd.length, passed)})${av ? `, середня оцінка ${av}` : ''}.`, `In ${year} you logged ${dn(yd.length)} of ${passed} (${pct(yd.length, passed)})${av ? `, average score ${av}` : ''}.`)); }
     let best = 0, cur = 0, prev = null, bestEnd = null;
     yd.forEach((d) => { cur = prev && addDaysIso(prev, 1) === d.date ? cur + 1 : 1; if (cur > best) { best = cur; bestEnd = d.date; } prev = d.date; });
-    if (best >= 2) L.push(`Самая длинная серия записей подряд — ${dn(best)} (до ${fdate(new Date(bestEnd + 'T00:00:00Z'))}).`);
+    if (best >= 2) O.push(L(`Самая длинная серия записей подряд — ${dn(best)} (до ${fdate(new Date(bestEnd + 'T00:00:00Z'))}).`, `Найдовша серія записів поспіль — ${dn(best)} (до ${fdate(new Date(bestEnd + 'T00:00:00Z'))}).`, `Longest streak: ${dn(best)} in a row (until ${fdate(new Date(bestEnd + 'T00:00:00Z'))}).`));
     if (year === +TODAY.slice(0, 4)) {
       let s = 0, iso = by.has(TODAY) ? TODAY : addDaysIso(TODAY, -1);
       while (by.has(iso)) { s++; iso = addDaysIso(iso, -1); }
-      if (s >= 2) L.push(`Сейчас идёт серия ${dn(s)} подряд — не прерывай 🔥`);
-      else if (!by.has(TODAY)) L.push('Сегодня ещё не записан — квадратик с рамкой ждёт.');
+      if (s >= 2) O.push(L(`Сейчас идёт серия ${dn(s)} подряд — не прерывай 🔥`, `Зараз триває серія ${dn(s)} поспіль — не переривай 🔥`, `Current streak: ${dn(s)} in a row — keep it going 🔥`));
+      else if (!by.has(TODAY)) O.push(L('Сегодня ещё не записан — квадратик с рамкой ждёт.', 'Сьогодні ще не записаний — квадратик з рамкою чекає.', 'Today isn’t logged yet — the outlined square is waiting.'));
     }
     let gap = 0, gEnd = null; for (let i = 1; i < yd.length; i++) { const g = Math.round((yd[i].t - yd[i - 1].t) / 864e5) - 1; if (g > gap) { gap = g; gEnd = yd[i].date; } }
-    if (gap >= 14) L.push(`Самый длинный перерыв — ${dn(gap)} без записей (закончился ${fdate(new Date(gEnd + 'T00:00:00Z'))}).`);
+    if (gap >= 14) O.push(L(`Самый длинный перерыв — ${dn(gap)} без записей (закончился ${fdate(new Date(gEnd + 'T00:00:00Z'))}).`, `Найдовша перерва — ${dn(gap)} без записів (закінчилася ${fdate(new Date(gEnd + 'T00:00:00Z'))}).`, `Longest break: ${dn(gap)} without entries (ended ${fdate(new Date(gEnd + 'T00:00:00Z'))}).`));
     const good = rated.filter((d) => d.rate >= 7).length, bad = rated.filter((d) => d.rate <= 3).length;
-    if (rated.length >= 5) L.push(`Зелёных дней (7+) — ${pct(good, rated.length)}, красных (1–3) — ${pct(bad, rated.length)}.`);
+    if (rated.length >= 5) O.push(L(`Зелёных дней (7+) — ${pct(good, rated.length)}, красных (1–3) — ${pct(bad, rated.length)}.`, `Зелених днів (7+) — ${pct(good, rated.length)}, червоних (1–3) — ${pct(bad, rated.length)}.`, `Green days (7+): ${pct(good, rated.length)}; red days (1–3): ${pct(bad, rated.length)}.`));
   }
-  putInsight('iHeat', L, yd.length >= 3 ? 'Серые пробелы — дни без записи. Даже одна оценка без текста делает картину года честнее.' : null);
+  putInsight('iHeat', O, yd.length >= 3 ? L('Серые пробелы — дни без записи. Даже одна оценка без текста делает картину года честнее.', 'Сірі пропуски — дні без запису. Навіть одна оцінка без тексту робить картину року чеснішою.', 'Grey gaps are days without entries. Even a score with no text makes the year’s picture more honest.') : null);
 }
 
 
 // ---------- ⚖️ сравнение двух периодов ----------
 const CMP = { a: null, b: null, pre: null };
-const perName = (v) => (v[0] === 'y' ? v.slice(1) + ' год' : monthName(v));
+const perName = (v) => (v[0] === 'y' ? yearName(v.slice(1)) : monthName(v));
 const perDays = (v) => DAYS.filter((d) => (v[0] === 'y' ? d.date.startsWith(v.slice(1)) : d.date.startsWith(v)));
 function perLen(v) { // сколько дней периода уже прошло
   const [s, e] = v[0] === 'y' ? [v.slice(1) + '-01-01', v.slice(1) + '-12-31'] : [v + '-01', addDaysIso(d3.utcFormat('%Y-%m-%d')(d3.utcMonth.offset(new Date(v + '-01T00:00:00Z'), 1)), -1)];
@@ -1057,16 +1226,17 @@ function cmpPresets() {
   const ms = new Set(DAYS.map((d) => d.date.slice(0, 7))); const ys = dataYears(); const P = [];
   const last = DAYS.length ? DAYS[DAYS.length - 1].date.slice(0, 7) : TODAY_YM;
   const cur = ms.has(TODAY_YM) ? TODAY_YM : last;
-  const mn = (ym) => MN[+ym.slice(5) - 1].toLowerCase();
-  const mnD = (ym) => ['январю', 'февралю', 'марту', 'апрелю', 'маю', 'июню', 'июлю', 'августу', 'сентябрю', 'октябрю', 'ноябрю', 'декабрю'][+ym.slice(5) - 1];
-  if (ms.has(prevYm(cur, 12))) P.push(['yoy', `${mn(cur)} ${cur.slice(0, 4)} к ${mnD(cur)} ${prevYm(cur, 12).slice(0, 4)}`, prevYm(cur, 12), cur]);
-  if (ms.has(prevYm(cur, 1))) P.push(['mom', `${mn(cur)} к ${mnD(prevYm(cur, 1))}`, prevYm(cur, 1), cur]);
-  if (ys.length >= 2) P.push(['yy', `${ys[ys.length - 1]} к ${ys[ys.length - 2]}`, 'y' + ys[ys.length - 2], 'y' + ys[ys.length - 1]]);
+  const mn = (ym) => (LANG === 'en' ? MN[+ym.slice(5) - 1].slice(0, 3) : MN[+ym.slice(5) - 1].toLowerCase());
+  const mnD = (ym) => L(['январю', 'февралю', 'марту', 'апрелю', 'маю', 'июню', 'июлю', 'августу', 'сентябрю', 'октябрю', 'ноябрю', 'декабрю'], ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'], MN.map((m) => m.slice(0, 3)))[+ym.slice(5) - 1];
+  const TO = L('к', 'до', 'vs');
+  if (ms.has(prevYm(cur, 12))) P.push(['yoy', `${mn(cur)} ${cur.slice(0, 4)} ${TO} ${mnD(cur)} ${prevYm(cur, 12).slice(0, 4)}`, prevYm(cur, 12), cur]);
+  if (ms.has(prevYm(cur, 1))) P.push(['mom', `${mn(cur)} ${TO} ${mnD(prevYm(cur, 1))}`, prevYm(cur, 1), cur]);
+  if (ys.length >= 2) P.push(['yy', `${ys[ys.length - 1]} ${TO} ${ys[ys.length - 2]}`, 'y' + ys[ys.length - 2], 'y' + ys[ys.length - 1]]);
   return P;
 }
 function setupCompare() {
   const ms = [...new Set(DAYS.map((d) => d.date.slice(0, 7)))].sort().reverse();
-  const opts = dataYears().slice().reverse().map((y) => ['y' + y, y + ' год']).concat(ms.map((m) => [m, monthName(m)]));
+  const opts = dataYears().slice().reverse().map((y) => ['y' + y, yearName(y)]).concat(ms.map((m) => [m, monthName(m)]));
   const P = cmpPresets();
   const valid = (v) => opts.some(([o]) => o === v);
   if (!valid(CMP.a) || !valid(CMP.b)) { const p0 = P[0]; if (p0) { CMP.a = p0[2]; CMP.b = p0[3]; CMP.pre = p0[0]; } else { CMP.a = opts[1] ? opts[1][0] : opts[0]?.[0]; CMP.b = opts[0]?.[0]; CMP.pre = null; } }
@@ -1077,12 +1247,12 @@ function setupCompare() {
   document.getElementById('compare').classList.toggle('hide', opts.length < 2);
 }
 function cmpStats(v) {
-  const L = perDays(v), R = L.filter((d) => d.rate != null), T = L.filter((d) => d.text);
-  const moods = d3.rollups(L.filter((d) => d.mood), (x) => x.length, (d) => d.mood).sort((a, b) => b[1] - a[1]);
-  const th = themeRows(L).rows.sort((a, b) => b.n - a.n);
+  const LD = perDays(v), R = LD.filter((d) => d.rate != null), T = LD.filter((d) => d.text);
+  const moods = d3.rollups(LD.filter((d) => d.mood), (x) => x.length, (d) => d.mood).sort((a, b) => b[1] - a[1]);
+  const th = themeRows(LD).rows.sort((a, b) => b.n - a.n);
   const best = R.slice().sort((a, b) => b.rate - a.rate || d3.ascending(a.date, b.date))[0];
-  return { n: L.length, len: perLen(v), text: T.length, avg: mean(R.map((d) => d.rate)), good: R.length ? R.filter((d) => d.rate >= 7).length / R.length : null, bad: R.length ? R.filter((d) => d.rate <= 3).length / R.length : null,
-    top: R.filter((d) => d.rate >= 9).length, sport: mean(L.map((d) => d.sport)), study: mean(L.map((d) => d.study)), pos: L.filter((d) => d.mood).length ? L.filter((d) => POS_MOODS.has(d.mood)).length / L.filter((d) => d.mood).length : null,
+  return { n: LD.length, len: perLen(v), text: T.length, avg: mean(R.map((d) => d.rate)), good: R.length ? R.filter((d) => d.rate >= 7).length / R.length : null, bad: R.length ? R.filter((d) => d.rate <= 3).length / R.length : null,
+    top: R.filter((d) => d.rate >= 9).length, sport: mean(LD.map((d) => d.sport)), study: mean(LD.map((d) => d.study)), pos: LD.filter((d) => d.mood).length ? LD.filter((d) => POS_MOODS.has(d.mood)).length / LD.filter((d) => d.mood).length : null,
     mood: moods[0] ? MOOD_EMOJI[moods[0][0]] + ' ' + moodName(moods[0][0]).toLowerCase() : '—', theme: th[0] ? th[0].name : '—', best: best ? `${fdate(best.t)} · ${best.rate}` : '—', rated: R.length };
 }
 function renderCompare() {
@@ -1092,20 +1262,21 @@ function renderCompare() {
   const A = cmpStats(CMP.a), B = cmpStats(CMP.b);
   const P = (x) => (x == null ? '—' : Math.round(x * 100) + '%');
   const rows = [
-    ['Дней в записи', A.n, B.n, (x, s) => `${x} из ${s.len}`, 1, 0],
-    ['Из них с текстом', A.text, B.text, (x) => x, 1, 0],
-    ['Средняя оценка', A.avg, B.avg, (x) => (x == null ? '—' : f1(x)), 1, 1],
-    ['Хорошие дни (7+)', A.good, B.good, P, 1, 2],
-    ['Тяжёлые дни (1–3)', A.bad, B.bad, P, -1, 2],
-    ['Дней на 9–10', A.top, B.top, (x) => x, 1, 0],
-    ['Позитивное настроение', A.pos, B.pos, P, 1, 2],
-    ['Спорт, в среднем из 5', A.sport, B.sport, (x) => (x == null ? '—' : f1(x)), 1, 1],
-    ['Учёба, в среднем из 5', A.study, B.study, (x) => (x == null ? '—' : f1(x)), 1, 1],
-    ['Частое настроение', A.mood, B.mood, (x) => x, 0],
-    ['Главная тема', A.theme, B.theme, (x) => x, 0],
-    ['Лучший день', A.best, B.best, (x) => x, 0],
+    [L('Дней в записи', 'Днів у записі', 'Days logged'), A.n, B.n, (x, s) => `${x} ${L('из', 'з', 'of')} ${s.len}`, 1, 0],
+    [L('Из них с текстом', 'З них з текстом', 'Of them with text'), A.text, B.text, (x) => x, 1, 0],
+    [L('Средняя оценка', 'Середня оцінка', 'Average score'), A.avg, B.avg, (x) => (x == null ? '—' : f1(x)), 1, 1],
+    [L('Хорошие дни (7+)', 'Добрі дні (7+)', 'Good days (7+)'), A.good, B.good, P, 1, 2],
+    [L('Тяжёлые дни (1–3)', 'Важкі дні (1–3)', 'Hard days (1–3)'), A.bad, B.bad, P, -1, 2],
+    [L('Дней на 9–10', 'Днів на 9–10', 'Days at 9–10'), A.top, B.top, (x) => x, 1, 0],
+    [L('Позитивное настроение', 'Позитивний настрій', 'Positive mood'), A.pos, B.pos, P, 1, 2],
+    [L('Спорт, в среднем из 5', 'Спорт, у середньому з 5', 'Sport, avg of 5'), A.sport, B.sport, (x) => (x == null ? '—' : f1(x)), 1, 1],
+    [L('Учёба, в среднем из 5', 'Навчання, у середньому з 5', 'Study, avg of 5'), A.study, B.study, (x) => (x == null ? '—' : f1(x)), 1, 1],
+    [L('Частое настроение', 'Частий настрій', 'Most common mood'), A.mood, B.mood, (x) => x, 0],
+    [L('Главная тема', 'Головна тема', 'Main topic'), A.theme, B.theme, (x) => x, 0],
+    [L('Лучший день', 'Найкращий день', 'Best day'), A.best, B.best, (x) => x, 0],
   ];
-  const head = document.createElement('thead'); head.innerHTML = '<tr><th></th><th></th><th></th><th>Разница</th></tr>';
+  const head = document.createElement('thead'); head.innerHTML = '<tr><th></th><th></th><th></th><th></th></tr>';
+  head.querySelectorAll('th')[3].textContent = window.innerWidth < 640 ? '±' : L('Разница', 'Різниця', 'Change');
   head.querySelectorAll('th')[1].textContent = perName(CMP.a); head.querySelectorAll('th')[2].textContent = perName(CMP.b);
   const body = document.createElement('tbody');
   rows.forEach(([name, a, b, fmt, dir, kind]) => {
@@ -1115,20 +1286,20 @@ function renderCompare() {
     if (!dir || a == null || b == null || typeof a !== 'number') { td(''); }
     else {
       const dlt = b - a; const eps = kind === 2 ? 0.005 : kind === 1 ? 0.05 : 0.5;
-      const txt = Math.abs(dlt) < eps ? '≈ так же' : (dlt > 0 ? '▲ ' : '▼ ') + (kind === 2 ? Math.round(Math.abs(dlt) * 100) + ' п.п.' : kind === 1 ? f1(Math.abs(dlt)) : Math.abs(dlt));
+      const txt = Math.abs(dlt) < eps ? L('≈ так же', '≈ так само', '≈ same') : (dlt > 0 ? '▲ ' : '▼ ') + (kind === 2 ? Math.round(Math.abs(dlt) * 100) + ' ' + L('п.п.', 'в.п.', 'pp') : kind === 1 ? f1(Math.abs(dlt)) : Math.abs(dlt));
       td(txt, Math.abs(dlt) < eps ? 'same' : dlt * dir > 0 ? 'up' : 'down');
     }
     body.append(tr);
   });
   t.append(head, body);
-  const L = [];
-  const nA = perName(CMP.a).toLowerCase(), nB = perName(CMP.b).toLowerCase();
-  if (A.avg != null && B.avg != null) { const d = B.avg - A.avg; L.push(Math.abs(d) < 0.3 ? `По оценке ${nB} примерно как ${nA} (${f1(A.avg)} и ${f1(B.avg)}).` : `${perName(CMP.b)} ${d > 0 ? 'лучше' : 'тяжелее'} по оценке: ${f1(B.avg)} против ${f1(A.avg)} (${signed(d)}).`); }
-  if (A.len && B.len) { const ca = A.n / A.len, cb = B.n / B.len; if (Math.abs(cb - ca) >= 0.15) L.push(`Записывал${cb > ca ? ' чаще' : ' реже'}: ${pct(B.n, B.len)} дней против ${pct(A.n, A.len)}.`); }
-  if (A.sport != null && B.sport != null && Math.abs(B.sport - A.sport) >= 0.5) L.push(`Спорта ${B.sport > A.sport ? 'больше' : 'меньше'}: ${f1(B.sport)} против ${f1(A.sport)} из 5.`);
-  if (A.theme !== B.theme && A.theme !== '—' && B.theme !== '—') L.push(`Главная тема сменилась: было «${A.theme}», стало «${B.theme}».`);
-  if (A.rated < 5 || B.rated < 5) L.push('В одном из периодов меньше 5 оценённых дней — сравнение пока примерное.');
-  putInsight('iCmp', L, null);
+  const O = [];
+  const nA = LANG === 'en' ? perName(CMP.a) : perName(CMP.a).toLowerCase(), nB = LANG === 'en' ? perName(CMP.b) : perName(CMP.b).toLowerCase();
+  if (A.avg != null && B.avg != null) { const d = B.avg - A.avg; O.push(Math.abs(d) < 0.3 ? L(`По оценке ${nB} примерно как ${nA} (${f1(A.avg)} и ${f1(B.avg)}).`, `За оцінкою ${nB} приблизно як ${nA} (${f1(A.avg)} і ${f1(B.avg)}).`, `By score, ${nB} is about the same as ${nA} (${f1(A.avg)} and ${f1(B.avg)}).`) : L(`${perName(CMP.b)} ${d > 0 ? 'лучше' : 'тяжелее'} по оценке: ${f1(B.avg)} против ${f1(A.avg)} (${signed(d)}).`, `${perName(CMP.b)} ${d > 0 ? 'кращий' : 'важчий'} за оцінкою: ${f1(B.avg)} проти ${f1(A.avg)} (${signed(d)}).`, `${perName(CMP.b)} scores ${d > 0 ? 'better' : 'lower'}: ${f1(B.avg)} vs ${f1(A.avg)} (${signed(d)}).`)); }
+  if (A.len && B.len) { const ca = A.n / A.len, cb = B.n / B.len; if (Math.abs(cb - ca) >= 0.15) O.push(L(`Записывал${cb > ca ? ' чаще' : ' реже'}: ${pct(B.n, B.len)} дней против ${pct(A.n, A.len)}.`, `Записував${cb > ca ? ' частіше' : ' рідше'}: ${pct(B.n, B.len)} днів проти ${pct(A.n, A.len)}.`, `Logged ${cb > ca ? 'more' : 'less'} often: ${pct(B.n, B.len)} of days vs ${pct(A.n, A.len)}.`)); }
+  if (A.sport != null && B.sport != null && Math.abs(B.sport - A.sport) >= 0.5) O.push(L(`Спорта ${B.sport > A.sport ? 'больше' : 'меньше'}: ${f1(B.sport)} против ${f1(A.sport)} из 5.`, `Спорту ${B.sport > A.sport ? 'більше' : 'менше'}: ${f1(B.sport)} проти ${f1(A.sport)} з 5.`, `${B.sport > A.sport ? 'More' : 'Less'} sport: ${f1(B.sport)} vs ${f1(A.sport)} of 5.`));
+  if (A.theme !== B.theme && A.theme !== '—' && B.theme !== '—') O.push(L(`Главная тема сменилась: было «${A.theme}», стало «${B.theme}».`, `Головна тема змінилася: було «${A.theme}», стало «${B.theme}».`, `The main topic changed: was “${A.theme}”, now “${B.theme}”.`));
+  if (A.rated < 5 || B.rated < 5) O.push(L('В одном из периодов меньше 5 оценённых дней — сравнение пока примерное.', 'В одному з періодів менше 5 оцінених днів — порівняння поки приблизне.', 'One of the periods has fewer than 5 scored days, so the comparison is rough for now.'));
+  putInsight('iCmp', O, null);
 }
 
 
@@ -1141,33 +1312,33 @@ function setupPrint() {
 }
 const PRINT_COL = d3.scaleLinear().domain([1, 3.5, 5.5, 7, 10]).range(['#e06a63', '#ea9356', '#e8c25a', '#9bd49e', '#46b071']).interpolate(d3.interpolateRgb).clamp(true);
 function printMonth(ym) {
-  const L = DAYS.filter((d) => d.date.startsWith(ym)); if (!L.length) return;
-  const R = L.filter((d) => d.rate != null);
+  const LD = DAYS.filter((d) => d.date.startsWith(ym)); if (!LD.length) return;
+  const R = LD.filter((d) => d.rate != null);
   const sh = document.getElementById('printSheet'); sh.replaceChildren();
   const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
   const m0 = new Date(ym + '-01T00:00:00Z'), days = d3.utcDays(m0, d3.utcMonth.offset(m0, 1));
   const passed = days.filter((t) => d3.utcFormat('%Y-%m-%d')(t) <= TODAY).length;
-  const emj = d3.rollups(L.map((d) => firstEmoji(d.emoji) || MOOD_EMOJI[d.mood]).filter(Boolean), (v) => v.length, (x) => x).sort((a, b) => b[1] - a[1]);
+  const emj = d3.rollups(LD.map((d) => firstEmoji(d.emoji) || MOOD_EMOJI[d.mood]).filter(Boolean), (v) => v.length, (x) => x).sort((a, b) => b[1] - a[1]);
   // шапка
   const top = el('div', 'ps-top'); const tl = el('div');
-  tl.append(el('h1', null, monthName(ym)), el('div', 'ps-sub', `Итог месяца · ${PUBLIC ? 'Дневник дней' : 'Дневник «Жизнь»'}`));
+  tl.append(el('h1', null, monthName(ym)), el('div', 'ps-sub', `${L('Итог месяца', 'Підсумок місяця', 'Month summary')} · ${PUBLIC ? L(...ST.appName) : 'Дневник «Жизнь»'}`));
   top.append(tl, el('div', 'ps-big', emj[0] ? emj[0][0] : '📔')); sh.append(top);
   // цифры
   const best = R.slice().sort((a, b) => b.rate - a.rate || d3.ascending(a.date, b.date))[0];
   const k = el('div', 'ps-kpis');
-  [[`${L.length} из ${passed}`, 'дней записано'], [f1(mean(R.map((d) => d.rate))), 'средняя оценка'], [R.length ? pct(R.filter((d) => d.rate >= 7).length, R.length) : '—', 'хороших дней (7+)'],
-   [best ? fdate(best.t).slice(0, 5) : '—', best ? `лучший день · ${best.rate}/10` : 'лучший день'], [f1(mean(L.map((d) => d.sport))), 'спорт, в среднем из 5']]
+  [[`${LD.length} ${L('из', 'з', 'of')} ${passed}`, L('дней записано', 'днів записано', 'days logged')], [f1(mean(R.map((d) => d.rate))), L('средняя оценка', 'середня оцінка', 'average score')], [R.length ? pct(R.filter((d) => d.rate >= 7).length, R.length) : '—', L('хороших дней (7+)', 'добрих днів (7+)', 'good days (7+)')],
+   [best ? fdate(best.t).slice(0, 5) : '—', (best ? L('лучший день', 'найкращий день', 'best day') + ` · ${best.rate}/10` : L('лучший день', 'найкращий день', 'best day'))], [f1(mean(LD.map((d) => d.sport))), L('спорт, в среднем из 5', 'спорт, у середньому з 5', 'sport, avg of 5')]]
     .forEach(([v, t]) => { const c = el('div', 'ps-kpi'); c.append(el('b', null, v), el('span', null, t)); k.append(c); });
   sh.append(k);
   // календарь + график
   const r1 = el('div', 'ps-row');
-  const cb = el('div'); cb.append(el('h3', null, 'Календарь'));
-  const g = el('div', 'ps-cal'); ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'].forEach((w) => g.append(el('div', 'wd', w)));
+  const cb = el('div'); cb.append(el('h3', null, L('Календарь', 'Календар', 'Calendar')));
+  const g = el('div', 'ps-cal'); WD_SHORT().forEach((w) => g.append(el('div', 'wd', w.toLowerCase())));
   for (let i = 0; i < (m0.getUTCDay() + 6) % 7; i++) g.append(el('div', 'blank'));
-  const by = new Map(L.map((d) => [d.date, d]));
+  const by = new Map(LD.map((d) => [d.date, d]));
   days.forEach((t) => { const d = by.get(d3.utcFormat('%Y-%m-%d')(t)); const c = el('div'); c.append(el('small', null, t.getUTCDate())); if (d) { c.append(document.createTextNode(firstEmoji(d.emoji) || MOOD_EMOJI[d.mood] || '•')); if (d.rate != null) c.style.background = PRINT_COL(d.rate); else c.style.background = '#e6e3fb'; } g.append(c); });
   cb.append(g); r1.append(cb);
-  const ch = el('div'); ch.append(el('h3', null, 'Оценка по дням'));
+  const ch = el('div'); ch.append(el('h3', null, L('Оценка по дням', 'Оцінка по днях', 'Score by day')));
   const Wc = 330, Hc = 150, mg = { l: 22, r: 6, t: 8, b: 18 };
   const x = d3.scaleUtc().domain([m0, d3.utcMonth.offset(m0, 1)]).range([mg.l, Wc - mg.r]), y = d3.scaleLinear().domain([1, 10]).range([Hc - mg.b, mg.t]);
   const svg = d3.select(ch).append('svg').attr('width', Wc).attr('height', Hc).style('font-size', '9px').style('font-family', 'inherit');
@@ -1177,38 +1348,38 @@ function printMonth(ym) {
   svg.append('path').datum(R).attr('fill', 'none').attr('stroke', '#8b7cf6').attr('stroke-width', 1.6).attr('d', d3.line().x(xr).y((d) => y(d.rate)));
   svg.selectAll('circle').data(R).join('circle').attr('cx', xr).attr('cy', (d) => y(d.rate)).attr('r', 3).attr('fill', (d) => PRINT_COL(d.rate)).attr('stroke', '#fff');
   // настроения
-  const moods = d3.rollups(L.filter((d) => d.mood), (v) => v.length, (d) => d.mood).sort((a, b) => b[1] - a[1]).slice(0, 5);
-  if (moods.length) { ch.append(el('h3', null, 'Настроения')); const mx = moods[0][1]; moods.forEach(([m, n]) => { const b = el('div', 'ps-bar'); const i = el('i'); i.style.width = Math.max(4, (n / mx) * 140) + 'px'; b.append(el('em', null, MOOD_EMOJI[m] + ' ' + moodName(m)), i, el('span', null, n)); ch.append(b); }); }
+  const moods = d3.rollups(LD.filter((d) => d.mood), (v) => v.length, (d) => d.mood).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  if (moods.length) { ch.append(el('h3', null, L('Настроения', 'Настрої', 'Moods'))); const mx = moods[0][1]; moods.forEach(([m, n]) => { const b = el('div', 'ps-bar'); const i = el('i'); i.style.width = Math.max(4, (n / mx) * 140) + 'px'; b.append(el('em', null, MOOD_EMOJI[m] + ' ' + moodName(m)), i, el('span', null, n)); ch.append(b); }); }
   r1.append(ch); sh.append(r1);
   // темы + выводы
   const r2 = el('div', 'ps-row');
-  const tb = el('div'); const th = themeRows(L).rows.sort((a, b) => b.n - a.n).slice(0, 6);
-  tb.append(el('h3', null, 'О чём писал'));
-  if (th.length) { const mx = th[0].n; th.forEach((r) => { const b = el('div', 'ps-bar'); const i = el('i'); i.style.width = Math.max(4, (r.n / mx) * 110) + 'px'; i.style.background = '#b9b0fb'; b.append(el('em', null, r.name), i, el('span', null, `${r.n} · ср. ${f1(r.a)}`)); tb.append(b); }); }
-  else tb.append(el('div', null, 'Текстов в этом месяце нет — только оценки.'));
-  const ib = el('div'); ib.append(el('h3', null, 'Что видно'));
+  const tb = el('div'); const th = themeRows(LD).rows.sort((a, b) => b.n - a.n).slice(0, 6);
+  tb.append(el('h3', null, L('О чём писал', 'Про що писав', 'What you wrote about')));
+  if (th.length) { const mx = th[0].n; th.forEach((r) => { const b = el('div', 'ps-bar'); const i = el('i'); i.style.width = Math.max(4, (r.n / mx) * 110) + 'px'; i.style.background = '#b9b0fb'; b.append(el('em', null, r.name), i, el('span', null, `${r.n} · ${L('ср.', 'сер.', 'avg')} ${f1(r.a)}`)); tb.append(b); }); }
+  else tb.append(el('div', null, L('Текстов в этом месяце нет — только оценки.', 'Текстів цього місяця немає — лише оцінки.', 'No text this month — only scores.')));
+  const ib = el('div'); ib.append(el('h3', null, L('Что видно', 'Що видно', 'What it shows')));
   const ul = el('ul'); const P = [];
   const prev = DAYS.filter((d) => d.date.startsWith(prevYm(ym, 1)) && d.rate != null), ly = DAYS.filter((d) => d.date.startsWith(prevYm(ym, 12)) && d.rate != null);
   const avg = mean(R.map((d) => d.rate));
-  if (avg != null) P.push(`Средняя оценка ${f1(avg)} — ${verdict(avg)}.`);
-  if (avg != null && prev.length >= 3) { const pa = d3.mean(prev, (d) => d.rate); P.push(`К прошлому месяцу: ${signed(avg - pa)} (было ${f1(pa)}).`); }
-  if (avg != null && ly.length >= 3) { const la = d3.mean(ly, (d) => d.rate); P.push(`К этому же месяцу год назад: ${signed(avg - la)} (было ${f1(la)}).`); }
-  let st = 0, bs = 0, pv = null; L.forEach((d) => { st = pv && addDaysIso(pv, 1) === d.date ? st + 1 : 1; bs = Math.max(bs, st); pv = d.date; });
-  if (bs >= 3) P.push(`Самая длинная серия записей — ${dn(bs)} подряд.`);
-  const sp = L.filter((d) => d.sport != null && d.rate != null); const hi = sp.filter((d) => d.sport >= 3), lo = sp.filter((d) => d.sport < 3);
-  if (hi.length >= 2 && lo.length >= 2) { const dd = d3.mean(hi, (d) => d.rate) - d3.mean(lo, (d) => d.rate); if (Math.abs(dd) >= 0.5) P.push(`В дни со спортом (3+) оценка ${dd > 0 ? 'выше' : 'ниже'} на ${f1(Math.abs(dd))}.`); }
-  if (!P.length) P.push('Пока мало оценок для выводов.');
+  if (avg != null) P.push(L(`Средняя оценка ${f1(avg)} — ${verdict(avg)}.`, `Середня оцінка ${f1(avg)} — ${verdict(avg)}.`, `Average score ${f1(avg)} — ${verdict(avg)}.`));
+  if (avg != null && prev.length >= 3) { const pa = d3.mean(prev, (d) => d.rate); P.push(L(`К прошлому месяцу: ${signed(avg - pa)} (было ${f1(pa)}).`, `До минулого місяця: ${signed(avg - pa)} (було ${f1(pa)}).`, `Vs last month: ${signed(avg - pa)} (was ${f1(pa)}).`)); }
+  if (avg != null && ly.length >= 3) { const la = d3.mean(ly, (d) => d.rate); P.push(L(`К этому же месяцу год назад: ${signed(avg - la)} (было ${f1(la)}).`, `До цього ж місяця рік тому: ${signed(avg - la)} (було ${f1(la)}).`, `Vs the same month a year ago: ${signed(avg - la)} (was ${f1(la)}).`)); }
+  let st = 0, bs = 0, pv = null; LD.forEach((d) => { st = pv && addDaysIso(pv, 1) === d.date ? st + 1 : 1; bs = Math.max(bs, st); pv = d.date; });
+  if (bs >= 3) P.push(L(`Самая длинная серия записей — ${dn(bs)} подряд.`, `Найдовша серія записів — ${dn(bs)} поспіль.`, `Longest streak: ${dn(bs)} in a row.`));
+  const sp = LD.filter((d) => d.sport != null && d.rate != null); const hi = sp.filter((d) => d.sport >= 3), lo = sp.filter((d) => d.sport < 3);
+  if (hi.length >= 2 && lo.length >= 2) { const dd = d3.mean(hi, (d) => d.rate) - d3.mean(lo, (d) => d.rate); if (Math.abs(dd) >= 0.5) P.push(L(`В дни со спортом (3+) оценка ${dd > 0 ? 'выше' : 'ниже'} на ${f1(Math.abs(dd))}.`, `У дні зі спортом (3+) оцінка ${dd > 0 ? 'вища' : 'нижча'} на ${f1(Math.abs(dd))}.`, `On days with sport (3+) the score is ${f1(Math.abs(dd))} ${dd > 0 ? 'higher' : 'lower'}.`)); }
+  if (!P.length) P.push(L('Пока мало оценок для выводов.', 'Поки замало оцінок для висновків.', 'Not enough scores for conclusions yet.'));
   P.forEach((t) => ul.append(el('li', null, t))); ib.append(ul);
   r2.append(tb, ib); sh.append(r2);
   // лучшие и тяжёлый день
   const r3 = el('div', 'ps-row');
-  const snip = (d) => (d.text ? (d.text.length > 150 ? d.text.slice(0, 150).trimEnd() + '…' : d.text).replace(/\s+/g, ' ') : 'Без текста.');
-  const bb = el('div'); bb.append(el('h3', null, 'Лучшие дни'));
+  const snip = (d) => (d.text ? (d.text.length > 150 ? d.text.slice(0, 150).trimEnd() + '…' : d.text).replace(/\s+/g, ' ') : L('Без текста.', 'Без тексту.', 'No text.'));
+  const bb = el('div'); bb.append(el('h3', null, L('Лучшие дни', 'Найкращі дні', 'Best days')));
   R.slice().sort((a, b) => b.rate - a.rate || (b.text ? 1 : 0) - (a.text ? 1 : 0)).slice(0, 3).forEach((d) => { const c = el('div', 'ps-day'); c.append(el('b', null, `${firstEmoji(d.emoji) || ''} ${fdate(d.t)} · ${d.rate}/10`), el('div', null, snip(d))); bb.append(c); });
   const wb = el('div'); const worst = R.slice().sort((a, b) => a.rate - b.rate)[0];
-  if (worst && worst.rate <= 5 && R.length > 1) { wb.append(el('h3', null, 'Самый тяжёлый день')); const c = el('div', 'ps-day bad'); c.append(el('b', null, `${firstEmoji(worst.emoji) || ''} ${fdate(worst.t)} · ${worst.rate}/10`), el('div', null, snip(worst))); wb.append(c); }
+  if (worst && worst.rate <= 5 && R.length > 1) { wb.append(el('h3', null, L('Самый тяжёлый день', 'Найважчий день', 'Hardest day'))); const c = el('div', 'ps-day bad'); c.append(el('b', null, `${firstEmoji(worst.emoji) || ''} ${fdate(worst.t)} · ${worst.rate}/10`), el('div', null, snip(worst))); wb.append(c); }
   r3.append(bb, wb); sh.append(r3);
-  sh.append(el('div', 'ps-foot', `Собрано ${fdate(new Date(TODAY + 'T00:00:00Z'))}. Это статистика по записям, а не диагноз.`));
+  sh.append(el('div', 'ps-foot', L(`Собрано ${fdate(new Date(TODAY + 'T00:00:00Z'))}. Это статистика по записям, а не диагноз.`, `Зібрано ${fdate(new Date(TODAY + 'T00:00:00Z'))}. Це статистика за записами, а не діагноз.`, `Built ${fdate(new Date(TODAY + 'T00:00:00Z'))}. These are statistics from entries, not a diagnosis.`)));
   document.body.classList.add('printing');
   const done = () => { document.body.classList.remove('printing'); removeEventListener('afterprint', done); };
   addEventListener('afterprint', done);
@@ -1247,6 +1418,7 @@ const clean = (d) => ({ date: d.date, rate: d.rate ?? null, mood: d.mood || null
 async function reload() { setDays((await DB.all()).map(clean)); await renderBanners(); }
 
 // ---------- редактор дня ----------
+const PHOTO_BTN = () => L('📷 Выбрать фото', '📷 Вибрати фото', '📷 Choose a photo');
 const ED_EMOJI = ['😊', '😌', '😐', '🙏', '🤔', '😮‍💨', '😞', '😢', '😠', '🥳', '❤️', '💪', '📚', '🎮', '🎬', '🍕', '🌧️', '☀️', '🤒', '😴', '💼', '🏠', '✈️', '🎉'];
 const ED = { date: null, rate: null, mood: null, emoji: '', sport: null, study: null, photo: null, confirmDel: false };
 (function buildEditor() {
@@ -1258,23 +1430,23 @@ const ED = { date: null, rate: null, mood: null, emoji: '', sport: null, study: 
   const seg = (el, k) => el.replaceChildren(...d3.range(0, 6).map((v) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = v; b.onclick = () => { ED[k] = ED[k] === v ? null : v; paintEd(); }; return b; }));
   seg(edSport, 'sport'); seg(edStudy, 'study');
   edPhotoBtn.onclick = () => edPhoto.click();
-  edPhoto.onchange = async () => { const f = edPhoto.files[0]; edPhoto.value = ''; if (!f) return; try { edPhotoBtn.textContent = '⏳ Сжимаю…'; ED.photo = await shrinkPhoto(f); } catch (e) { toast('Не получилось открыть это фото'); } edPhotoBtn.textContent = '📷 Выбрать фото'; paintEd(); };
+  edPhoto.onchange = async () => { const f = edPhoto.files[0]; edPhoto.value = ''; if (!f) return; try { edPhotoBtn.textContent = L('⏳ Сжимаю…', '⏳ Стискаю…', '⏳ Compressing…'); ED.photo = await shrinkPhoto(f); } catch (e) { toast(L('Не получилось открыть это фото', 'Не вдалося відкрити це фото', 'Couldn’t open this photo')); } edPhotoBtn.textContent = PHOTO_BTN(); paintEd(); };
   edPhotoDel.onclick = () => { ED.photo = null; paintEd(); };
   edCancel.onclick = () => ed.close();
-  edDel.onclick = async () => { if (!ED.confirmDel) { ED.confirmDel = true; edDel.textContent = 'Точно удалить?'; return; } BK.gesture(); await markDeleted(ED.orig); await DB.del(ED.orig); ed.close(); closeDetail(); toast('Запись удалена'); await reload(); BK.changed(); };
+  edDel.onclick = async () => { if (!ED.confirmDel) { ED.confirmDel = true; edDel.textContent = L('Точно удалить?', 'Точно видалити?', 'Delete for sure?'); return; } BK.gesture(); await markDeleted(ED.orig); await DB.del(ED.orig); ed.close(); closeDetail(); toast(L('Запись удалена', 'Запис видалено', 'Entry deleted')); await reload(); BK.changed(); };
   edForm.onsubmit = async (ev) => {
     ev.preventDefault(); BK.gesture();
     const date = edDate.value;
-    if (!date) { toast('Укажи дату'); return false; }
-    if (date > TODAY) { toast('Будущий день записать нельзя 🙂'); return false; }
+    if (!date) { toast(L('Укажи дату', 'Вкажи дату', 'Pick a date')); return false; }
+    if (date > TODAY) { toast(L('Будущий день записать нельзя 🙂', 'Майбутній день записати не можна 🙂', 'You can’t log a future day 🙂')); return false; }
     const rec = clean({ date, rate: ED.rate, mood: ED.mood, emoji: ED.emoji, sport: ED.sport, study: ED.study, text: edText.value.trim(), photo: ED.photo, updated: new Date().toISOString() });
-    if (rec.rate == null && !rec.mood && !rec.text && !rec.photo) { toast('Поставь хотя бы оценку или настроение'); return false; }
+    if (rec.rate == null && !rec.mood && !rec.text && !rec.photo) { toast(L('Поставь хотя бы оценку или настроение', 'Постав хоча б оцінку або настрій', 'Add at least a score or a mood')); return false; }
     try {
       if (ED.orig && ED.orig !== date) { await markDeleted(ED.orig); await DB.del(ED.orig); }
       await DB.put(rec);
-    } catch (e) { toast('Не сохранилось: в браузере закончилось место. Попробуй фото поменьше.'); return false; }
+    } catch (e) { toast(L('Не сохранилось: в браузере закончилось место. Попробуй фото поменьше.', 'Не збереглося: у браузері закінчилося місце. Спробуй менше фото.', 'Not saved: the browser is out of space. Try a smaller photo.')); return false; }
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
-    ed.close(); toast('Сохранено ✓');
+    ed.close(); toast(L('Сохранено ✓', 'Збережено ✓', 'Saved ✓'));
     await reload(); BK.changed();
     const d = DAYS.find((x) => x.date === date); if (d) openDay(d, DAYS);
     return false;
@@ -1288,6 +1460,7 @@ function paintEd() {
   edPhotoPrev.classList.toggle('hide', !ED.photo); if (ED.photo) edPhotoPrev.src = ED.photo;
   edPhotoDel.classList.toggle('hide', !ED.photo);
 }
+const NEW_TITLE = () => L('Новая запись дня', 'Новий запис дня', 'New day entry');
 function openEditor(date) {
   if (DEMO) exitDemo();
   hideTip();
@@ -1295,17 +1468,17 @@ function openEditor(date) {
   Object.assign(ED, { orig: d ? d.date : null, rate: d?.rate ?? null, mood: d?.mood ?? null, emoji: d?.emoji || '', sport: d?.sport ?? null, study: d?.study ?? null, photo: d?.photo || null, confirmDel: false });
   edDate.value = date || TODAY; edDate.max = TODAY;
   edText.value = d?.text || ''; edEmoji.value = d && !ED_EMOJI.includes(d.emoji) ? d.emoji : '';
-  edTitle.textContent = d ? `Изменить запись · ${fdate(d.t)}` : 'Новая запись дня';
-  edDel.classList.toggle('hide', !d); edDel.textContent = 'Удалить';
+  edTitle.textContent = d ? `${L('Изменить запись', 'Змінити запис', 'Edit entry')} · ${fdate(d.t)}` : NEW_TITLE();
+  edDel.classList.toggle('hide', !d); edDel.textContent = L('Удалить', 'Видалити', 'Delete'); edPhotoBtn.textContent = PHOTO_BTN();
   paintEd(); if (!ed.open) ed.showModal();
 }
 // смена даты в окне = переключиться на этот день (существующая запись откроется, пустой день — с чистыми полями)
 edDate && (edDate.onchange = () => {
   const iso = edDate.value; if (!iso) return;
   const d = DAYS.find((x) => x.date === iso);
-  if (d) { openEditor(iso); toast('За этот день уже есть запись — открыл её'); return; }
+  if (d) { openEditor(iso); toast(L('За этот день уже есть запись — открыл её', 'За цей день уже є запис — відкрив його', 'This day already has an entry — opened it')); return; }
   if (ED.orig) { openEditor(iso); return; } // было «изменить» другой день → начинаем новый с нуля
-  edTitle.textContent = 'Новая запись дня'; // новая запись: просто меняем дату, введённое сохраняем
+  edTitle.textContent = NEW_TITLE(); // новая запись: просто меняем дату, введённое сохраняем
 });
 function closeDetail() { document.getElementById('detail').style.display = 'none'; selDate = null; }
 function shrinkPhoto(file) {
@@ -1325,12 +1498,12 @@ function shrinkPhoto(file) {
 // ---------- копия: сохранить / загрузить ----------
 async function exportCopy() {
   const days = (await DB.all()).map(clean);
-  if (!days.length) { toast('Пока нечего сохранять'); return; }
+  if (!days.length) { toast(L('Пока нечего сохранять', 'Поки нічого зберігати', 'Nothing to save yet')); return; }
   const blob = new Blob([JSON.stringify({ app: 'dnevnik-dnei', version: 1, exported: new Date().toISOString(), days }, null, 1)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `дневник-дней-копия-${TODAY}.json`;
   document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   BK.manual = new Date().toISOString(); await DB.setMeta('lastBackup', BK.manual);
-  toast(`Копия скачана: ${dn(days.length)}`); renderBanners();
+  toast(L('Копия скачана: ', 'Копію завантажено: ', 'Copy downloaded: ') + dn(days.length)); renderBanners();
 }
 async function importCopy(file) {
   try {
@@ -1343,9 +1516,9 @@ async function importCopy(file) {
     const before = new Set((await DB.all()).map((d) => d.date));
     await DB.putMany(ok); BK.changed();
     const added = ok.filter((d) => !before.has(d.date)).length;
-    toast(`Загружено: ${dn(ok.length)} (новых ${added}, обновлено ${ok.length - added})`);
+    toast(L(`Загружено: ${dn(ok.length)} (новых ${added}, обновлено ${ok.length - added})`, `Завантажено: ${dn(ok.length)} (нових ${added}, оновлено ${ok.length - added})`, `Loaded: ${dn(ok.length)} (${added} new, ${ok.length - added} updated)`));
     await reload();
-  } catch (e) { toast('Это не похоже на файл-копию дневника'); }
+  } catch (e) { toast(L('Это не похоже на файл-копию дневника', 'Це не схоже на файл-копію щоденника', 'This doesn’t look like a diary backup file')); }
 }
 
 // ---------- плашки-напоминания ----------
@@ -1353,19 +1526,19 @@ async function renderBanners() {
   const box = document.getElementById('banners'); box.replaceChildren();
   if (!PUBLIC) return;
   const add = (cls, html, btns) => { const b = document.createElement('div'); b.className = 'banner ' + cls; const s = document.createElement('span'); s.innerHTML = html; b.append(s); if (btns) { const a = document.createElement('div'); a.className = 'actions'; btns.forEach(([t, fn, p]) => { const x = document.createElement('button'); x.className = 'btn' + (p ? ' primary' : ''); x.textContent = t; x.onclick = fn; a.append(x); }); b.append(a); } box.append(b); };
-  if (DEMO) { add('info', '👀 <b>Это пример</b> с выдуманными днями — посмотреть, как всё выглядит. Твои записи не тронуты.', [['Выйти из примера', () => exitDemo(), true]]); return; }
+  if (DEMO) { add('info', L('👀 <b>Это пример</b> с выдуманными днями — посмотреть, как всё выглядит. Твои записи не тронуты.', '👀 <b>Це приклад</b> з вигаданими днями — подивитися, як усе виглядає. Твої записи не зачеплено.', '👀 <b>This is an example</b> with made-up days, to show how everything looks. Your entries are untouched.'), [[L('Выйти из примера', 'Вийти з прикладу', 'Leave the example'), () => exitDemo(), true]]); return; }
   await BK.load(); renderProt();
-  if (BK.drive.on && BK.driveNeed) add('warn', '☁️ <b>Google Диск ждёт подтверждения входа</b> — нажми, и всё сохранится и синхронизируется.', [['Продолжить', () => BK.driveConnect(false), true]]);
-  if (BK.file.h && BK.fileNeed) add('warn', '💻 <b>Автокопия в файл на паузе</b> — браузер просит разрешение ещё раз.', [['Разрешить', () => BK.fileAllow(), true]]);
+  if (BK.drive.on && BK.driveNeed) add('warn', L('☁️ <b>Google Диск ждёт подтверждения входа</b> — нажми, и всё сохранится и синхронизируется.', '☁️ <b>Google Диск чекає підтвердження входу</b> — натисни, і все збережеться та синхронізується.', '☁️ <b>Google Drive is waiting for you to confirm sign-in</b> — tap and everything will save and sync.'), [[L('Продолжить', 'Продовжити', 'Continue'), () => BK.driveConnect(false), true]]);
+  if (BK.file.h && BK.fileNeed) add('warn', L('💻 <b>Автокопия в файл на паузе</b> — браузер просит разрешение ещё раз.', '💻 <b>Автокопія у файл на паузі</b> — браузер просить дозвіл ще раз.', '💻 <b>File autosave is paused</b> — the browser is asking for permission again.'), [[L('Разрешить', 'Дозволити', 'Allow'), () => BK.fileAllow(), true]]);
   if (!DAYS.length) return;
   const autoOn = BK.drive.on || !!BK.file.h;
   if (!autoOn) {
     const last = BK.last();
     const firstUpd = DAYS.map((d) => d.updated).filter(Boolean).sort()[0];
     const since = last ? (Date.now() - new Date(last)) / 864e5 : firstUpd ? (Date.now() - new Date(firstUpd)) / 864e5 : 0;
-    if (since >= 2 || DAYS.length >= 3) add('warn', `🛡️ <b>Записи пока не защищены.</b> ${last ? `Последняя копия — ${Math.floor(since)} дн. назад.` : 'Копий ещё нет.'} Если очистить браузер — всё пропадёт. Включи автосохранение: копия будет обновляться сама.`, [['Включить автосохранение', () => document.getElementById('about').scrollIntoView({ behavior: 'smooth' }), true], ['Скачать копию', exportCopy]]);
+    if (since >= 2 || DAYS.length >= 3) { const ds = Math.floor(since); add('warn', L(`🛡️ <b>Записи пока не защищены.</b> ${last ? `Последняя копия — ${ds} дн. назад.` : 'Копий ещё нет.'} Если очистить браузер — всё пропадёт. Включи автосохранение: копия будет обновляться сама.`, `🛡️ <b>Записи поки не захищені.</b> ${last ? `Остання копія — ${ds} дн. тому.` : 'Копій ще немає.'} Якщо очистити браузер — усе зникне. Увімкни автозбереження: копія оновлюватиметься сама.`, `🛡️ <b>Your entries aren’t protected yet.</b> ${last ? `Last copy: ${ds} days ago.` : 'No copies yet.'} Clearing the browser would erase everything. Turn on autosave and a copy will update itself.`), [[L('Включить автосохранение', 'Увімкнути автозбереження', 'Turn on autosave'), () => document.getElementById('about').scrollIntoView({ behavior: 'smooth' }), true], [L('Скачать копию', 'Завантажити копію', 'Download a copy'), exportCopy]]); }
   }
-  if (!DAYS.some((d) => d.date === TODAY)) add('info', '✍️ Сегодня ещё не записан.', [['Записать сегодня', () => openEditor(TODAY), true]]);
+  if (!DAYS.some((d) => d.date === TODAY)) add('info', L('✍️ Сегодня ещё не записан.', '✍️ Сьогодні ще не записаний.', '✍️ Today isn’t logged yet.'), [[L('Записать сегодня', 'Записати сьогодні', 'Log today'), () => openEditor(TODAY), true]]);
 }
 
 // ======================================================================
@@ -1374,7 +1547,7 @@ async function renderBanners() {
 const GCID = '5618507761-r5h1r6d1194gqhj0riid9qb62kfl0qp5.apps.googleusercontent.com'.startsWith('/*') ? '' : '5618507761-r5h1r6d1194gqhj0riid9qb62kfl0qp5.apps.googleusercontent.com';
 const GFILE = 'dnevnik-dnei-backup.json';
 async function markDeleted(date) { const del = (await DB.getMeta('deleted')) || {}; del[date] = new Date().toISOString(); await DB.setMeta('deleted', del); }
-const whenTxt = (iso) => { if (!iso) return 'ещё не было'; const d = new Date(iso); const today = isoLocal(new Date()) === isoLocal(d); return (today ? 'сегодня' : isoLocal(d).split('-').reverse().join('.')) + ' в ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+const whenTxt = (iso) => { if (!iso) return L('ещё не было', 'ще не було', 'not yet'); const d = new Date(iso); const today = isoLocal(new Date()) === isoLocal(d); return (today ? L('сегодня', 'сьогодні', 'today') : isoLocal(d).split('-').reverse().join('.')) + L(' в ', ' о ', ' at ') + pad(d.getHours()) + ':' + pad(d.getMinutes()); };
 async function snapshot() { return { app: 'dnevnik-dnei', version: 1, exported: new Date().toISOString(), days: (await DB.all()).map(clean), deleted: (await DB.getMeta('deleted')) || {} }; }
 // слияние: побеждает более свежая правка; удаление побеждает, если оно свежее записи
 async function mergeRemote(remote) {
@@ -1419,7 +1592,7 @@ const BK = {
   changed() { clearTimeout(this.timer); this.timer = setTimeout(() => this.run('change'), 700); },
   async run(why) {
     if (DEMO || this.busy) { if (this.busy) this.again = true; return; }
-    this.busy = true; renderProt('⏳ сохраняю…');
+    this.busy = true; renderProt(L('⏳ сохраняю…', '⏳ зберігаю…', '⏳ saving…'));
     try {
       if (this.file.h && !this.fileNeed) await this.fileWrite();
       if (this.drive.on) await this.driveSync();
@@ -1429,10 +1602,10 @@ const BK = {
   fileSupported: () => typeof window.showSaveFilePicker === 'function',
   async filePick() {
     try {
-      const h = await window.showSaveFilePicker({ suggestedName: 'дневник-дней-автокопия.json', types: [{ description: 'Копия дневника', accept: { 'application/json': ['.json'] } }] });
+      const h = await window.showSaveFilePicker({ suggestedName: 'дневник-дней-автокопия.json', types: [{ description: L('Копия дневника', 'Копія щоденника', 'Diary backup'), accept: { 'application/json': ['.json'] } }] });
       this.file = { h, name: h.name }; this.fileNeed = false; await DB.setMeta('fileH', h);
-      await this.fileWrite(); toast('Автокопия включена: ' + h.name); renderBanners();
-    } catch (e) { if (e && e.name !== 'AbortError') toast('Не получилось выбрать файл'); }
+      await this.fileWrite(); toast(L('Автокопия включена: ', 'Автокопію увімкнено: ', 'Autosave to file is on: ') + h.name); renderBanners();
+    } catch (e) { if (e && e.name !== 'AbortError') toast(L('Не получилось выбрать файл', 'Не вдалося вибрати файл', 'Couldn’t choose the file')); }
   },
   async fileAllow() { try { const p = await this.file.h.requestPermission({ mode: 'readwrite' }); this.fileNeed = p !== 'granted'; if (!this.fileNeed) await this.run('allow'); } catch (e) { this.fileNeed = true; } renderBanners(); },
   async fileWrite() {
@@ -1440,7 +1613,7 @@ const BK = {
       if ((await this.file.h.queryPermission({ mode: 'readwrite' })) !== 'granted') { this.fileNeed = true; return; }
       const w = await this.file.h.createWritable(); await w.write(JSON.stringify(await snapshot(), null, 1)); await w.close();
       this.file.last = new Date().toISOString(); await DB.setMeta('fileLast', this.file.last); this.fileErr = null;
-    } catch (e) { this.fileErr = 'файл недоступен — выбери заново'; }
+    } catch (e) { this.fileErr = L('файл недоступен — выбери заново', 'файл недоступний — вибери заново', 'file unavailable — choose it again'); }
   },
   async fileOff() { this.file = { h: null }; this.fileNeed = false; await DB.setMeta('fileH', null); renderBanners(); },
   // ---- Google Диск ----
@@ -1463,15 +1636,15 @@ const BK = {
     else { ws.forEach((f) => f(false)); }
   },
   async driveConnect(first) {
-    if (!this.tc) { toast('Google ещё загружается, нажми через секунду'); this.loadGis(); return; }
+    if (!this.tc) { toast(L('Google ещё загружается, нажми через секунду', 'Google ще завантажується, натисни за секунду', 'Google is still loading, tap again in a second')); this.loadGis(); return; }
     const ok = !first && this.tokValid() ? true : await this.askToken(first ? 'consent' : '');
-    if (!ok) { toast('Вход в Google отменён'); return; }
+    if (!ok) { toast(L('Вход в Google отменён', 'Вхід у Google скасовано', 'Google sign-in cancelled')); return; }
     if (first) {
       this.drive = { on: true }; await DB.setMeta('drive', this.drive);
       try { const a = await this.api('https://www.googleapis.com/drive/v3/about?fields=user(emailAddress)'); this.drive.email = (await a.json()).user.emailAddress; await DB.setMeta('drive', this.drive); } catch (e) {}
     }
     await this.run('connect');
-    if (first) toast(this.drive.err ? 'Подключено, но сохранить не вышло: ' + this.drive.err : '☁️ Google Диск подключён — копия сохранена');
+    if (first) toast(this.drive.err ? L('Подключено, но сохранить не вышло: ', 'Підключено, але зберегти не вдалося: ', 'Connected, but saving failed: ') + this.drive.err : L('☁️ Google Диск подключён — копия сохранена', '☁️ Google Диск підключено — копію збережено', '☁️ Google Drive connected — copy saved'));
   },
   async api(url, opt = {}) {
     const r = await fetch(url, { ...opt, headers: { ...(opt.headers || {}), Authorization: 'Bearer ' + this.tok.t } });
@@ -1487,7 +1660,7 @@ const BK = {
       if (id) {
         let remote = null;
         try { remote = await (await this.api(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`)).json(); } catch (e) { if (String(e.message).includes('404')) id = null; else throw e; }
-        if (remote && (await mergeRemote(remote))) { await reload(); toast('☁️ Подтянул записи с Google Диска'); }
+        if (remote && (await mergeRemote(remote))) { await reload(); toast(L('☁️ Подтянул записи с Google Диска', '☁️ Підтягнув записи з Google Диска', '☁️ Pulled entries from Google Drive')); }
       }
       const body = JSON.stringify(await snapshot());
       if (id) await this.api(`https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body });
@@ -1498,37 +1671,45 @@ const BK = {
         id = (await (await this.api('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', { method: 'POST', body: fd })).json()).id;
       }
       Object.assign(this.drive, { fileId: id, last: new Date().toISOString(), err: null }); await DB.setMeta('drive', this.drive);
-    } catch (e) { this.drive.err = e.message === 'auth' ? null : 'нет связи с Google Диском, попробую позже'; }
+    } catch (e) { this.drive.err = e.message === 'auth' ? null : L('нет связи с Google Диском, попробую позже', 'немає звʼязку з Google Диском, спробую пізніше', 'no connection to Google Drive, will retry later'); }
   },
   async driveOff() {
     try { if (this.tok) google.accounts.oauth2.revoke(this.tok.t, () => {}); } catch (e) {}
-    this.drive = { on: false }; this.tok = null; this.driveNeed = false; await DB.setMeta('drive', this.drive); await DB.setMeta('gtok', null); renderBanners(); toast('Google Диск отключён. Файл-копия на Диске осталась.');
+    this.drive = { on: false }; this.tok = null; this.driveNeed = false; await DB.setMeta('drive', this.drive); await DB.setMeta('gtok', null); renderBanners(); toast(L('Google Диск отключён. Файл-копия на Диске осталась.', 'Google Диск відключено. Файл-копія на Диску залишилася.', 'Google Drive disconnected. The backup file stays in your Drive.'));
   },
 };
 function renderProt(busyTxt) {
   const box = document.getElementById('prot'); if (!box || !PUBLIC) return; box.replaceChildren();
   const row = (cls, title, sub, btns) => { const r = document.createElement('div'); r.className = 'prow ' + cls; const l = document.createElement('div'); const t = document.createElement('div'); t.className = 'pt'; t.textContent = title; const s2 = document.createElement('div'); s2.className = 'ps'; s2.textContent = sub; l.append(t, s2); r.append(l); const a = document.createElement('div'); a.className = 'actions'; btns.forEach(([tx, fn, p]) => { const b = document.createElement('button'); b.className = 'btn' + (p ? ' primary' : ''); b.textContent = tx; b.onclick = fn; a.append(b); }); r.append(a); box.append(r); };
   if (GCID) {
-    if (!BK.drive.on) row('', '☁️ Google Диск — самый надёжный вариант', 'Копия хранится в твоём Google-аккаунте и обновляется после каждой записи. Заодно переносит дневник между телефоном и компьютером: подключи один и тот же аккаунт на обоих. Приложение видит только свой файл, остальной Диск — нет.', [['Подключить', () => BK.driveConnect(true), true]]);
-    else row(BK.driveNeed ? 'need' : 'on', `☁️ Google Диск подключён${BK.drive.email ? ' · ' + BK.drive.email : ''}`, busyTxt || (BK.driveNeed ? 'Нужно нажать «Продолжить» — Google просит подтвердить вход.' : BK.drive.err ? BK.drive.err : `Сохраняется автоматически · последний раз: ${whenTxt(BK.drive.last)}`),
-      [[BK.driveNeed ? 'Продолжить' : 'Синхронизировать', () => BK.driveConnect(false), BK.driveNeed], ['Отключить', () => BK.driveOff()]]);
+    if (!BK.drive.on) row('', L('☁️ Google Диск — самый надёжный вариант', '☁️ Google Диск — найнадійніший варіант', '☁️ Google Drive — the most reliable option'), L('Копия хранится в твоём Google-аккаунте и обновляется после каждой записи. Заодно переносит дневник между телефоном и компьютером: подключи один и тот же аккаунт на обоих. Приложение видит только свой файл, остальной Диск — нет.', 'Копія зберігається у твоєму Google-акаунті й оновлюється після кожного запису. Заодно переносить щоденник між телефоном і компʼютером: підключи один і той самий акаунт на обох. Застосунок бачить лише свій файл, решту Диска — ні.', 'The copy lives in your Google account and updates after every entry. It also syncs the diary between phone and computer: connect the same account on both. The app sees only its own file, not the rest of your Drive.'), [[L('Подключить', 'Підключити', 'Connect'), () => BK.driveConnect(true), true]]);
+    else row(BK.driveNeed ? 'need' : 'on', L('☁️ Google Диск подключён', '☁️ Google Диск підключено', '☁️ Google Drive connected') + (BK.drive.email ? ' · ' + BK.drive.email : ''), busyTxt || (BK.driveNeed ? L('Нужно нажать «Продолжить» — Google просит подтвердить вход.', 'Треба натиснути «Продовжити» — Google просить підтвердити вхід.', 'Tap “Continue” — Google wants you to confirm sign-in.') : BK.drive.err ? BK.drive.err : L('Сохраняется автоматически · последний раз: ', 'Зберігається автоматично · останній раз: ', 'Saves automatically · last time: ') + whenTxt(BK.drive.last)),
+      [[BK.driveNeed ? L('Продолжить', 'Продовжити', 'Continue') : L('Синхронизировать', 'Синхронізувати', 'Sync now'), () => BK.driveConnect(false), BK.driveNeed], [L('Отключить', 'Відключити', 'Disconnect'), () => BK.driveOff()]]);
   }
   if (BK.fileSupported()) {
-    if (!BK.file.h) row('', '💻 Автокопия в файл на компьютере', 'Выбери, куда класть файл — лучше в папку OneDrive, Google Drive или Dropbox, тогда копия ещё и улетит в облако. Обновляется после каждой записи.', [['Выбрать файл', () => BK.filePick(), !GCID]]);
-    else row(BK.fileNeed || BK.fileErr ? 'need' : 'on', `💻 Автокопия в файл «${BK.file.h.name}»`, BK.fileErr || (BK.fileNeed ? 'Браузер просит разрешение ещё раз — нажми «Разрешить».' : `Сохраняется автоматически · последний раз: ${whenTxt(BK.file.last)}`), [[BK.fileNeed ? 'Разрешить' : 'Сменить файл', () => (BK.fileNeed ? BK.fileAllow() : BK.filePick()), BK.fileNeed], ['Отключить', () => BK.fileOff()]]);
+    if (!BK.file.h) row('', L('💻 Автокопия в файл на компьютере', '💻 Автокопія у файл на компʼютері', '💻 Autosave to a file on this computer'), L('Выбери, куда класть файл — лучше в папку OneDrive, Google Drive или Dropbox, тогда копия ещё и улетит в облако. Обновляется после каждой записи.', 'Вибери, куди класти файл — краще в теку OneDrive, Google Drive чи Dropbox, тоді копія ще й полетить у хмару. Оновлюється після кожного запису.', 'Choose where to keep the file — ideally a OneDrive, Google Drive or Dropbox folder, so the copy also goes to the cloud. Updates after every entry.'), [[L('Выбрать файл', 'Вибрати файл', 'Choose file'), () => BK.filePick(), !GCID]]);
+    else row(BK.fileNeed || BK.fileErr ? 'need' : 'on', L('💻 Автокопия в файл', '💻 Автокопія у файл', '💻 Autosave to file') + ` «${BK.file.h.name}»`, BK.fileErr || (BK.fileNeed ? L('Браузер просит разрешение ещё раз — нажми «Разрешить».', 'Браузер просить дозвіл ще раз — натисни «Дозволити».', 'The browser is asking for permission again — tap “Allow”.') : L('Сохраняется автоматически · последний раз: ', 'Зберігається автоматично · останній раз: ', 'Saves automatically · last time: ') + whenTxt(BK.file.last)), [[BK.fileNeed ? L('Разрешить', 'Дозволити', 'Allow') : L('Сменить файл', 'Змінити файл', 'Change file'), () => (BK.fileNeed ? BK.fileAllow() : BK.filePick()), BK.fileNeed], [L('Отключить', 'Відключити', 'Disconnect'), () => BK.fileOff()]]);
   }
-  row(BK.manual ? 'on' : '', '💾 Копия вручную', `Скачать файл со всеми записями или загрузить его на другом устройстве. Последняя ручная копия: ${whenTxt(BK.manual)}.`, [['Скачать копию', exportCopy], ['Загрузить копию', () => fileImport.click()]]);
+  row(BK.manual ? 'on' : '', L('💾 Копия вручную', '💾 Копія вручну', '💾 Manual copy'), L('Скачать файл со всеми записями или загрузить его на другом устройстве. Последняя ручная копия: ', 'Завантажити файл з усіма записами або завантажити його на іншому пристрої. Остання ручна копія: ', 'Download a file with all entries, or load it on another device. Last manual copy: ') + whenTxt(BK.manual) + '.', [[L('Скачать копию', 'Завантажити копію', 'Download copy'), exportCopy], [L('Загрузить копию', 'Відновити з копії', 'Load copy'), () => fileImport.click()]]);
 }
 
 // ---------- пример с выдуманными днями ----------
 function demoDays() {
   let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
   const pick = (a) => a[Math.floor(rnd() * a.length)];
-  const T = {
+  const T = L({
     good: ['Выспался, погулял в парке, вечером посмотрел фильм с друзьями.', 'Хорошая тренировка, потом приготовил вкусный ужин.', 'Встретился с другом, долго болтали, очень тепло.', 'Дочитал книгу, прогулка по городу, спокойный вечер.', 'Сделал важную задачу на работе, похвалили. Вечером игры.'],
     mid: ['Обычный рабочий день, вечером сериал.', 'Работа, магазин, уборка. Ничего особенного.', 'Немного устал, но в целом нормально. Позвонил маме.', 'Дела по дому, немного почитал.'],
     bad: ['Устал, на работе завал, плохо спал.', 'Болит голова, весь день как в тумане.', 'Поругался, настроение на нуле, не выспался.', 'Стресс на работе, ничего не хотелось.'],
-  };
+  }, {
+    good: ['Виспався, погуляв у парку, ввечері подивився фільм з друзями.', 'Добре тренування, потім приготував смачну вечерю.', 'Зустрівся з другом, довго балакали, дуже тепло.', 'Дочитав книгу, прогулянка містом, спокійний вечір.', 'Зробив важливе завдання на роботі, похвалили. Ввечері ігри.'],
+    mid: ['Звичайний робочий день, ввечері серіал.', 'Робота, магазин, прибирання. Нічого особливого.', 'Трохи втомився, але загалом нормально. Подзвонив мамі.', 'Справи вдома, трохи почитав.'],
+    bad: ['Втомився, на роботі завал, погано спав.', 'Болить голова, весь день як у тумані.', 'Посварився, настрій на нулі, не виспався.', 'Стрес на роботі, нічого не хотілося.'],
+  }, {
+    good: ['Slept well, walked in the park, watched a movie with friends in the evening.', 'Good workout, then I cooked a tasty dinner.', 'Met a friend, we talked for ages, felt very warm.', 'Finished a book, walked around the city, calm evening.', 'Finished an important task at work and got praised. Games in the evening.'],
+    mid: ['Ordinary work day, a series in the evening.', 'Work, shop, cleaning. Nothing special.', 'A bit tired but fine overall. Called mom.', 'Chores at home, read a little.'],
+    bad: ['Tired, swamped at work, slept badly.', 'Headache, the whole day felt foggy.', 'Had a fight, mood at zero, didn’t sleep enough.', 'Stress at work, didn’t feel like doing anything.'],
+  });
   const out = []; let level = 6.5;
   for (let i = 150; i >= 1; i--) {
     const date = addDaysIso(TODAY, -i);
@@ -1544,22 +1725,43 @@ function demoDays() {
 function startDemo() { DEMO = true; setDays(demoDays()); renderBanners(); scrollTo({ top: 0, behavior: 'smooth' }); }
 function exitDemo(silent) { DEMO = false; closeDetail(); if (!silent) reload(); }
 
+// ---------- язык и тема: тексты вне графиков ----------
+function applyTexts() {
+  applyStatic();
+  if (PUBLIC) {
+    document.title = L(...ST.appName);
+    document.getElementById('title').textContent = '📔 ' + L(...ST.appName);
+    document.getElementById('calSub').textContent = L('Наведи на день — увидишь запись. Нажми — откроется ниже. Пустой день можно нажать и записать. Точка в углу — есть текст.', 'Наведи на день — побачиш запис. Натисни — відкриється нижче. Порожній день можна натиснути й записати. Крапка в куті — є текст.', 'Hover a day to see the entry, tap to open it below. Tap an empty day to log it. A dot in the corner means there’s text.');
+    document.getElementById('foot').innerHTML = L('Дневник дней · записи хранятся только у тебя: в этом браузере и, если подключишь, на твоём Google Диске · работает без интернета', 'Щоденник днів · записи зберігаються лише в тебе: у цьому браузері та, якщо підключиш, на твоєму Google Диску · працює без інтернету', 'Diary of Days · entries are stored only with you: in this browser and, if you connect it, in your Google Drive · works offline') + ' · <a href="privacy.html" style="color:var(--accent)">' + L('Политика конфиденциальности', 'Політика конфіденційності', 'Privacy policy') + '</a>';
+  } else {
+    document.getElementById('foot').textContent = `Собрано ${DATA.built} из файлов папки «дневник». Картинки дня, отмеченные ✱ в заметках, поставил Claude. Работает без интернета.`;
+  }
+  edPhotoBtn.textContent = PHOTO_BTN();
+  fToggle.textContent = filters.classList.contains('open') ? L('✕ Скрыть фильтры', '✕ Сховати фільтри', '✕ Hide filters') : L(...ST.fMoreBtn);
+}
+fToggle.onclick = () => { filters.classList.toggle('open'); applyTexts(); };
+langSeg.querySelectorAll('button').forEach((b) => (b.onclick = () => {
+  if (b.dataset.lang === LANG) return;
+  LANG = b.dataset.lang; lsSet('dn-lang', LANG); MN = MN_ALL[LANG]; WDN = WDN_ALL[LANG];
+  applyTexts();
+  if (PUBLIC && !DEMO) reload(); else setDays(DEMO ? demoDays() : DATA.days);
+  if (PUBLIC) renderBanners();
+}));
+themeSel.onchange = () => { THEME = themeSel.value; lsSet('dn-theme', THEME); applyTheme(); render(); };
+
 // ---------- запуск ----------
 if (PUBLIC) {
-  document.title = 'Дневник дней';
-  document.getElementById('title').textContent = '📔 Дневник дней';
   document.querySelectorAll('.pub').forEach((e) => e.classList.remove('hide'));
-  document.getElementById('calSub').textContent = 'Наведи на день — увидишь запись. Нажми — откроется ниже. Пустой день можно нажать и записать. Точка в углу — есть текст.';
   bAdd.onclick = () => openEditor(TODAY); bFirst.onclick = () => openEditor(TODAY);
-  bExport.onclick = () => (DEMO ? toast('Это пример — сохранять нечего') : exportCopy());
+  bExport.onclick = () => (DEMO ? toast(L('Это пример — сохранять нечего', 'Це приклад — зберігати нічого', 'This is an example — nothing to save')) : exportCopy());
   bImport.onclick = bImport2.onclick = () => fileImport.click();
   fileImport.onchange = () => { const f = fileImport.files[0]; fileImport.value = ''; if (f) importCopy(f); };
   bDemo.onclick = startDemo;
-  document.getElementById('foot').innerHTML = 'Дневник дней · записи хранятся только у тебя: в этом браузере и, если подключишь, на твоём Google Диске · работает без интернета · <a href="privacy.html" style="color:var(--accent)">Политика конфиденциальности</a>';
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
-  reload().catch(() => { toast('Браузер не даёт сохранять данные (возможно, режим инкогнито)'); setDays([]); });
+  applyTexts();
+  reload().catch(() => { toast(L('Браузер не даёт сохранять данные (возможно, режим инкогнито)', 'Браузер не дає зберігати дані (можливо, режим інкогніто)', 'The browser won’t let us store data (maybe private/incognito mode)')); setDays([]); });
 } else {
-  document.getElementById('foot').textContent = `Собрано ${DATA.built} из файлов папки «дневник». Картинки дня, отмеченные ✱ в заметках, поставил Claude. Работает без интернета.`;
+  applyTexts();
   setDays(DATA.days);
 }
 </script>
