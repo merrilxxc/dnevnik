@@ -1371,7 +1371,7 @@ async function renderBanners() {
 // ======================================================================
 // 🛡️ АВТОСОХРАНЕНИЕ: Google Диск (с синхронизацией) и файл на компьютере
 // ======================================================================
-const GCID = '/*__GCID__*/'.startsWith('/*') ? '' : '/*__GCID__*/';
+const GCID = '5618507761-r5h1r6d1194gqhj0riid9qb62kfl0qp5.apps.googleusercontent.com'.startsWith('/*') ? '' : '5618507761-r5h1r6d1194gqhj0riid9qb62kfl0qp5.apps.googleusercontent.com';
 const GFILE = 'dnevnik-dnei-backup.json';
 async function markDeleted(date) { const del = (await DB.getMeta('deleted')) || {}; del[date] = new Date().toISOString(); await DB.setMeta('deleted', del); }
 const whenTxt = (iso) => { if (!iso) return 'ещё не было'; const d = new Date(iso); const today = isoLocal(new Date()) === isoLocal(d); return (today ? 'сегодня' : isoLocal(d).split('-').reverse().join('.')) + ' в ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); };
@@ -1555,7 +1555,7 @@ if (PUBLIC) {
   bImport.onclick = bImport2.onclick = () => fileImport.click();
   fileImport.onchange = () => { const f = fileImport.files[0]; fileImport.value = ''; if (f) importCopy(f); };
   bDemo.onclick = startDemo;
-  document.getElementById('foot').textContent = 'Дневник дней · записи хранятся только в этом браузере и никуда не отправляются · работает без интернета.';
+  document.getElementById('foot').innerHTML = 'Дневник дней · записи хранятся только у тебя: в этом браузере и, если подключишь, на твоём Google Диске · работает без интернета · <a href="privacy.html" style="color:var(--accent)">Политика конфиденциальности</a>';
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
   reload().catch(() => { toast('Браузер не даёт сохранять данные (возможно, режим инкогнито)'); setDays([]); });
 } else {
