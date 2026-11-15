@@ -1,5 +1,5 @@
-// Дневник дней — офлайн-работа. Версия: 20261114-0300
-const CACHE = 'dnevnik-20261115-1200';
+// Дневник дней — офлайн-работа. Версия: 20261115-1400
+const CACHE = 'dnevnik-20261115-1400';
 const FILES = ['./', './index.html', './privacy.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
