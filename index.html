@@ -1510,7 +1510,8 @@ async function importCopy(file) {
     const j = JSON.parse(await file.text());
     const arr = Array.isArray(j) ? j : j.days;
     if (!Array.isArray(arr)) throw new Error('format');
-    const ok = arr.filter((d) => d && /^\d{4}-\d{2}-\d{2}$/.test(d.date) && d.date <= TODAY).map((d) => clean({ ...d, rate: Number.isInteger(d.rate) && d.rate >= 1 && d.rate <= 10 ? d.rate : null, mood: MOODS.includes(d.mood) ? d.mood : null, text: typeof d.text === 'string' ? d.text : '', photo: typeof d.photo === 'string' && d.photo.startsWith('data:image/') ? d.photo : null }));
+    const now = new Date().toISOString(); // записи без отметки времени считаем свежими — иначе синхронизация с Диском их перетирает
+    const ok = arr.filter((d) => d && /^\d{4}-\d{2}-\d{2}$/.test(d.date) && d.date <= TODAY).map((d) => clean({ ...d, updated: d.updated || now, rate: Number.isInteger(d.rate) && d.rate >= 1 && d.rate <= 10 ? d.rate : null, mood: MOODS.includes(d.mood) ? d.mood : null, text: typeof d.text === 'string' ? d.text : '', photo: typeof d.photo === 'string' && d.photo.startsWith('data:image/') ? d.photo : null }));
     if (!ok.length) throw new Error('empty');
     if (DEMO) exitDemo(true);
     const before = new Set((await DB.all()).map((d) => d.date));
