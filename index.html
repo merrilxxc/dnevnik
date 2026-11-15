@@ -2,7 +2,7 @@
 <html lang="ru" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Дневник дней</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#8b7cf6">
@@ -230,6 +230,85 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
 #printSheet li { margin: 2px 0; }
 #printSheet .ps-foot { color: #9a9aa0; font-size: 9.5px; margin-top: 8px; border-top: 1px solid #e3e3e8; padding-top: 5px; }
 
+/* ===== вкладки ===== */
+.tabhide { display: none !important; }
+.tabs { position: sticky; top: 0; z-index: 30; display: flex; gap: 6px; padding: 8px 0; background: var(--bg); }
+.tabs button { flex: 0 1 auto; display: inline-flex; align-items: center; gap: 7px; background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 14px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.tabs button .ti { font-size: 16px; line-height: 1; }
+.tabs button:hover { border-color: var(--accent); }
+.tabs button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (min-width: 900px) { .filters { top: 58px !important; } }
+@media (max-width: 700px) {
+  body { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
+  .tabs { position: fixed; top: auto; bottom: 0; left: 0; right: 0; z-index: 40; gap: 0; padding: 4px 2px calc(4px + env(safe-area-inset-bottom)); background: var(--panel); border-top: 1px solid var(--line); box-shadow: 0 -4px 18px rgba(0,0,0,.18); }
+  .tabs button { flex: 1 1 0; min-width: 0; flex-direction: column; gap: 2px; padding: 6px 2px 5px; border: 0; border-radius: 10px; background: none; color: var(--muted); font-size: 10.5px; font-weight: 600; }
+  .tabs button .ti { font-size: 21px; }
+  .tabs button .tl { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tabs button.on { background: var(--head); color: var(--accent); }
+  .toast { bottom: calc(80px + env(safe-area-inset-bottom)); }
+}
+/* ===== лента записей ===== */
+.elist { display: flex; flex-direction: column; }
+.ei { display: flex; gap: 12px; align-items: flex-start; padding: 11px 4px 11px 10px; border-top: 1px solid var(--line); border-left: 4px solid var(--line); cursor: pointer; border-radius: 4px; }
+.ei:first-child { border-top: 0; }
+.ei:hover { background: var(--panel2); }
+.ei .ee { font-size: 28px; line-height: 1; min-width: 34px; text-align: center; }
+.ei .eb { flex: 1; min-width: 0; }
+.ei .et { font-weight: 600; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.ei .em { color: var(--muted); font-size: 12px; margin: 2px 0 3px; }
+.ei .ex { font-size: 13.5px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; }
+.ei .eph { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; flex: none; }
+.emore { display: flex; justify-content: center; margin-top: 10px; }
+/* ===== страница дня ===== */
+body.dpopen { overflow: hidden; }
+.dpage { position: fixed; inset: 0; z-index: 60; background: var(--bg); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.dpbar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 6px; padding: 9px 12px; padding-top: calc(9px + env(safe-area-inset-top)); background: var(--panel); border-bottom: 1px solid var(--line); }
+.dpbar .ttl { flex: 1; min-width: 0; font-weight: 600; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dpbar .btn { font-size: 14px; padding: 6px 11px; }
+.dpin { max-width: 760px; margin: 0 auto; padding: 20px 16px calc(50px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 22px; }
+.dphero { display: flex; gap: 16px; align-items: center; }
+.dphero .big { font-size: 66px; line-height: 1; }
+.dphero .dd { font-size: 24px; font-weight: 700; line-height: 1.2; }
+.dphero .dpwd { color: var(--muted); font-size: 14px; margin-top: 2px; }
+.dpchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.dpchip { border: 1px solid var(--line); background: var(--panel2); border-radius: 999px; padding: 3px 11px; font-size: 13px; }
+.dpchip.rate { color: #fff; font-weight: 700; border-color: transparent; }
+.dpsec h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin: 0 0 10px; font-weight: 700; }
+.dptext { white-space: pre-wrap; font-size: 16.5px; line-height: 1.7; }
+.dptext.empty { color: var(--muted); font-size: 14px; }
+.gal { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+.gal img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; cursor: zoom-in; display: block; background: var(--panel2); }
+.gal img.cover { grid-column: 1 / -1; aspect-ratio: auto; max-height: 480px; object-fit: contain; }
+.evs { list-style: none; margin: 0 0 0 7px; padding: 0; border-left: 2px solid var(--line); }
+.evs li { position: relative; padding: 3px 0 12px 18px; font-size: 15px; }
+.evs li::before { content: ''; position: absolute; left: -7px; top: 8px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--bg); }
+.evs .tm { color: var(--accent); font-variant-numeric: tabular-nums; margin-right: 8px; font-weight: 700; }
+.vids { display: flex; flex-direction: column; gap: 10px; }
+.vids iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 10px; background: #000; display: block; }
+.vlink { display: flex; gap: 10px; align-items: center; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel2); color: var(--fg); text-decoration: none; word-break: break-all; }
+.vlink:hover { border-color: var(--accent); }
+.vlink b { font-size: 22px; }
+.dphint { border: 1px dashed var(--line); border-radius: 10px; padding: 12px 14px; color: var(--muted); font-size: 13.5px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.dpyears { display: flex; flex-wrap: wrap; gap: 6px; }
+.dpyears button { background: var(--panel2); color: var(--fg); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+.dpyears button:hover { border-color: var(--accent); }
+.dpnav { display: flex; gap: 8px; justify-content: space-between; }
+.dpnav .btn { flex: 1; padding: 10px; font-size: 13px; text-align: center; }
+.lbox { position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,.93); display: flex; align-items: center; justify-content: center; cursor: zoom-out; }
+.lbox img { max-width: 96vw; max-height: 92vh; object-fit: contain; border-radius: 6px; }
+.lbox .lbn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.14); color: #fff; border: 0; border-radius: 50%; width: 46px; height: 46px; font-size: 22px; cursor: pointer; }
+.lbox .lbc { position: absolute; bottom: calc(16px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); color: #ddd; font-size: 13px; }
+/* ===== редактор: доп. фото, события, видео ===== */
+.thumbs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.thumbs div { position: relative; }
+.thumbs img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; display: block; }
+.thumbs button { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; border: 0; background: var(--bad); color: #fff; font-size: 12px; cursor: pointer; line-height: 1; }
+.evrows { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+.evrow { display: flex; gap: 6px; align-items: center; }
+.ed .evrow input[type=time] { width: 116px; flex: none; background: var(--panel2); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 6px; font: inherit; }
+.ed .evrow input[type=text], .ed .evrow input[type=url] { flex: 1; min-width: 0; width: auto; background: var(--panel2); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; font: inherit; }
+.evrow .x { flex: none; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel2); color: var(--muted); cursor: pointer; }
+
 </style>
 </head>
 <body>
@@ -265,10 +344,12 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
     </div>
   </section>
 
-  <section class="card" id="otd"><h2 data-t="hOtd">🕰️ В этот день</h2><p class="sub" id="otdSub" data-t="otdSub">Что было ровно год назад. Нажми, чтобы открыть запись.</p><div id="otdList"></div></section>
+
+  <nav class="tabs hide" id="tabs" aria-label="Разделы"></nav>
 
   <div id="main">
-  <section class="card filters" id="filters">
+  <section class="card" id="otd" data-tab="cal"><h2 data-t="hOtd">🕰️ В этот день</h2><p class="sub" id="otdSub" data-t="otdSub">Что было ровно год назад. Нажми, чтобы открыть запись.</p><div id="otdList"></div></section>
+  <section class="card filters" id="filters" data-tab="cal charts analysis entries">
     <div class="f"><span data-t="fQuickL">Быстро</span> <span class="seg" id="fQuick"></span></div>
     <button class="btn" id="fToggle" data-t="fMoreBtn">⚙️ Ещё фильтры</button>
     <div class="fmore">
@@ -281,9 +362,9 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
     </div>
   </section>
 
-  <section class="card" id="summary"><h2 data-t="hSummary">🧭 Коротко о выбранном периоде</h2><p class="sub" data-t="sSummary">Собирается автоматически из оценок, настроений и текста. Меняется вместе с фильтрами.</p><div id="iSummary"></div><p class="note" data-t="nSummary">Это статистика по твоим записям, а не диагноз. Она подсвечивает закономерности: выводы делаешь ты.</p></section>
+  <section class="card" id="summary" data-tab="analysis"><h2 data-t="hSummary">🧭 Коротко о выбранном периоде</h2><p class="sub" data-t="sSummary">Собирается автоматически из оценок, настроений и текста. Меняется вместе с фильтрами.</p><div id="iSummary"></div><p class="note" data-t="nSummary">Это статистика по твоим записям, а не диагноз. Она подсвечивает закономерности: выводы делаешь ты.</p></section>
 
-  <section class="card" id="heat">
+  <section class="card" id="heat" data-tab="cal">
     <h2 data-t="hHeat">🟩 Год одной полосой</h2>
     <div class="hrow"><p class="sub" style="margin:0;flex:1 1 240px" id="heatSub">Каждый квадратик — день, цвет — оценка. Как активность на GitHub: видно серии, провалы и пропуски.</p><span class="seg" id="hYears"></span></div>
     <div class="heatwrap"><div id="cHeat"></div></div>
@@ -291,7 +372,7 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
     <div class="insight" id="iHeat"></div>
   </section>
 
-  <section class="card" id="compare">
+  <section class="card" id="compare" data-tab="cmp">
     <h2 data-t="hCmp">⚖️ Сравнение двух периодов</h2>
     <p class="sub" data-t="sCmp">Например, ноябрь прошлого года против этого. Цифры рядом и разница. Фильтры сверху здесь не действуют.</p>
     <div class="cmpctl">
@@ -302,9 +383,9 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
     <div class="insight" id="iCmp"></div>
   </section>
 
-  <section class="card" id="calendar">
+  <section class="card" id="calendar" data-tab="cal">
     <h2 data-t="hCal">📅 Календарь дней</h2>
-    <p class="sub" id="calSub">Наведи на день — увидишь запись. Нажми — откроется целиком ниже. Точка в углу — есть текст.</p>
+    <p class="sub" id="calSub">Наведи на день — увидишь запись. Нажми — откроется страница дня. Точка в углу — есть текст.</p>
     <div class="calnav" id="calNav"><button class="btn" id="calPrev" data-tt="prevM" aria-label="Предыдущий месяц">◀</button><div style="text-align:center"><b id="calName"></b><div class="cnt" id="calCnt"></div></div><button class="btn" id="calNext" data-tt="nextM" aria-label="Следующий месяц">▶</button></div>
     <div class="legend">
       <span><i style="background:var(--ok)"></i>7–10</span><span><i style="background:var(--warn)"></i>4–6</span><span><i style="background:var(--bad)"></i>1–3</span>
@@ -314,46 +395,52 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
     <div class="calfoot"><span class="f"><span data-t="printL">🖨️ Итог месяца одной страницей:</span> <select id="pMonth"></select></span><button class="btn" id="bPrint" data-t="bPrint">Сохранить PDF / распечатать</button></div>
   </section>
 
-  <section class="card" id="detail"></section>
 
-  <section class="card">
+  <section class="card" data-tab="charts">
     <h2 data-t="hWeeks">📊 Средняя оценка по неделям</h2>
     <p class="sub" data-t="sWeeks">Один столбик — одна неделя с записями (пустые недели пропущены, «⋯» — большой перерыв). Высота — средняя оценка, цвет — по твоей шкале.</p>
     <div id="cWeeks"></div><div class="insight" id="iWeeks"></div>
   </section>
 
-  <div class="two">
+  <div class="two" data-tab="charts">
     <section class="card"><h2 data-t="hMonths">🗓️ Средняя оценка по месяцам</h2><p class="sub" data-t="sMonths">Под столбиком — сколько дней с оценкой.</p><div id="cMonths"></div><div class="insight" id="iMonths"></div></section>
     <section class="card"><h2 data-t="hSport">🏃 Спорт и учёба по месяцам</h2><p class="sub" data-t="sSport">Средние баллы из 5.</p><div id="cSport"></div><div class="insight" id="iSport"></div></section>
   </div>
 
-  <div class="two">
+  <div class="two" data-tab="charts">
     <section class="card"><h2 data-t="hMoods">🎭 Настроения</h2><p class="sub" data-t="sMoods">Сколько дней с каждым настроением и средняя оценка таких дней.</p><div id="cMoods"></div><div class="insight" id="iMoods"></div></section>
     <section class="card"><h2 data-t="hWd">📆 Дни недели</h2><p class="sub" data-t="sWd">Какой день недели в среднем лучше.</p><div id="cWeekday"></div><div class="insight" id="iWeekday"></div></section>
   </div>
 
-  <section class="card">
+  <section class="card" data-tab="analysis">
     <h2 data-t="hThemes">🧠 Анализ текста: о чём дни и как они оцениваются</h2>
     <p class="sub" data-t="sThemes">Темы ищутся по словам в записях. Справа — средняя оценка дней с этой темой и разница со средней по всем дням с текстом.</p>
     <div class="themes" id="cThemes"></div><div class="insight" id="iThemes"></div>
   </section>
 
-  <section class="card">
+  <section class="card" data-tab="analysis">
     <h2 data-t="hWords">💬 Частые слова</h2>
     <p class="sub" data-t="sWords">Чем крупнее — тем чаще встречается. Клик по слову — поиск по нему.</p>
     <div class="words" id="cWords"></div><div class="insight" id="iWords"></div>
   </section>
 
+  <section class="card" id="entries" data-tab="entries">
+    <h2 data-t="hEntries">📝 Все записи</h2>
+    <p class="sub" id="entSub"></p>
+    <div class="elist" id="entList"></div>
+    <div class="emore" id="entMore"></div>
+  </section>
+
   </div><!-- /main -->
 
-  <section class="card help pub hide" id="help">
+  <section class="card help pub hide" id="help" data-tab="entries">
     <h2 data-t="hHelp">💛 Если тяжело</h2>
     <p data-t="help1">Подсказки на этой странице — просто статистика по твоим записям, а не диагноз и не совет врача.</p>
     <p data-t="help2">Если долго плохо, пусто или страшно — не держи это в себе. Напиши или позвони кому-то из близких. В Украине круглосуточно и бесплатно отвечают на линии <b>Lifeline Ukraine — 7333</b> (<a href="https://lifelineukraine.com" target="_blank" rel="noopener">lifelineukraine.com</a>). Если есть угроза жизни — звони <b>112</b>.</p>
     <p data-t="help3">В другой стране телефоны помощи можно найти на <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a>.</p>
   </section>
 
-  <section class="card help pub hide" id="about">
+  <section class="card help pub hide" id="about" data-tab="entries">
     <h2 data-t="hProt">🛡️ Защита записей</h2>
     <p data-t="prot1">Записи живут в этом браузере. Если очистить данные браузера — они сотрутся. Включи автосохранение: копия будет обновляться сама после каждой записи.</p>
     <div class="prot" id="prot"></div>
@@ -365,6 +452,8 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
 <div id="tip"></div>
 <div class="toast" id="toast"></div>
 <div id="printSheet"></div>
+<div class="dpage hide" id="dayPage" role="dialog" aria-modal="true"></div>
+<div class="lbox hide" id="lbox"></div>
 
 <dialog id="ed"><form class="ed" method="dialog" id="edForm" onsubmit="return false">
   <h2 id="edTitle">Запись дня</h2>
@@ -383,6 +472,17 @@ dialog::backdrop { background: rgba(0,0,0,.55); }
   <div><label class="lb" data-t="edPhotoL">Фото дня</label>
     <div class="actions"><button type="button" class="btn" id="edPhotoBtn">📷 Выбрать фото</button><button type="button" class="btn hide" id="edPhotoDel" data-t="edPhotoDel">Убрать фото</button></div>
     <input type="file" id="edPhoto" accept="image/*" class="hide"><img id="edPhotoPrev" class="phprev hide" alt="">
+  </div>
+  <div><label class="lb" data-t="edMoreL">Ещё фото (до 6)</label>
+    <div class="actions"><button type="button" class="btn" id="edPhotosBtn" data-t="edPhotosBtn">🖼️ Добавить фото</button></div>
+    <input type="file" id="edPhotos" accept="image/*" multiple class="hide"><div class="thumbs" id="edThumbs"></div>
+  </div>
+  <div><label class="lb" data-t="edEventsL">События дня</label>
+    <div class="evrows" id="edEvents"></div><button type="button" class="btn" id="edEvAdd" data-t="edEvAdd">＋ Событие</button>
+  </div>
+  <div><label class="lb" data-t="edVideosL">Видео — ссылки</label>
+    <div class="evrows" id="edVideos"></div><button type="button" class="btn" id="edVidAdd" data-t="edVidAdd">＋ Ссылка на видео</button>
+    <p class="sub" style="margin:6px 0 0" data-t="edVideosH">YouTube, Google Диск, Google Фото, TikTok, Instagram… Само видео лежит там, здесь только ссылка — так дневник остаётся лёгким.</p>
   </div>
   <div class="edfoot">
     <button type="button" class="btn hide" id="edDel" style="border-color:var(--bad)">Удалить</button>
@@ -496,6 +596,11 @@ const ST = {
   edTextP: ['Пара строк — уже отлично. Можно и без текста.', 'Пара рядків — уже чудово. Можна й без тексту.', 'A couple of lines is great. Text is optional.'],
   edPhotoL: ['Фото дня', 'Фото дня', 'Photo of the day'], edPhotoDel: ['Убрать фото', 'Прибрати фото', 'Remove photo'],
   edCancel: ['Отмена', 'Скасувати', 'Cancel'], edSave: ['Сохранить', 'Зберегти', 'Save'],
+  hEntries: ['📝 Все записи', '📝 Усі записи', '📝 All entries'],
+  edMoreL: ['Ещё фото (до 6)', 'Ще фото (до 6)', 'More photos (up to 6)'], edPhotosBtn: ['🖼️ Добавить фото', '🖼️ Додати фото', '🖼️ Add photos'],
+  edEventsL: ['События дня', 'Події дня', 'Events of the day'], edEvAdd: ['＋ Событие', '＋ Подія', '＋ Event'],
+  edVideosL: ['Видео — ссылки', 'Відео — посилання', 'Videos — links'], edVidAdd: ['＋ Ссылка на видео', '＋ Посилання на відео', '＋ Video link'],
+  edVideosH: ['YouTube, Google Диск, Google Фото, TikTok, Instagram… Само видео лежит там, здесь только ссылка — так дневник остаётся лёгким.', 'YouTube, Google Диск, Google Фото, TikTok, Instagram… Саме відео лежить там, тут лише посилання — так щоденник лишається легким.', 'YouTube, Google Drive, Google Photos, TikTok, Instagram… The video itself stays there, only the link is kept here so the diary stays light.'],
 };
 function applyStatic() {
   document.documentElement.lang = LANG === 'uk' ? 'uk' : LANG;
@@ -597,7 +702,7 @@ const match = (d) => {
   if (F.moods.size && !F.moods.has(d.mood)) return false;
   if (F.kind === 'text' && !d.text) return false;
   if (F.kind === 'rate' && d.text) return false;
-  if (F.q && !(d.text || '').toLowerCase().includes(F.q) && !(d.mood_raw || '').toLowerCase().includes(F.q)) return false;
+  if (F.q && !(d.text || '').toLowerCase().includes(F.q) && !(d.mood_raw || '').toLowerCase().includes(F.q) && !(d.events || []).some((e) => e.text.toLowerCase().includes(F.q))) return false;
   return true;
 };
 
@@ -629,33 +734,149 @@ function simpleTip(ev, lines) {
   tip.style.display = 'block'; moveTip(ev);
 }
 
-// ---------- карточка дня ----------
+// ---------- 📖 страница дня ----------
 let selDate = null;
+const DP = { date: null, list: null, pushed: false, booted: false };
+const dayPage = document.getElementById('dayPage'), lbox = document.getElementById('lbox');
+const MGEN = { ru: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'], uk: ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'], en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] };
+const longDate = (iso, noYear) => { const [y, m, d] = iso.split('-').map(Number); const mm = MGEN[LANG][m - 1]; return LANG === 'en' ? `${mm} ${d}${noYear ? '' : ', ' + y}` : `${d} ${mm}${noYear ? '' : ' ' + y}`; };
+const cap = (x) => x.charAt(0).toUpperCase() + x.slice(1);
+const dayPhotos = (d) => [d.photo, ...(d.photos || [])].filter(Boolean);
+const dayIsOpen = () => !dayPage.classList.contains('hide');
+function ytId(u) { const m = String(u).match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/); return m ? m[1] : null; }
 function openDay(d, list) {
+  if (!d) return;
   selDate = d.date; hideTip(); CAL.follow = true;
-  const box = document.getElementById('detail'); box.replaceChildren(); box.style.display = 'block';
-  const head = document.createElement('div'); head.className = 'dh';
-  const t = document.createElement('div'); t.className = 'dt'; t.textContent = `${d.emoji || ''} ${fdate(d.t)}${d.rate != null ? ' — ' + L('оценка', 'оцінка', 'score') + ' ' + d.rate + '/10' : ''}`;
-  const nav = document.createElement('div'); nav.style.display = 'flex'; nav.style.gap = '6px'; nav.style.flexWrap = 'wrap';
-  const idx = list.findIndex((x) => x.date === d.date);
-  const mk = (txt, fn, dis) => { const b = document.createElement('button'); b.className = 'btn'; b.textContent = txt; b.disabled = dis; if (dis) b.style.opacity = .4; b.onclick = fn; return b; };
-  nav.append(mk(L('◀ пред.', '◀ попер.', '◀ prev'), () => openDay(list[idx - 1], list), idx <= 0), mk(L('след. ▶', 'наст. ▶', 'next ▶'), () => openDay(list[idx + 1], list), idx < 0 || idx >= list.length - 1));
-  if (PUBLIC) nav.append(mk(L('✏️ Изменить', '✏️ Змінити', '✏️ Edit'), () => openEditor(d.date), DEMO));
-  else {
-    const ob = document.createElement('a'); ob.className = 'btn'; ob.textContent = 'Открыть в Obsidian';
-    ob.href = 'obsidian://open?path=' + encodeURIComponent(DATA.vault + '\\дневник\\' + d.file + '.md');
-    nav.append(ob);
-  }
-  nav.append(mk('✕', () => { box.style.display = 'none'; selDate = null; renderCalendar(); renderHeat(DAYS.filter(match)); }));
-  head.append(t, nav);
-  const m = document.createElement('div'); m.className = 'dm'; m.textContent = `${WDN[d.t.getUTCDay()]} · ${L('Настроение', 'Настрій', 'Mood')}: ${d.mood_raw || '—'} · ${L('Спорт', 'Спорт', 'Sport')}: ${d.sport ?? '—'}/5 · ${L('Учёба', 'Навчання', 'Study')}: ${d.study ?? '—'}/5`;
-  box.append(head, m);
-  if (d.photo) { const im = document.createElement('img'); im.className = 'dphoto'; im.src = d.photo; im.alt = L('Фото дня', 'Фото дня', 'Photo of the day'); box.append(im); }
-  const x = document.createElement('div'); x.className = 'dx'; x.textContent = d.text || NOTEXT();
-  box.append(x);
-  renderCalendar(); renderHeat(DAYS.filter(match));
-  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  DP.date = d.date; DP.list = list && list.some((x) => x.date === d.date) ? list : DAYS;
+  const was = dayIsOpen();
+  dayPage.classList.remove('hide'); document.body.classList.add('dpopen');
+  if (!was) { if (location.hash !== '#day/' + d.date) { history.pushState({ dp: 1 }, '', '#day/' + d.date); DP.pushed = true; } }
+  else history.replaceState(history.state, '', '#day/' + d.date);
+  renderDayPage(); dayPage.scrollTop = 0;
 }
+function closeDay(fromPop) {
+  if (dayIsOpen()) {
+    dayPage.classList.add('hide'); document.body.classList.remove('dpopen'); closeLightbox();
+    selDate = null; renderCalendar(); renderHeat(DAYS.filter(match));
+  }
+  if (!fromPop && DP.pushed) { DP.pushed = false; history.back(); return; }
+  DP.pushed = false;
+  if (!fromPop && location.hash.startsWith('#day/')) history.replaceState(null, '', location.pathname + location.search);
+}
+const closeDetail = () => closeDay();
+addEventListener('popstate', () => {
+  const m = location.hash.match(/^#day\/(\d{4}-\d{2}-\d{2})$/);
+  const d = m && DAYS.find((x) => x.date === m[1]);
+  if (d) { DP.date = d.date; dayPage.classList.remove('hide'); document.body.classList.add('dpopen'); renderDayPage(); }
+  else closeDay(true);
+});
+function openFromHash() {
+  const m = location.hash.match(/^#day\/(\d{4}-\d{2}-\d{2})$/); if (!m) return;
+  const d = DAYS.find((x) => x.date === m[1]);
+  if (d) openDay(d, DAYS); else history.replaceState(null, '', location.pathname + location.search);
+}
+function dpStep(k) { const l = DP.list || DAYS; const i = l.findIndex((x) => x.date === DP.date); const n = l[i + k]; if (i >= 0 && n) openDay(n, l); }
+function renderDayPage() {
+  const d = DAYS.find((x) => x.date === DP.date);
+  if (!d) { closeDay(); return; }
+  const list = DP.list || DAYS, idx = list.findIndex((x) => x.date === d.date);
+  const prev = list[idx - 1], next = list[idx + 1];
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  const btn = (txt, fn, dis, title) => { const b = el('button', 'btn', txt); b.type = 'button'; b.onclick = fn; b.disabled = !!dis; if (title) { b.title = title; b.setAttribute('aria-label', title); } return b; };
+  dayPage.replaceChildren();
+  // верхняя полоса
+  const bar = el('div', 'dpbar');
+  bar.append(btn(L('← Назад', '← Назад', '← Back'), () => closeDay()), el('div', 'ttl', `${firstEmoji(d.emoji) || ''} ${fdate(d.t)}`),
+    btn('◀', () => dpStep(-1), !prev, L('Предыдущий день', 'Попередній день', 'Previous day')), btn('▶', () => dpStep(1), !next, L('Следующий день', 'Наступний день', 'Next day')));
+  if (PUBLIC) { if (!DEMO) bar.append(btn('✏️', () => openEditor(d.date), false, L('Изменить', 'Змінити', 'Edit'))); }
+  else if (d.file) { const a = el('a', 'btn', 'Obsidian'); a.href = 'obsidian://open?path=' + encodeURIComponent(DATA.vault + '\\дневник\\' + d.file + '.md'); bar.append(a); }
+  const inn = el('div', 'dpin');
+  // шапка дня
+  const hero = el('div', 'dphero');
+  hero.append(el('div', 'big', firstEmoji(d.emoji) || MOOD_EMOJI[d.mood] || '📔'));
+  const hb = el('div'); hb.append(el('div', 'dd', longDate(d.date)), el('div', 'dpwd', cap(WDN[d.t.getUTCDay()])));
+  const chips = el('div', 'dpchips');
+  if (d.rate != null) { const c = el('span', 'dpchip rate', `${d.rate}/10`); c.style.background = colorOf(d.rate); chips.append(c); }
+  if (d.mood_raw) chips.append(el('span', 'dpchip', `${MOOD_EMOJI[d.mood] || '🎭'} ${d.mood_raw}`));
+  if (d.sport != null) chips.append(el('span', 'dpchip', `🏃 ${d.sport}/5`));
+  if (d.study != null) chips.append(el('span', 'dpchip', `📚 ${d.study}/5`));
+  if (chips.children.length) hb.append(chips);
+  hero.append(hb); inn.append(hero);
+  const sec = (title) => { const x = el('section', 'dpsec'); x.append(el('h3', '', title)); inn.append(x); return x; };
+  // фото
+  const ph = dayPhotos(d);
+  if (ph.length) {
+    const g = el('div', 'gal');
+    ph.forEach((src, i) => { const im = el('img', i === 0 ? 'cover' : ''); im.src = src; im.alt = ''; im.loading = 'lazy'; im.onclick = () => openLightbox(ph, i); g.append(im); });
+    sec(ph.length > 1 ? L(`Фото · ${ph.length}`, `Фото · ${ph.length}`, `Photos · ${ph.length}`) : L('Фото дня', 'Фото дня', 'Photo of the day')).append(g);
+  }
+  // текст
+  sec(L('Что было', 'Що було', 'What happened')).append(el('div', 'dptext' + (d.text ? '' : ' empty'), d.text || NOTEXT()));
+  // события
+  const evs = (d.events || []).slice().sort((a, b) => (a.time || '99') < (b.time || '99') ? -1 : 1);
+  if (evs.length) {
+    const ul = el('ul', 'evs');
+    evs.forEach((e) => { const li = el('li'); if (e.time) li.append(el('span', 'tm', e.time)); li.append(document.createTextNode(e.text)); ul.append(li); });
+    sec(L('События дня', 'Події дня', 'Events of the day')).append(ul);
+  }
+  // видео
+  const vids = d.videos || [];
+  if (vids.length) {
+    const box = el('div', 'vids');
+    vids.forEach((u) => {
+      const id = ytId(u);
+      if (id && navigator.onLine !== false) { const f = el('iframe'); f.src = 'https://www.youtube-nocookie.com/embed/' + id; f.loading = 'lazy'; f.allow = 'encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true; f.title = 'YouTube'; box.append(f); }
+      else { const a = el('a', 'vlink'); a.href = u; a.target = '_blank'; a.rel = 'noopener'; let host = u; try { host = new URL(u).hostname.replace(/^www\./, ''); } catch (e) {} a.append(el('b', '', '🎬'), el('span', '', `${L('Открыть видео', 'Відкрити відео', 'Open video')} · ${host}`)); box.append(a); }
+    });
+    sec(L('Видео', 'Відео', 'Videos')).append(box);
+  }
+  // подсказка, если день пока «голый»
+  if (PUBLIC && !DEMO && !ph.length && !evs.length && !vids.length) {
+    const h = el('div', 'dphint'); h.append(el('span', '', L('Сюда можно добавить фото, события по времени и ссылки на видео — чтобы потом прожить этот день заново.', 'Сюди можна додати фото, події за часом і посилання на відео — щоб потім прожити цей день знову.', 'Add photos, timed events and video links here — so you can relive this day later.')), btn(L('✏️ Дополнить день', '✏️ Доповнити день', '✏️ Add to this day'), () => openEditor(d.date)));
+    inn.append(h);
+  }
+  // этот же день в другие годы
+  const same = DAYS.filter((x) => x.date.slice(5) === d.date.slice(5) && x.date !== d.date);
+  if (same.length) {
+    const w = el('div', 'dpyears');
+    same.forEach((x) => w.append(btn(`${x.date.slice(0, 4)} · ${firstEmoji(x.emoji) || MOOD_EMOJI[x.mood] || '📅'}${x.rate != null ? ' ' + x.rate + '/10' : ''}`, () => openDay(x, DAYS))));
+    sec(L(`${cap(longDate(d.date, true))} в другие годы`, `${cap(longDate(d.date, true))} в інші роки`, `${longDate(d.date, true)} in other years`)).append(w);
+  }
+  // соседние дни
+  const nav = el('div', 'dpnav');
+  nav.append(btn(prev ? `◀ ${longDate(prev.date, prev.date.slice(0, 4) === d.date.slice(0, 4))}` : '◀', () => dpStep(-1), !prev), btn(next ? `${longDate(next.date, next.date.slice(0, 4) === d.date.slice(0, 4))} ▶` : '▶', () => dpStep(1), !next));
+  inn.append(nav);
+  dayPage.append(bar, inn);
+}
+// свайп влево/вправо — соседний день; клавиши ← → и Esc
+(function dpGestures() {
+  let x0 = null, y0 = null;
+  dayPage.addEventListener('touchstart', (e) => { if (e.touches.length !== 1) { x0 = null; return; } x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  dayPage.addEventListener('touchend', (e) => {
+    if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8) dpStep(dx < 0 ? 1 : -1);
+  }, { passive: true });
+  addEventListener('keydown', (e) => {
+    if (document.querySelector('dialog[open]')) return;
+    if (!lbox.classList.contains('hide')) { if (e.key === 'Escape') closeLightbox(); else if (e.key === 'ArrowLeft') LB.step(-1); else if (e.key === 'ArrowRight') LB.step(1); return; }
+    if (!dayIsOpen() || /INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName)) return;
+    if (e.key === 'Escape') closeDay(); else if (e.key === 'ArrowLeft') dpStep(-1); else if (e.key === 'ArrowRight') dpStep(1);
+  });
+})();
+// просмотр фото на весь экран
+const LB = { ph: [], i: 0, step(k) { if (this.ph.length < 2) return; this.i = (this.i + k + this.ph.length) % this.ph.length; paintLightbox(); } };
+function openLightbox(ph, i) { LB.ph = ph; LB.i = i; lbox.classList.remove('hide'); paintLightbox(); }
+function closeLightbox() { lbox.classList.add('hide'); lbox.replaceChildren(); }
+function paintLightbox() {
+  lbox.replaceChildren();
+  const im = document.createElement('img'); im.src = LB.ph[LB.i]; im.alt = ''; lbox.append(im);
+  if (LB.ph.length > 1) {
+    const mk = (t, k, side) => { const b = document.createElement('button'); b.className = 'lbn'; b.textContent = t; b.style[side] = '12px'; b.onclick = (e) => { e.stopPropagation(); LB.step(k); }; return b; };
+    const c = document.createElement('div'); c.className = 'lbc'; c.textContent = `${LB.i + 1} / ${LB.ph.length}`;
+    lbox.append(mk('‹', -1, 'left'), mk('›', 1, 'right'), c);
+  }
+}
+lbox.onclick = closeLightbox;
 
 // ---------- календарь ----------
 const CAL = { ym: null, follow: false };
@@ -1386,15 +1607,67 @@ function printMonth(ym) {
   setTimeout(() => window.print(), 50);
 }
 
+// ---------- 🗂️ вкладки ----------
+const TABS = [['cal', '📅', 'Календарь', 'Календар', 'Calendar'], ['charts', '📊', 'Графики', 'Графіки', 'Charts'], ['analysis', '🧠', 'Анализ', 'Аналіз', 'Insights'], ['cmp', '⚖️', 'Сравнение', 'Порівняння', 'Compare'], ['entries', '📝', 'Записи', 'Записи', 'Entries']];
+let TAB = (() => { const t = lsGet('dn-tab'); return TABS.some((x) => x[0] === t) ? t : 'cal'; })();
+function buildTabs() {
+  const nav = document.getElementById('tabs'); nav.setAttribute('aria-label', L('Разделы', 'Розділи', 'Sections'));
+  nav.replaceChildren(...TABS.map(([k, ic, ...n]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.tab2 = k;
+    const i = document.createElement('span'); i.className = 'ti'; i.textContent = ic;
+    const t = document.createElement('span'); t.className = 'tl'; t.textContent = L(...n);
+    b.append(i, t); b.onclick = () => setTab(k); return b;
+  }));
+  applyTabs();
+}
+function applyTabs() {
+  const empty = PUBLIC && !DAYS.length;
+  document.getElementById('tabs').classList.toggle('hide', empty);
+  document.querySelectorAll('#tabs button').forEach((b) => { b.classList.toggle('on', b.dataset.tab2 === TAB); b.setAttribute('aria-current', b.dataset.tab2 === TAB ? 'page' : 'false'); });
+  document.querySelectorAll('[data-tab]').forEach((e) => e.classList.toggle('tabhide', !(e.dataset.tab.split(' ').includes(TAB) || (empty && !e.closest('#main')))));
+}
+function setTab(k) {
+  if (k !== TAB) { TAB = k; lsSet('dn-tab', k); render(); }
+  const top = document.getElementById('tabs').getBoundingClientRect().top + scrollY - 8;
+  if (scrollY > top && !isNarrow()) scrollTo({ top, behavior: 'smooth' }); else if (isNarrow()) scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---------- 📝 лента записей ----------
+const ENT = { n: 30, key: '' };
+function renderEntries(list) {
+  const box = document.getElementById('entList'), more = document.getElementById('entMore'); box.replaceChildren(); more.replaceChildren();
+  const key = JSON.stringify([F.from, F.to, F.range, F.rmin, F.rmax, [...F.moods], F.kind, F.q]); if (key !== ENT.key) { ENT.key = key; ENT.n = 30; }
+  const all = list.slice().sort((a, b) => d3.descending(a.date, b.date));
+  document.getElementById('entSub').textContent = all.length ? L(`${dn(all.length)} под фильтры сверху, новые первыми. Нажми на запись — откроется страница дня.`, `${dn(all.length)} під фільтри зверху, нові першими. Натисни на запис — відкриється сторінка дня.`, `${dn(all.length)} matching the filters above, newest first. Tap an entry to open its page.`) : L('Под эти фильтры записей нет.', 'Під ці фільтри записів немає.', 'No entries match these filters.');
+  all.slice(0, ENT.n).forEach((d) => {
+    const r = document.createElement('div'); r.className = 'ei'; if (d.rate != null) r.style.borderLeftColor = colorOf(d.rate);
+    const e = document.createElement('div'); e.className = 'ee'; e.textContent = firstEmoji(d.emoji) || MOOD_EMOJI[d.mood] || '📅';
+    const b = document.createElement('div'); b.className = 'eb';
+    const t = document.createElement('div'); t.className = 'et'; t.textContent = `${fdate(d.t)} · ${WDN[d.t.getUTCDay()]}`;
+    if (d.rate != null) { const p = document.createElement('span'); p.className = 'pill'; p.style.background = colorOf(d.rate); p.textContent = d.rate + '/10'; t.append(p); }
+    const ph = dayPhotos(d).length, ev = (d.events || []).length, vd = (d.videos || []).length;
+    const m = document.createElement('div'); m.className = 'em'; m.textContent = [d.mood_raw, ph ? '📷 ' + ph : null, ev ? '📌 ' + ev : null, vd ? '🎬 ' + vd : null].filter(Boolean).join(' · ') || ' ';
+    const x = document.createElement('div'); x.className = 'ex'; x.textContent = d.text || (ev ? d.events.map((q) => (q.time ? q.time + ' ' : '') + q.text).join(' · ') : NOTEXT());
+    b.append(t, m, x); r.append(e, b);
+    if (d.photo || ph) { const im = document.createElement('img'); im.className = 'eph'; im.src = dayPhotos(d)[0]; im.alt = ''; im.loading = 'lazy'; r.append(im); }
+    r.onclick = () => openDay(d, all.slice().reverse());
+    box.append(r);
+  });
+  if (all.length > ENT.n) { const b = document.createElement('button'); b.className = 'btn'; b.textContent = L(`Показать ещё (${all.length - ENT.n})`, `Показати ще (${all.length - ENT.n})`, `Show more (${all.length - ENT.n})`); b.onclick = () => { ENT.n += 30; renderEntries(DAYS.filter(match)); }; more.append(b); }
+}
+
 // ---------- общий рендер ----------
 function render() {
   const list = DAYS.filter(match);
   const empty = PUBLIC && !DAYS.length;
   document.getElementById('main').classList.toggle('hide', empty);
   document.getElementById('welcome').classList.toggle('hide', !empty);
+  applyTabs();
   if (empty) { kpis.replaceChildren(); return; }
   renderKpis(list);
-  renderHeat(list); renderCompare(); renderCalendar(); renderWeeks(list); renderMonths(list); renderSport(list); renderMoods(list); renderWeekday(list); renderThemes(list); renderWords(list); renderInsights(list);
+  renderHeat(list); renderCompare(); renderCalendar(); renderWeeks(list); renderMonths(list); renderSport(list); renderMoods(list); renderWeekday(list); renderThemes(list); renderWords(list); renderInsights(list); renderEntries(list);
+  if (dayIsOpen()) renderDayPage();
+  if (!DP.booted && DAYS.length) { DP.booted = true; openFromHash(); }
 }
 let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(render, 150); });
 
@@ -1414,13 +1687,16 @@ const DB = {
   getMeta(k) { return this.tx('meta', 'readonly', (s) => s.get(k)); },
   setMeta(k, v) { return this.tx('meta', 'readwrite', (s) => s.put(v, k)); },
 };
-const clean = (d) => ({ date: d.date, rate: d.rate ?? null, mood: d.mood || null, mood_raw: d.mood ? moodName(d.mood) : null, emoji: d.emoji || '', sport: d.sport ?? null, study: d.study ?? null, text: d.text || '', photo: d.photo || null, updated: d.updated || null });
+const clean = (d) => ({ date: d.date, rate: d.rate ?? null, mood: d.mood || null, mood_raw: d.mood ? moodName(d.mood) : null, emoji: d.emoji || '', sport: d.sport ?? null, study: d.study ?? null, text: d.text || '', photo: d.photo || null, photos: cleanPhotos(d.photos), events: cleanEvents(d.events), videos: cleanVideos(d.videos), updated: d.updated || null });
+function cleanPhotos(a) { return Array.isArray(a) ? a.filter((x) => typeof x === 'string' && x.startsWith('data:image/')).slice(0, 6) : []; }
+function cleanEvents(a) { return Array.isArray(a) ? a.filter((e) => e && typeof e.text === 'string' && e.text.trim()).map((e) => ({ time: /^\d{2}:\d{2}$/.test(e.time) ? e.time : '', text: e.text.trim().slice(0, 300) })).slice(0, 40) : []; }
+function cleanVideos(a) { return Array.isArray(a) ? a.map((u) => (typeof u === 'string' ? u.trim() : '')).filter((u) => /^https?:\/\/\S+$/i.test(u)).slice(0, 10) : []; }
 async function reload() { setDays((await DB.all()).map(clean)); await renderBanners(); }
 
 // ---------- редактор дня ----------
 const PHOTO_BTN = () => L('📷 Выбрать фото', '📷 Вибрати фото', '📷 Choose a photo');
 const ED_EMOJI = ['😊', '😌', '😐', '🙏', '🤔', '😮‍💨', '😞', '😢', '😠', '🥳', '❤️', '💪', '📚', '🎮', '🎬', '🍕', '🌧️', '☀️', '🤒', '😴', '💼', '🏠', '✈️', '🎉'];
-const ED = { date: null, rate: null, mood: null, emoji: '', sport: null, study: null, photo: null, confirmDel: false };
+const ED = { date: null, rate: null, mood: null, emoji: '', sport: null, study: null, photo: null, photos: [], events: [], videos: [], confirmDel: false };
 (function buildEditor() {
   if (!PUBLIC) return;
   edRates.replaceChildren(...d3.range(1, 11).map((v) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = v; b.onclick = () => { ED.rate = ED.rate === v ? null : v; paintEd(); }; return b; }));
@@ -1432,6 +1708,17 @@ const ED = { date: null, rate: null, mood: null, emoji: '', sport: null, study: 
   edPhotoBtn.onclick = () => edPhoto.click();
   edPhoto.onchange = async () => { const f = edPhoto.files[0]; edPhoto.value = ''; if (!f) return; try { edPhotoBtn.textContent = L('⏳ Сжимаю…', '⏳ Стискаю…', '⏳ Compressing…'); ED.photo = await shrinkPhoto(f); } catch (e) { toast(L('Не получилось открыть это фото', 'Не вдалося відкрити це фото', 'Couldn’t open this photo')); } edPhotoBtn.textContent = PHOTO_BTN(); paintEd(); };
   edPhotoDel.onclick = () => { ED.photo = null; paintEd(); };
+  edPhotosBtn.onclick = () => edPhotos.click();
+  edPhotos.onchange = async () => {
+    const fs = [...edPhotos.files]; edPhotos.value = ''; if (!fs.length) return;
+    const room = 6 - ED.photos.length; if (room <= 0) { toast(L('Уже 6 фото — это максимум', 'Вже 6 фото — це максимум', '6 photos is the maximum')); return; }
+    edPhotosBtn.textContent = L('⏳ Сжимаю…', '⏳ Стискаю…', '⏳ Compressing…');
+    for (const f of fs.slice(0, room)) { try { ED.photos.push(await shrinkPhoto(f, 1024, 0.7)); } catch (e) { toast(L('Одно фото не открылось', 'Одне фото не відкрилося', 'One photo could not be opened')); } }
+    if (fs.length > room) toast(L(`Добавил ${room}: больше 6 нельзя`, `Додав ${room}: більше 6 не можна`, `Added ${room}: max is 6`));
+    edPhotosBtn.textContent = L(...ST.edPhotosBtn); paintThumbs();
+  };
+  edEvAdd.onclick = () => { ED.events.push({ time: '', text: '' }); paintEdLists(); const r = edEvents.lastElementChild; if (r) r.querySelector('input[type=text]').focus(); };
+  edVidAdd.onclick = () => { ED.videos.push(''); paintEdLists(); const r = edVideos.lastElementChild; if (r) r.querySelector('input').focus(); };
   edCancel.onclick = () => ed.close();
   edDel.onclick = async () => { if (!ED.confirmDel) { ED.confirmDel = true; edDel.textContent = L('Точно удалить?', 'Точно видалити?', 'Delete for sure?'); return; } BK.gesture(); await markDeleted(ED.orig); await DB.del(ED.orig); ed.close(); closeDetail(); toast(L('Запись удалена', 'Запис видалено', 'Entry deleted')); await reload(); BK.changed(); };
   edForm.onsubmit = async (ev) => {
@@ -1439,8 +1726,9 @@ const ED = { date: null, rate: null, mood: null, emoji: '', sport: null, study: 
     const date = edDate.value;
     if (!date) { toast(L('Укажи дату', 'Вкажи дату', 'Pick a date')); return false; }
     if (date > TODAY) { toast(L('Будущий день записать нельзя 🙂', 'Майбутній день записати не можна 🙂', 'You can’t log a future day 🙂')); return false; }
-    const rec = clean({ date, rate: ED.rate, mood: ED.mood, emoji: ED.emoji, sport: ED.sport, study: ED.study, text: edText.value.trim(), photo: ED.photo, updated: new Date().toISOString() });
-    if (rec.rate == null && !rec.mood && !rec.text && !rec.photo) { toast(L('Поставь хотя бы оценку или настроение', 'Постав хоча б оцінку або настрій', 'Add at least a score or a mood')); return false; }
+    const rec = clean({ date, rate: ED.rate, mood: ED.mood, emoji: ED.emoji, sport: ED.sport, study: ED.study, text: edText.value.trim(), photo: ED.photo, photos: ED.photos, events: ED.events, videos: ED.videos, updated: new Date().toISOString() });
+    if (ED.videos.some((u) => u.trim()) && rec.videos.length < ED.videos.filter((u) => u.trim()).length) toast(L('Часть ссылок не похожа на ссылку (нужно https://…) — их не сохранил', 'Частина посилань не схожа на посилання (потрібно https://…) — їх не зберіг', 'Some links don’t look like links (need https://…) — skipped'));
+    if (rec.rate == null && !rec.mood && !rec.text && !rec.photo && !rec.photos.length && !rec.events.length && !rec.videos.length) { toast(L('Поставь хотя бы оценку или настроение', 'Постав хоча б оцінку або настрій', 'Add at least a score or a mood')); return false; }
     try {
       if (ED.orig && ED.orig !== date) { await markDeleted(ED.orig); await DB.del(ED.orig); }
       await DB.put(rec);
@@ -1452,6 +1740,23 @@ const ED = { date: null, rate: null, mood: null, emoji: '', sport: null, study: 
     return false;
   };
 })();
+function paintThumbs() {
+  edThumbs.replaceChildren(...ED.photos.map((src, i) => { const w = document.createElement('div'); const im = document.createElement('img'); im.src = src; im.alt = ''; const x = document.createElement('button'); x.type = 'button'; x.textContent = '✕'; x.title = L('Убрать', 'Прибрати', 'Remove'); x.onclick = () => { ED.photos.splice(i, 1); paintThumbs(); }; w.append(im, x); return w; }));
+}
+function paintEdLists() {
+  const x = (fn) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'x'; b.textContent = '✕'; b.title = L('Убрать', 'Прибрати', 'Remove'); b.onclick = fn; return b; };
+  edEvents.replaceChildren(...ED.events.map((ev, i) => {
+    const r = document.createElement('div'); r.className = 'evrow';
+    const t = document.createElement('input'); t.type = 'time'; t.value = ev.time || ''; t.oninput = () => (ev.time = t.value);
+    const s2 = document.createElement('input'); s2.type = 'text'; s2.maxLength = 300; s2.value = ev.text; s2.placeholder = L('что случилось', 'що сталося', 'what happened'); s2.oninput = () => (ev.text = s2.value);
+    r.append(t, s2, x(() => { ED.events.splice(i, 1); paintEdLists(); })); return r;
+  }));
+  edVideos.replaceChildren(...ED.videos.map((u, i) => {
+    const r = document.createElement('div'); r.className = 'evrow';
+    const s2 = document.createElement('input'); s2.type = 'url'; s2.value = u; s2.placeholder = 'https://youtu.be/…'; s2.oninput = () => (ED.videos[i] = s2.value);
+    r.append(s2, x(() => { ED.videos.splice(i, 1); paintEdLists(); })); return r;
+  }));
+}
 function paintEd() {
   edRates.querySelectorAll('button').forEach((b, i) => { const on = ED.rate === i + 1; b.classList.toggle('on', on); b.style.background = on ? colorOf(i + 1) : ''; });
   edMoods.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c.dataset.m === ED.mood));
@@ -1465,12 +1770,12 @@ function openEditor(date) {
   if (DEMO) exitDemo();
   hideTip();
   const d = DAYS.find((x) => x.date === date) || null;
-  Object.assign(ED, { orig: d ? d.date : null, rate: d?.rate ?? null, mood: d?.mood ?? null, emoji: d?.emoji || '', sport: d?.sport ?? null, study: d?.study ?? null, photo: d?.photo || null, confirmDel: false });
+  Object.assign(ED, { orig: d ? d.date : null, rate: d?.rate ?? null, mood: d?.mood ?? null, emoji: d?.emoji || '', sport: d?.sport ?? null, study: d?.study ?? null, photo: d?.photo || null, photos: [...(d?.photos || [])], events: (d?.events || []).map((e) => ({ ...e })), videos: [...(d?.videos || [])], confirmDel: false });
   edDate.value = date || TODAY; edDate.max = TODAY;
   edText.value = d?.text || ''; edEmoji.value = d && !ED_EMOJI.includes(d.emoji) ? d.emoji : '';
   edTitle.textContent = d ? `${L('Изменить запись', 'Змінити запис', 'Edit entry')} · ${fdate(d.t)}` : NEW_TITLE();
   edDel.classList.toggle('hide', !d); edDel.textContent = L('Удалить', 'Видалити', 'Delete'); edPhotoBtn.textContent = PHOTO_BTN();
-  paintEd(); if (!ed.open) ed.showModal();
+  paintEd(); paintThumbs(); paintEdLists(); if (!ed.open) ed.showModal();
 }
 // смена даты в окне = переключиться на этот день (существующая запись откроется, пустой день — с чистыми полями)
 edDate && (edDate.onchange = () => {
@@ -1480,15 +1785,14 @@ edDate && (edDate.onchange = () => {
   if (ED.orig) { openEditor(iso); return; } // было «изменить» другой день → начинаем новый с нуля
   edTitle.textContent = NEW_TITLE(); // новая запись: просто меняем дату, введённое сохраняем
 });
-function closeDetail() { document.getElementById('detail').style.display = 'none'; selDate = null; }
-function shrinkPhoto(file) {
+function shrinkPhoto(file, max0, q0) {
   return new Promise((ok, no) => {
     const url = URL.createObjectURL(file); const img = new Image();
     img.onload = () => {
-      const max = 1280, k = Math.min(1, max / Math.max(img.width, img.height));
+      const max = max0 || 1280, k = Math.min(1, max / Math.max(img.width, img.height));
       const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
       c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
-      ok(c.toDataURL('image/jpeg', 0.72));
+      ok(c.toDataURL('image/jpeg', q0 || 0.72));
     };
     img.onerror = () => { URL.revokeObjectURL(url); no(new Error('bad image')); };
     img.src = url;
@@ -1719,7 +2023,8 @@ function demoDays() {
     const sport = Math.floor(rnd() * 6), study = Math.floor(rnd() * 6);
     const rate = Math.max(1, Math.min(10, Math.round(level + (sport >= 3 ? 1 : -0.5) + (rnd() - 0.5) * 2)));
     const mood = rate >= 8 ? pick(['Приятное', 'Благодарное', 'Спокойное']) : rate >= 6 ? pick(['Спокойное', 'Нейтральное-обычн', 'Раздумия']) : rate >= 4 ? pick(['Уставшее', 'Нейтральное-обычн', 'Разочарование']) : pick(['Грустное', 'Неприятное', 'Уставшее']);
-    out.push(clean({ date, rate, mood, emoji: MOOD_EMOJI[mood], sport, study, text: rnd() < 0.7 ? pick(rate >= 7 ? T.good : rate >= 5 ? T.mid : T.bad) : '' }));
+    const events = rate >= 8 && rnd() < 0.5 ? [{ time: '09:30', text: L('Утренняя прогулка', 'Ранкова прогулянка', 'Morning walk') }, { time: '19:00', text: L('Встреча с другом', 'Зустріч з другом', 'Met a friend') }] : [];
+    out.push(clean({ date, rate, mood, emoji: MOOD_EMOJI[mood], sport, study, events, text: rnd() < 0.7 ? pick(rate >= 7 ? T.good : rate >= 5 ? T.mid : T.bad) : '' }));
   }
   return out;
 }
@@ -1732,12 +2037,12 @@ function applyTexts() {
   if (PUBLIC) {
     document.title = L(...ST.appName);
     document.getElementById('title').textContent = '📔 ' + L(...ST.appName);
-    document.getElementById('calSub').textContent = L('Наведи на день — увидишь запись. Нажми — откроется ниже. Пустой день можно нажать и записать. Точка в углу — есть текст.', 'Наведи на день — побачиш запис. Натисни — відкриється нижче. Порожній день можна натиснути й записати. Крапка в куті — є текст.', 'Hover a day to see the entry, tap to open it below. Tap an empty day to log it. A dot in the corner means there’s text.');
+    document.getElementById('calSub').textContent = L('Наведи на день — увидишь запись. Нажми — откроется страница дня. Пустой день можно нажать и записать. Точка в углу — есть текст.', 'Наведи на день — побачиш запис. Натисни — відкриється сторінка дня. Порожній день можна натиснути й записати. Крапка в куті — є текст.', 'Hover a day to see the entry. Tap to open the day page. Tap an empty day to log it. A dot in the corner means there is text.');
     document.getElementById('foot').innerHTML = L('Дневник дней · записи хранятся только у тебя: в этом браузере и, если подключишь, на твоём Google Диске · работает без интернета', 'Щоденник днів · записи зберігаються лише в тебе: у цьому браузері та, якщо підключиш, на твоєму Google Диску · працює без інтернету', 'Diary of Days · entries are stored only with you: in this browser and, if you connect it, in your Google Drive · works offline') + ' · <a href="privacy.html" style="color:var(--accent)">' + L('Политика конфиденциальности', 'Політика конфіденційності', 'Privacy policy') + '</a>';
   } else {
     document.getElementById('foot').textContent = `Собрано ${DATA.built} из файлов папки «дневник». Картинки дня, отмеченные ✱ в заметках, поставил Claude. Работает без интернета.`;
   }
-  edPhotoBtn.textContent = PHOTO_BTN();
+  edPhotoBtn.textContent = PHOTO_BTN(); buildTabs();
   fToggle.textContent = filters.classList.contains('open') ? L('✕ Скрыть фильтры', '✕ Сховати фільтри', '✕ Hide filters') : L(...ST.fMoreBtn);
 }
 fToggle.onclick = () => { filters.classList.toggle('open'); applyTexts(); };
